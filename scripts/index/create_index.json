@@ -1,0 +1,95 @@
+{
+  "name": "nz-programs",
+  "fields": [
+    { "name": "id", "type": "Edm.String", "key": true, "filterable": true },
+
+    {
+      "name": "university",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true
+    },
+    { "name": "program", "type": "Edm.String", "searchable": true },
+
+    {
+      "name": "fields",
+      "type": "Collection(Edm.String)",
+      "searchable": true,
+      "filterable": true
+    },
+    { "name": "type", "type": "Edm.String", "filterable": true },
+    { "name": "campus", "type": "Edm.String", "filterable": true },
+    { "name": "intakes", "type": "Collection(Edm.String)", "filterable": true },
+
+    {
+      "name": "tuition_nzd_per_year",
+      "type": "Edm.Double",
+      "filterable": true
+    },
+
+    { "name": "english_ielts", "type": "Edm.Double", "filterable": true },
+    {
+      "name": "english_no_band_below",
+      "type": "Edm.Double",
+      "filterable": true
+    },
+    { "name": "english_toefl_total", "type": "Edm.Double", "filterable": true },
+    {
+      "name": "english_toefl_reading",
+      "type": "Edm.Double",
+      "filterable": true
+    },
+    {
+      "name": "english_toefl_listening",
+      "type": "Edm.Double",
+      "filterable": true
+    },
+    {
+      "name": "english_toefl_speaking",
+      "type": "Edm.Double",
+      "filterable": true
+    },
+    {
+      "name": "english_toefl_writing",
+      "type": "Edm.Double",
+      "filterable": true
+    },
+
+    { "name": "duration_years", "type": "Edm.Double", "filterable": true },
+    { "name": "level", "type": "Edm.String", "filterable": true },
+
+    {
+      "name": "academic_reqs",
+      "type": "Collection(Edm.String)",
+      "searchable": true
+    },
+    {
+      "name": "other_reqs",
+      "type": "Collection(Edm.String)",
+      "searchable": true
+    },
+
+    { "name": "url", "type": "Edm.String" },
+    { "name": "source_updated", "type": "Edm.String" },
+
+    { "name": "content", "type": "Edm.String", "searchable": true }
+  ],
+  "semantic": {
+    "configurations": [
+      {
+        "name": "default",
+        "prioritizedFields": {
+          "titleField": { "fieldName": "program" },
+          "prioritizedContentFields": [
+            { "fieldName": "content" },
+            { "fieldName": "program" },
+            { "fieldName": "university" },
+            { "fieldName": "academic_reqs" },
+            { "fieldName": "other_reqs" }
+          ],
+          "prioritizedKeywordsFields": [{ "fieldName": "fields" }]
+        }
+      }
+    ]
+  }
+}
