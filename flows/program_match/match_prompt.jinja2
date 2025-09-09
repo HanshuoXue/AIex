@@ -1,0 +1,73 @@
+system:
+You are an expert education consultant specializing in New Zealand university program matching. Your task is to evaluate how well a candidate matches with a specific academic program.
+
+user:
+Please evaluate the following candidate and program match:
+
+## Candidate Profile:
+{{candidate}}
+
+## Program Details:
+{{program}}
+
+## Evaluation Criteria:
+Please evaluate the match based on the following weighted criteria:
+
+1. **Academic Fit (35 points)**: 
+   - GPA compatibility with program requirements
+   - Relevant academic background for the field
+   - Meeting minimum academic standards
+
+2. **English Proficiency (25 points)**:
+   - IELTS overall score vs program requirements
+   - Individual band scores if specified
+   - Language readiness for academic success
+
+3. **Field/Interest Alignment (20 points)**:
+   - Overlap between candidate interests and program fields
+   - Career goals alignment with program outcomes
+   - Passion and motivation for the subject area
+
+4. **Location Preference (10 points)**:
+   - City/campus preference match
+   - Lifestyle and location compatibility
+
+5. **Budget Compatibility (10 points)**:
+   - Tuition affordability within candidate's budget
+   - Financial sustainability for the program duration
+
+## Required Output Format:
+Provide your evaluation in the following JSON format:
+
+```json
+{
+  "eligible": true/false,
+  "overall_score": 0-100,
+  "detailed_scores": {
+    "academic_fit": 0-35,
+    "english_proficiency": 0-25,
+    "field_alignment": 0-20,
+    "location_preference": 0-10,
+    "budget_compatibility": 0-10
+  },
+  "reasoning": {
+    "academic_fit": "Brief explanation of academic compatibility",
+    "english_proficiency": "Brief explanation of language readiness",
+    "field_alignment": "Brief explanation of interest/field match",
+    "location_preference": "Brief explanation of location match",
+    "budget_compatibility": "Brief explanation of budget feasibility",
+    "overall_assessment": "Summary of why this is/isn't a good match"
+  },
+  "red_flags": ["List any major concerns or deal-breakers"],
+  "strengths": ["List key advantages of this match"]
+}
+```
+
+## Important Notes:
+- Set "eligible" to true for most reasonable matches - only set to false for severe mismatches (e.g., IELTS significantly below requirement, budget less than 70% of tuition, completely unrelated academic background)
+- Be precise and varied in scoring - differentiate clearly between programs based on fit quality
+- Use the full 0-100 scale: excellent matches (80-100), good matches (60-79), fair matches (40-59), poor matches (20-39)
+- Consider specific factors that make each program unique for this candidate
+- Factor in New Zealand's welcoming education environment
+- If the candidate meets basic requirements (IELTS, academic background, reasonable budget), they should generally be considered eligible
+- ALWAYS provide the "overall_assessment" field in reasoning with a comprehensive summary

@@ -1,6 +1,7 @@
 # api/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from match_flow import flow_matcher, Candidate
 
 app = FastAPI()
 
@@ -17,3 +18,71 @@ app.add_middleware(
 @app.get("/healthz")
 def healthz():
     return {"ok": True}
+
+@app.post("/match")
+async def match(c: Candidate):
+    """
+    Use Prompt Flow for intelligent matching
+    """
+    # Build search query
+    q = " OR ".join((c.interests or ["Master"])) or "Master"
+    
+    # Use Prompt Flow for matching
+    results = await flow_matcher.match_programs(
+        candidate=c,
+        query=q,
+        top_k=2,  # can return more results
+        level=None  # can specify level as needed
+    )
+    
+    # Format output
+    formatted_results = []
+    for result in results:
+        formatted_results.append({
+            "program": result.get("program_name"),
+            "university": result.get("university"),
+            "score": result.get("overall_score"),
+            "detailed_scores": result.get("detailed_scores"),
+            "reasoning": result.get("reasoning", {}).get("overall_assessment", ""),
+            "strengths": result.get("strengths", []),
+            "red_flags": result.get("red_flags", []),
+            "url": result.get("program_url")  # Return program's official URL
+        })
+    
+    return formatted_results[:2]  # Return top 2 results
+
+@app.post("/match/detailed")
+async def match_detailed(c: Candidate):
+    """
+    Return detailed match analysis including all scoring details
+    """
+    q = " OR ".join((c.interests or ["Master"])) or "Master"
+    
+    results = await flow_matcher.match_programs(
+        candidate=c,
+        query=q,
+        top_k=5,
+        level=None
+    )
+    
+    return results  # Return complete evaluation results
+
+@app.post("/match/all")
+async def match_all(c: Candidate):
+    """
+    Return match analysis for all programs, including rejected programs and exclusion reasons
+    """
+    q = " OR ".join((c.interests or ["Master"])) or "Master"
+    
+    results = await flow_matcher.match_programs_with_rejected(
+        candidate=c,
+        query=q,
+        top_k=5,
+        level=None
+    )
+    
+    return {
+        "eligible_matches": results["eligible"],
+        "rejected_matches": results["rejected"],
+        "total_evaluated": len(results["eligible"]) + len(results["rejected"])
+    }

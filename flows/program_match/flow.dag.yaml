@@ -1,0 +1,37 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+inputs:
+  candidate_profile:
+    type: string
+    description: "Candidate information in JSON format"
+  program_details:
+    type: string
+    description: "Program information in JSON format"
+outputs:
+  match_result:
+    type: object
+    reference: ${match_evaluator.output}
+nodes:
+  - name: match_prompt
+    type: llm
+    source:
+      type: code
+      path: match_prompt.jinja2
+    inputs:
+      candidate: ${inputs.candidate_profile}
+      program: ${inputs.program_details}
+      deployment_name: gpt-4o-mini
+      max_tokens: 2000
+      temperature: 0.3
+    connection: azure_openai_connection
+    api: chat
+  - name: match_evaluator
+    type: python
+    source:
+      type: code
+      path: match_evaluator.py
+    inputs:
+      llm_response: ${match_prompt.output}
+      candidate_data: ${inputs.candidate_profile}
+      program_data: ${inputs.program_details}
+environment:
+  python_requirements_txt: requirements.txt
