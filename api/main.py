@@ -60,17 +60,25 @@ def debug_info():
 @app.get("/debug/matcher")
 def debug_matcher():
     """Get detailed debug info from PromptFlowMatcher"""
-    from .match_flow import flow_matcher
-    import os
-    from datetime import datetime
-    return {
-        "matcher_debug_info": flow_matcher.debug_info,
-        "current_time": str(datetime.now()),
-        "environment_variables": {
-            "AZURE_OPENAI_KEY": "SET" if os.environ.get("AZURE_OPENAI_KEY") else "NOT SET",
-            "AZURE_OPENAI_ENDPOINT": os.environ.get("AZURE_OPENAI_ENDPOINT", "NOT SET")
+    try:
+        from .match_flow import flow_matcher
+        import os
+        from datetime import datetime
+        return {
+            "status": "ok",
+            "matcher_debug_info": getattr(flow_matcher, 'debug_info', {}),
+            "current_time": str(datetime.now()),
+            "environment_variables": {
+                "AZURE_OPENAI_KEY": "SET" if os.environ.get("AZURE_OPENAI_KEY") else "NOT SET",
+                "AZURE_OPENAI_ENDPOINT": os.environ.get("AZURE_OPENAI_ENDPOINT", "NOT SET")
+            }
         }
-    }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "type": type(e).__name__
+        }
 
 @app.post("/match")
 async def match(c: Candidate):
