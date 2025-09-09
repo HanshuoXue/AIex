@@ -47,7 +47,8 @@ class PromptFlowMatcher:
         working_dir = os.getcwd()
         
         # Check if flows exists in current working directory (production case)
-        if os.path.exists(os.path.join(working_dir, "flows")):
+        if os.path.exists("flows"):
+            # Use absolute path from working directory
             self.flow_path = os.path.join(working_dir, "flows", "program_match")
         else:
             # Local development case - flows is sibling to api
