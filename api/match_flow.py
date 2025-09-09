@@ -44,11 +44,28 @@ class PromptFlowMatcher:
         self.pf_client = PFClient()
         # Use absolute path to ensure correct path
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        
-        # In Azure App Service, files are deployed to the working directory
-        # flows/ folder is at the same level as main.py
         working_dir = os.getcwd()
-        self.flow_path = os.path.join(working_dir, "flows", "program_match")
+        
+        # Try different path strategies based on environment
+        possible_paths = [
+            # Local development: flows/ is sibling to api/
+            os.path.join(os.path.dirname(current_dir), "flows", "program_match"),
+            # Production: flows/ is in working directory  
+            os.path.join(working_dir, "flows", "program_match"),
+            # Alternative: relative from current file
+            os.path.join(current_dir, "..", "flows", "program_match")
+        ]
+        
+        # Find the first existing path
+        self.flow_path = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                self.flow_path = path
+                break
+        
+        # If none found, use the first as default
+        if not self.flow_path:
+            self.flow_path = possible_paths[0]
         
         # Debug: print path information
         print(f"Current dir: {current_dir}")
