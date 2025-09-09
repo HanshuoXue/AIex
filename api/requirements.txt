@@ -23,6 +23,7 @@ azure-search-documents
 azure-core
 azure-identity
 promptflow
+promptflow-azure
 azure-ai-ml
 openai
 # Production server
