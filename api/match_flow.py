@@ -7,6 +7,12 @@ from promptflow.client import PFClient
 from pydantic import BaseModel
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path="../.env")
@@ -47,14 +53,31 @@ class PromptFlowMatcher:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         self.flow_path = os.path.join(current_dir, "flows", "program_match")
         
-        # Debug: print path and environment information
-        print(f"Current dir: {current_dir}")
-        print(f"Flow path: {self.flow_path}")
-        print(f"Flow path exists: {os.path.exists(self.flow_path)}")
+        # Initialize debug info storage
+        self.debug_info = {
+            "init_time": str(datetime.now()),
+            "env_vars": {
+                "AZURE_OPENAI_KEY": "SET" if os.environ.get("AZURE_OPENAI_KEY") else "NOT SET",
+                "AZURE_OPENAI_ENDPOINT": os.environ.get("AZURE_OPENAI_ENDPOINT", "NOT SET"),
+                "SEARCH_ENDPOINT": "SET" if search_endpoint else "NOT SET",
+                "SEARCH_KEY": "SET" if search_key else "NOT SET"
+            },
+            "paths": {
+                "current_dir": current_dir,
+                "flow_path": self.flow_path,
+                "flow_path_exists": os.path.exists(self.flow_path),
+                "working_dir": os.getcwd()
+            },
+            "connection_attempts": [],
+            "errors": []
+        }
         
-        # Debug environment variables
-        print(f"AZURE_OPENAI_KEY available: {bool(os.environ.get('AZURE_OPENAI_KEY'))}")
-        print(f"AZURE_OPENAI_ENDPOINT available: {bool(os.environ.get('AZURE_OPENAI_ENDPOINT'))}")
+        # Debug: print path and environment information
+        logger.info("=== PROMPT FLOW MATCHER INITIALIZATION ===")
+        logger.info(f"Current dir: {current_dir}")
+        logger.info(f"Flow path: {self.flow_path}")
+        logger.info(f"Flow path exists: {os.path.exists(self.flow_path)}")
+        logger.info(f"Environment variables: {self.debug_info['env_vars']}")
         
         # Auto-create Azure OpenAI connection if it doesn't exist
         self._ensure_connection()
@@ -73,20 +96,44 @@ class PromptFlowMatcher:
     
     def _ensure_connection(self):
         """Ensure Azure OpenAI connection exists, create if not"""
+        attempt_info = {
+            "timestamp": str(datetime.now()),
+            "success": False,
+            "error": None,
+            "details": {}
+        }
+        
         try:
             # Try to get the connection
+            logger.info("=== CONNECTION CHECK START ===")
             connections = self.pf_client.connections.list()
             connection_names = [conn.name for conn in connections]
+            logger.info(f"Existing connections: {connection_names}")
+            attempt_info["details"]["existing_connections"] = connection_names
             
             if 'azure_openai_connection' not in connection_names:
-                print("Creating Azure OpenAI connection...")
+                logger.info("Azure OpenAI connection NOT found, creating new one...")
                 
                 # Get environment variables
                 api_key = os.environ.get("AZURE_OPENAI_KEY")
                 api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
                 
+                # Log environment status (without exposing keys)
+                logger.info(f"Environment check:")
+                logger.info(f"  - AZURE_OPENAI_KEY: {'SET' if api_key else 'NOT SET'}")
+                logger.info(f"  - AZURE_OPENAI_ENDPOINT: {api_base if api_base else 'NOT SET'}")
+                
+                attempt_info["details"]["env_check"] = {
+                    "api_key_exists": bool(api_key),
+                    "api_base_value": api_base if api_base else "NOT SET"
+                }
+                
                 if not api_key or not api_base:
-                    print(f"Missing environment variables: api_key={bool(api_key)}, api_base={bool(api_base)}")
+                    error_msg = f"Missing environment variables: api_key={bool(api_key)}, api_base={bool(api_base)}"
+                    logger.error(f"❌ {error_msg}")
+                    attempt_info["error"] = error_msg
+                    self.debug_info["errors"].append(error_msg)
+                    self.debug_info["connection_attempts"].append(attempt_info)
                     return
                 
                 # Create connection programmatically
@@ -100,26 +147,46 @@ class PromptFlowMatcher:
                 
                 # Try different methods to create connection
                 try:
+                    logger.info("Attempting pf_client.connections.create_or_update...")
                     self.pf_client.connections.create_or_update(connection_config)
-                    print("✅ Azure OpenAI connection created successfully!")
+                    logger.info("✅ Azure OpenAI connection created successfully!")
+                    attempt_info["success"] = True
+                    attempt_info["details"]["method"] = "create_or_update"
                 except Exception as create_error:
-                    print(f"❌ create_or_update failed: {create_error}")
+                    error_detail = f"create_or_update failed: {str(create_error)}"
+                    logger.error(f"❌ {error_detail}")
+                    attempt_info["error"] = error_detail
+                    
                     # Try alternative: direct API creation
-                    from promptflow.azure import PFClient as AzurePFClient
-                    from azure.identity import DefaultAzureCredential
                     try:
+                        logger.info("Trying alternative: Azure ML PFClient...")
+                        from promptflow.azure import PFClient as AzurePFClient
+                        from azure.identity import DefaultAzureCredential
                         # Create connection using Azure ML workspace if available
                         azure_client = AzurePFClient(credential=DefaultAzureCredential())
                         azure_client.connections.create_or_update(connection_config)
-                        print("✅ Connection created via Azure ML!")
-                    except:
-                        print("❌ All connection methods failed!")
+                        logger.info("✅ Connection created via Azure ML!")
+                        attempt_info["success"] = True
+                        attempt_info["details"]["method"] = "azure_ml"
+                    except Exception as ml_error:
+                        final_error = f"All connection methods failed! Last error: {str(ml_error)}"
+                        logger.error(f"❌ {final_error}")
+                        attempt_info["error"] = final_error
+                        self.debug_info["errors"].append(final_error)
             else:
-                print("✅ Azure OpenAI connection already exists")
+                logger.info("✅ Azure OpenAI connection already exists")
+                attempt_info["success"] = True
+                attempt_info["details"]["status"] = "already_exists"
                 
         except Exception as e:
-            print(f"Error ensuring connection: {e}")
-            # Continue anyway, the error will be caught in evaluate_match
+            error_msg = f"Error in connection check: {str(e)}"
+            logger.error(f"❌ {error_msg}")
+            logger.exception(e)  # This logs the full traceback
+            attempt_info["error"] = error_msg
+            self.debug_info["errors"].append(error_msg)
+        
+        self.debug_info["connection_attempts"].append(attempt_info)
+        logger.info(f"=== CONNECTION CHECK END (Success: {attempt_info['success']}) ===")
     
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
         """Get program list"""
