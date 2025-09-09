@@ -17,7 +17,7 @@ app.add_middleware(
 
 @app.get("/healthz")
 def healthz():
-    return {"ok": True}
+    return {"ok": True}  # Health check endpoint
 
 @app.get("/debug")
 def debug_info():
