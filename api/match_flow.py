@@ -46,6 +46,30 @@ class PromptFlowMatcher:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         project_root = os.path.dirname(current_dir)
         self.flow_path = os.path.join(project_root, "flows", "program_match")
+        
+        # Debug: print path information
+        print(f"Current dir: {current_dir}")
+        print(f"Project root: {project_root}")
+        print(f"Flow path: {self.flow_path}")
+        print(f"Flow path exists: {os.path.exists(self.flow_path)}")
+        
+        # Fallback: try different path strategies
+        if not os.path.exists(self.flow_path):
+            # Try relative from current working directory
+            fallback_path = os.path.join(os.getcwd(), "flows", "program_match")
+            print(f"Trying fallback path: {fallback_path}")
+            if os.path.exists(fallback_path):
+                self.flow_path = fallback_path
+                print(f"Using fallback path: {self.flow_path}")
+            else:
+                print(f"WARNING: Flow path not found! Current working directory: {os.getcwd()}")
+                # List available directories for debugging
+                try:
+                    print(f"Available in current dir: {os.listdir('.')}")
+                    if os.path.exists('flows'):
+                        print(f"Available in flows/: {os.listdir('flows')}")
+                except Exception as e:
+                    print(f"Error listing directories: {e}")
     
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
         """Get program list"""
