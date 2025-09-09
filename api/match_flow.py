@@ -44,20 +44,15 @@ class PromptFlowMatcher:
         self.pf_client = PFClient()
         # Use absolute path to ensure correct path
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        # In production, flows/ is at the same level as api/
-        # So we need to go up from api/ to find flows/
-        if current_dir.endswith('/api') or 'api' in current_dir:
-            # In deployment, api/ and flows/ are siblings
-            project_root = os.path.dirname(current_dir) if current_dir.endswith('/api') else current_dir
-            self.flow_path = os.path.join(project_root, "flows", "program_match")
-        else:
-            # Fallback for other environments
-            project_root = os.path.dirname(current_dir)
-            self.flow_path = os.path.join(project_root, "flows", "program_match")
+        
+        # In Azure App Service, files are deployed to the working directory
+        # flows/ folder is at the same level as main.py
+        working_dir = os.getcwd()
+        self.flow_path = os.path.join(working_dir, "flows", "program_match")
         
         # Debug: print path information
         print(f"Current dir: {current_dir}")
-        print(f"Project root: {project_root}")
+        print(f"Working dir: {working_dir}")
         print(f"Flow path: {self.flow_path}")
         print(f"Flow path exists: {os.path.exists(self.flow_path)}")
         
