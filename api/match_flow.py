@@ -157,22 +157,11 @@ class PromptFlowMatcher:
                     logger.error(f"❌ {error_detail}")
                     attempt_info["error"] = error_detail
                     
-                    # Try alternative: direct API creation
-                    try:
-                        logger.info("Trying alternative: Azure ML PFClient...")
-                        from promptflow.azure import PFClient as AzurePFClient
-                        from azure.identity import DefaultAzureCredential
-                        # Create connection using Azure ML workspace if available
-                        azure_client = AzurePFClient(credential=DefaultAzureCredential())
-                        azure_client.connections.create_or_update(connection_config)
-                        logger.info("✅ Connection created via Azure ML!")
-                        attempt_info["success"] = True
-                        attempt_info["details"]["method"] = "azure_ml"
-                    except Exception as ml_error:
-                        final_error = f"All connection methods failed! Last error: {str(ml_error)}"
-                        logger.error(f"❌ {final_error}")
-                        attempt_info["error"] = final_error
-                        self.debug_info["errors"].append(final_error)
+                    # Skip Azure ML method for now - use local approach
+                    logger.info("Skipping Azure ML method, using local connection approach...")
+                    # For now, we'll continue without the connection and let the flow handle it
+                    attempt_info["success"] = False
+                    attempt_info["details"]["method"] = "local_fallback"
             else:
                 logger.info("✅ Azure OpenAI connection already exists")
                 attempt_info["success"] = True
