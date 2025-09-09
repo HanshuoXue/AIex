@@ -1,46 +1,44 @@
-name: Azure Static Web Apps CI/CD
+name: Deploy Frontend (SWA - Next.js SSR)
 
 on:
   push:
     branches: [main]
     paths:
       - "app/**"
-      - ".github/workflows/azure-static-web-apps-*.yml"
+      - ".github/workflows/*.yml"
   pull_request:
     branches: [main]
     paths:
       - "app/**"
 
 jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # 1) 固定 Node 版本并缓存依赖
+      # 和 SWA Functions 侧保持一致：Node 18（SSR 更稳；SWA 后端日志里也显示 node 18）
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
           cache: npm
           cache-dependency-path: app/package-lock.json
 
-      # 2) 在 Actions 里先本地构建
-      - name: Build (local)
+      # 可选：先装依赖做个快速类型/语法校验（不产出最终产物）
+      - name: Install deps (sanity check)
         working-directory: app
-        run: |
-          npm ci
-          npm run build
+        run: npm ci
 
-      # 3) 只上传产物，避免 Oryx 再构建
-      - name: Build And Deploy (SWA)
+      # 交给 SWA 官方 Action 来构建 + 打包 SSR（不要本地 build / 不要 export）
+      - name: Build & Deploy (SWA SSR)
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_0D1794703 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           app_location: app
-          output_location: .next
-          skip_app_build: true
+          # 让 Oryx 自动识别 .next 并封装 Functions，SSR 场景不要指定 output_location，也不要 skip_app_build
+          output_location: ""
+          skip_app_build: false
           production_branch: main
           deployment_environment: production
