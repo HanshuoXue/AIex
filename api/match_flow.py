@@ -160,6 +160,40 @@ class PromptFlowMatcher:
                     logger.info("✅ Azure OpenAI connection created successfully!")
                     attempt_info["success"] = True
                     attempt_info["details"]["method"] = "create_or_update"
+                except Exception as keyring_error:
+                    logger.warning(f"Keyring error, trying alternative method: {keyring_error}")
+                    # Try alternative: create connection file directly
+                    try:
+                        import os
+                        import yaml
+                        from pathlib import Path
+                        
+                        # Create .promptflow directory if it doesn't exist
+                        promptflow_dir = Path.home() / ".promptflow" / "connections"
+                        promptflow_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        # Create connection file
+                        connection_file = promptflow_dir / f"{connection_config['name']}.yaml"
+                        connection_data = {
+                            "name": connection_config["name"],
+                            "type": connection_config["type"],
+                            "configs": {
+                                "api_key": connection_config["api_key"],
+                                "api_base": connection_config["api_base"],
+                                "api_version": connection_config["api_version"]
+                            }
+                        }
+                        
+                        with open(connection_file, 'w') as f:
+                            yaml.dump(connection_data, f)
+                        
+                        logger.info("✅ Azure OpenAI connection created via file method!")
+                        attempt_info["success"] = True
+                        attempt_info["details"]["method"] = "file_method"
+                    except Exception as file_error:
+                        logger.error(f"File method also failed: {file_error}")
+                        attempt_info["success"] = False
+                        attempt_info["error"] = f"Both keyring and file methods failed: {file_error}"
                 except Exception as create_error:
                     error_detail = f"create_or_update failed: {str(create_error)}"
                     logger.warning(f"⚠️ {error_detail}")
