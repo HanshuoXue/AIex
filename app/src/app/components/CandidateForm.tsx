@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import type { Candidate } from "../../types";
 
 interface CandidateFormProps {
-  onMatch: (data: any) => void;
-  onDetailedMatch: (data: any) => void;
-  onAllMatch: (data: any) => void;
+  onMatch: (data: Candidate) => void;
+  onDetailedMatch: (data: Candidate) => void;
+  onAllMatch: (data: Candidate) => void;
   loading: boolean;
 }
 
@@ -32,7 +33,10 @@ export default function CandidateForm({
     budget_nzd_per_year: 60000,
   });
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (
+    field: keyof Candidate,
+    value: string | number | string[]
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -85,7 +89,7 @@ export default function CandidateForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-1">
-                Bachelor's Major
+                Bachelor&apos;s Major
               </label>
               <input
                 type="text"

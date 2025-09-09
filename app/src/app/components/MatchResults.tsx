@@ -1,7 +1,9 @@
 "use client";
 
+import type { MatchResult, AllMatchResults } from "../../types";
+
 interface MatchResultsProps {
-  results: any[] | any | null;
+  results: MatchResult[] | AllMatchResults | null;
   loading: boolean;
 }
 
@@ -45,8 +47,12 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
   // Handle new data format (containing eligible and rejected)
   const isAllMatchFormat =
     results && typeof results === "object" && "eligible_matches" in results;
-  const eligibleResults = isAllMatchFormat ? results.eligible_matches : results;
-  const rejectedResults = isAllMatchFormat ? results.rejected_matches : [];
+  const eligibleResults = isAllMatchFormat
+    ? (results as AllMatchResults).eligible_matches
+    : (results as MatchResult[]);
+  const rejectedResults = isAllMatchFormat
+    ? (results as AllMatchResults).rejected_matches
+    : [];
 
   if (
     Array.isArray(eligibleResults) &&
@@ -88,7 +94,7 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
               ✅ Recommended Programs ({eligibleResults.length})
             </h3>
             <div className="space-y-4">
-              {(eligibleResults as any[]).map((result: any, index: number) => (
+              {eligibleResults.map((result: MatchResult, index: number) => (
                 <div
                   key={index}
                   className="border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow duration-200"
@@ -141,7 +147,9 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
                           <div
                             className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
                             style={{
-                              width: `${result.score || result.overall_score}%`,
+                              width: `${
+                                result.score || result.overall_score || 0
+                              }%`,
                             }}
                           ></div>
                         </div>
@@ -149,20 +157,22 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
                         {/* Match level */}
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            (result.score || result.overall_score) >= 90
+                            (result.score || result.overall_score || 0) >= 90
                               ? "bg-green-100 text-green-800"
-                              : (result.score || result.overall_score) >= 80
+                              : (result.score || result.overall_score || 0) >=
+                                80
                               ? "bg-blue-100 text-blue-800"
-                              : (result.score || result.overall_score) >= 70
+                              : (result.score || result.overall_score || 0) >=
+                                70
                               ? "bg-yellow-100 text-yellow-800"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {(result.score || result.overall_score) >= 90
+                          {(result.score || result.overall_score || 0) >= 90
                             ? "🌟 Perfect Match"
-                            : (result.score || result.overall_score) >= 80
+                            : (result.score || result.overall_score || 0) >= 80
                             ? "✨ Excellent Match"
-                            : (result.score || result.overall_score) >= 70
+                            : (result.score || result.overall_score || 0) >= 70
                             ? "👍 Good Match"
                             : "🤔 Fair Match"}
                         </span>
@@ -324,7 +334,7 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
               </span>
             </h3>
             <div className="space-y-4">
-              {rejectedResults.map((result: any, index: number) => (
+              {rejectedResults.map((result: MatchResult, index: number) => (
                 <div
                   key={`rejected-${index}`}
                   className="border border-red-200 rounded-lg p-5 bg-red-50 hover:shadow-md transition-shadow duration-200"
@@ -386,7 +396,9 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
                     </h4>
                     <p className="text-sm text-red-700">
                       {result.rejection_reason ||
-                        result.reasoning?.overall_assessment ||
+                        (typeof result.reasoning === "object"
+                          ? result.reasoning?.overall_assessment
+                          : result.reasoning) ||
                         "Failed AI evaluation screening"}
                     </p>
                   </div>

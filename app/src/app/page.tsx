@@ -3,12 +3,15 @@
 import { useState } from "react";
 import CandidateForm from "./components/CandidateForm";
 import MatchResults from "./components/MatchResults";
+import type { Candidate, MatchResult, AllMatchResults } from "../types";
 
 export default function Home() {
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<
+    MatchResult[] | AllMatchResults | null
+  >(null);
   const [loading, setLoading] = useState(false);
 
-  const handleMatch = async (candidateData: any) => {
+  const handleMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
       const response = await fetch("/api/match", {
@@ -29,7 +32,7 @@ export default function Home() {
     }
   };
 
-  const handleDetailedMatch = async (candidateData: any) => {
+  const handleDetailedMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
       const response = await fetch("/api/match/detailed", {
@@ -50,7 +53,7 @@ export default function Home() {
     }
   };
 
-  const handleAllMatch = async (candidateData: any) => {
+  const handleAllMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
       const response = await fetch("/api/match/all", {

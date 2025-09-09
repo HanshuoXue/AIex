@@ -1,0 +1,90 @@
+{
+  "flow_runs": [
+    {
+      "run_id": "521c2de8-2cad-400e-bd5c-ecd6fce30306_0",
+      "status": "Completed",
+      "error": null,
+      "inputs": {
+        "test_input": "hello"
+      },
+      "output": {
+        "test_output": "Hello, please respond with \"Hello World\" to test the connection.\n"
+      },
+      "metrics": null,
+      "request": null,
+      "parent_run_id": "521c2de8-2cad-400e-bd5c-ecd6fce30306",
+      "root_run_id": "521c2de8-2cad-400e-bd5c-ecd6fce30306",
+      "source_run_id": null,
+      "flow_id": "default_flow_id",
+      "start_time": "2025-09-09T11:04:46.350400Z",
+      "end_time": "2025-09-09T11:04:46.351671Z",
+      "index": 0,
+      "api_calls": [
+        {
+          "name": "flow",
+          "node_name": "flow",
+          "type": "Flow",
+          "start_time": 1757372686.3504,
+          "end_time": 1757372686.351671,
+          "children": [],
+          "system_metrics": {
+            "duration": 0.001271,
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0
+          },
+          "inputs": {
+            "test_input": "hello"
+          },
+          "output": {
+            "test_output": "Hello, please respond with \"Hello World\" to test the connection.\n"
+          },
+          "error": null
+        }
+      ],
+      "name": "",
+      "description": "",
+      "tags": null,
+      "system_metrics": {
+        "duration": 0.001271,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "result": {
+        "test_output": "Hello, please respond with \"Hello World\" to test the connection.\n"
+      },
+      "upload_metrics": false,
+      "otel_trace_id": null,
+      "message_format": "basic"
+    }
+  ],
+  "node_runs": [
+    {
+      "node": "test_prompt",
+      "flow_run_id": "521c2de8-2cad-400e-bd5c-ecd6fce30306",
+      "run_id": "521c2de8-2cad-400e-bd5c-ecd6fce30306_test_prompt_0",
+      "status": "Completed",
+      "inputs": {},
+      "output": "Hello, please respond with \"Hello World\" to test the connection.\n",
+      "metrics": null,
+      "error": null,
+      "parent_run_id": "521c2de8-2cad-400e-bd5c-ecd6fce30306_0",
+      "start_time": "2025-09-09T11:04:46.350926Z",
+      "end_time": "2025-09-09T11:04:46.351445Z",
+      "index": 0,
+      "api_calls": [],
+      "cached_run_id": null,
+      "cached_flow_run_id": null,
+      "logs": {
+        "stdout": "",
+        "stderr": ""
+      },
+      "system_metrics": {
+        "duration": 0.000519
+      },
+      "result": "Hello, please respond with \"Hello World\" to test the connection.\n",
+      "message_format": "basic"
+    }
+  ]
+}
