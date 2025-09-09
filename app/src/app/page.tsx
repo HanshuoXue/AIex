@@ -14,7 +14,7 @@ export default function Home() {
   const handleMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/match", {
+      const response = await fetch("/api/match", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function Home() {
   const handleDetailedMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/match/detailed", {
+      const response = await fetch("/api/match/detailed", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export default function Home() {
   const handleAllMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/match/all", {
+      const response = await fetch("/api/match/all", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
