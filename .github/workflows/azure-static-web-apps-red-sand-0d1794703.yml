@@ -2,45 +2,45 @@ name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - "app/**"
+      - ".github/workflows/azure-static-web-apps-*.yml"
   pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - "app/**"
 
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
-      - name: Build And Deploy
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_0D1794703 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
-          action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/app" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+      - uses: actions/checkout@v4
 
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
+      # 1) 固定 Node 版本并缓存依赖
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      # 2) 在 Actions 里先本地构建
+      - name: Build (local)
+        working-directory: app
+        run: |
+          npm ci
+          npm run build
+
+      # 3) 只上传产物，避免 Oryx 再构建
+      - name: Build And Deploy (SWA)
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_0D1794703 }}
-          action: "close"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          app_location: app
+          output_location: .next
+          skip_app_build: true
+          production_branch: main
+          deployment_environment: production
