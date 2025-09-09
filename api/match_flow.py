@@ -53,17 +53,24 @@ class PromptFlowMatcher:
             # Production: flows/ is in working directory  
             os.path.join(working_dir, "flows", "program_match"),
             # Alternative: relative from current file
-            os.path.join(current_dir, "..", "flows", "program_match")
+            os.path.join(current_dir, "..", "flows", "program_match"),
+            # Production specific: based on debug info showing flows exists at working dir level
+            os.path.join(working_dir, "flows", "program_match") if os.path.exists(os.path.join(working_dir, "flows")) else None
         ]
         
         # Find the first existing path
         self.flow_path = None
         for path in possible_paths:
-            if os.path.exists(path):
+            if path and os.path.exists(path):
                 self.flow_path = path
                 break
         
-        # If none found, use the first as default
+        # Special handling for production environment based on debug info
+        if not self.flow_path and os.path.exists("flows"):
+            # flows/ exists in current working directory
+            self.flow_path = os.path.join(working_dir, "flows", "program_match")
+        
+        # If still none found, use the first as default
         if not self.flow_path:
             self.flow_path = possible_paths[0]
         
