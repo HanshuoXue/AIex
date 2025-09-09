@@ -31,12 +31,12 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('api/requirements.txt') }}
           restore-keys: ${{ runner.os }}-pip-
 
-      # install dependencies (code)
-      - name: Install dependencies (vendor)
-        working-directory: api
-        run: |
-          python -m pip install --upgrade pip
-          pip install --target="./.python_packages/lib/site-packages" -r requirements.txt
+      # Skip local install - let Azure build it
+      # Azure App Service will run pip install during deployment
+      
+      # Force Azure to rebuild
+      - name: Set build flag
+        run: echo "SCM_DO_BUILD_DURING_DEPLOYMENT=true" >> $GITHUB_ENV
 
       # zip (code + vendored + flows）
       - name: Zip package
