@@ -145,7 +145,7 @@ class PromptFlowMatcher:
                     "api_version": "2024-02-15-preview"
                 }
                 
-                # Try different methods to create connection
+                # Try to create connection using local approach
                 try:
                     logger.info("Attempting pf_client.connections.create_or_update...")
                     self.pf_client.connections.create_or_update(connection_config)
@@ -154,14 +154,11 @@ class PromptFlowMatcher:
                     attempt_info["details"]["method"] = "create_or_update"
                 except Exception as create_error:
                     error_detail = f"create_or_update failed: {str(create_error)}"
-                    logger.error(f"❌ {error_detail}")
-                    attempt_info["error"] = error_detail
-                    
-                    # Skip Azure ML method for now - use local approach
-                    logger.info("Skipping Azure ML method, using local connection approach...")
-                    # For now, we'll continue without the connection and let the flow handle it
+                    logger.warning(f"⚠️ {error_detail}")
+                    # Don't treat this as a fatal error - continue without connection
                     attempt_info["success"] = False
                     attempt_info["details"]["method"] = "local_fallback"
+                    attempt_info["error"] = error_detail
             else:
                 logger.info("✅ Azure OpenAI connection already exists")
                 attempt_info["success"] = True

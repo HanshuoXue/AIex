@@ -21,10 +21,7 @@ websockets==15.0.1
 # Azure Search and Prompt Flow dependencies
 azure-search-documents
 azure-core
-azure-identity
 promptflow
-promptflow-azure
-azure-ai-ml
 openai
 # Production server
 gunicorn

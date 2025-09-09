@@ -1,4 +1,2 @@
 promptflow
-azure-ai-ml
-azure-identity
 openai
