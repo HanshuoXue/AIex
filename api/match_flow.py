@@ -57,9 +57,10 @@ class PromptFlowMatcher:
             print(f"ERROR: Flow path not found at {self.flow_path}")
             # List directories for debugging
             try:
-                print(f"Working dir contents: {os.listdir(working_dir)}")
-                if os.path.exists("flows"):
-                    print(f"flows/ contents: {os.listdir('flows')}")
+                print(f"Current dir contents: {os.listdir(current_dir)}")
+                flows_dir = os.path.join(current_dir, "flows")
+                if os.path.exists(flows_dir):
+                    print(f"flows/ contents: {os.listdir(flows_dir)}")
             except Exception as e:
                 print(f"Error listing directories: {e}")
     
