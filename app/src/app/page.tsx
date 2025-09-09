@@ -14,13 +14,16 @@ export default function Home() {
   const handleMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/match", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(candidateData),
-      });
+      const response = await fetch(
+        "https://api-alex-12345.azurewebsites.net/match",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(candidateData),
+        }
+      );
 
       const data = await response.json();
       setResults(data);
@@ -35,13 +38,16 @@ export default function Home() {
   const handleDetailedMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/match/detailed", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(candidateData),
-      });
+      const response = await fetch(
+        "https://api-alex-12345.azurewebsites.net/match/detailed",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(candidateData),
+        }
+      );
 
       const data = await response.json();
       setResults(data);
@@ -56,13 +62,16 @@ export default function Home() {
   const handleAllMatch = async (candidateData: Candidate) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/match/all", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(candidateData),
-      });
+      const response = await fetch(
+        "https://api-alex-12345.azurewebsites.net/match/all",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(candidateData),
+        }
+      );
 
       const data = await response.json();
       setResults(data);
