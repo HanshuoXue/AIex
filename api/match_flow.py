@@ -47,10 +47,14 @@ class PromptFlowMatcher:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         self.flow_path = os.path.join(current_dir, "flows", "program_match")
         
-        # Debug: print path information
+        # Debug: print path and environment information
         print(f"Current dir: {current_dir}")
         print(f"Flow path: {self.flow_path}")
         print(f"Flow path exists: {os.path.exists(self.flow_path)}")
+        
+        # Debug environment variables
+        print(f"AZURE_OPENAI_KEY available: {bool(os.environ.get('AZURE_OPENAI_KEY'))}")
+        print(f"AZURE_OPENAI_ENDPOINT available: {bool(os.environ.get('AZURE_OPENAI_ENDPOINT'))}")
         
         # Auto-create Azure OpenAI connection if it doesn't exist
         self._ensure_connection()
