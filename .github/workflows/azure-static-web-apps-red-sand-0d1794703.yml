@@ -23,7 +23,7 @@ jobs:
         working-directory: app
         run: |
           npm ci
-          npm run build # 产物在 app/out
+          npm run build # output folder is app/out
 
       - name: Deploy to SWA (upload prebuilt files)
         uses: Azure/static-web-apps-deploy@v1
