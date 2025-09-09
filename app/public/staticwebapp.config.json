@@ -1,0 +1,24 @@
+{
+  "routes": [
+    {
+      "route": "/api/match",
+      "methods": ["POST"],
+      "rewrite": "https://api-alex-12345.azurewebsites.net/match"
+    },
+    {
+      "route": "/api/match/detailed", 
+      "methods": ["POST"],
+      "rewrite": "https://api-alex-12345.azurewebsites.net/match/detailed"
+    },
+    {
+      "route": "/api/match/all",
+      "methods": ["POST"], 
+      "rewrite": "https://api-alex-12345.azurewebsites.net/match/all"
+    }
+  ],
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/index.html"
+    }
+  }
+}
