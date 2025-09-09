@@ -52,6 +52,9 @@ class PromptFlowMatcher:
         print(f"Flow path: {self.flow_path}")
         print(f"Flow path exists: {os.path.exists(self.flow_path)}")
         
+        # Auto-create Azure OpenAI connection if it doesn't exist
+        self._ensure_connection()
+        
         # Final verification
         if not os.path.exists(self.flow_path):
             print(f"ERROR: Flow path not found at {self.flow_path}")
@@ -63,6 +66,42 @@ class PromptFlowMatcher:
                     print(f"flows/ contents: {os.listdir(flows_dir)}")
             except Exception as e:
                 print(f"Error listing directories: {e}")
+    
+    def _ensure_connection(self):
+        """Ensure Azure OpenAI connection exists, create if not"""
+        try:
+            # Try to get the connection
+            connections = self.pf_client.connections.list()
+            connection_names = [conn.name for conn in connections]
+            
+            if 'azure_openai_connection' not in connection_names:
+                print("Creating Azure OpenAI connection...")
+                
+                # Get environment variables
+                api_key = os.environ.get("AZURE_OPENAI_KEY")
+                api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
+                
+                if not api_key or not api_base:
+                    print(f"Missing environment variables: api_key={bool(api_key)}, api_base={bool(api_base)}")
+                    return
+                
+                # Create connection programmatically
+                connection_config = {
+                    "name": "azure_openai_connection",
+                    "type": "azure_open_ai",
+                    "api_key": api_key,
+                    "api_base": api_base,
+                    "api_version": "2024-02-15-preview"
+                }
+                
+                self.pf_client.connections.create_or_update(connection_config)
+                print("✅ Azure OpenAI connection created successfully!")
+            else:
+                print("✅ Azure OpenAI connection already exists")
+                
+        except Exception as e:
+            print(f"Error ensuring connection: {e}")
+            # Continue anyway, the error will be caught in evaluate_match
     
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
         """Get program list"""
