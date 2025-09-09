@@ -42,61 +42,34 @@ class PromptFlowMatcher:
         
         # Initialize Prompt Flow client
         self.pf_client = PFClient()
-        # Use absolute path to ensure correct path
-        current_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Simplified path detection - production first
         working_dir = os.getcwd()
         
-        # Try different path strategies based on environment
-        possible_paths = [
-            # Local development: flows/ is sibling to api/
-            os.path.join(os.path.dirname(current_dir), "flows", "program_match"),
-            # Production: flows/ is in working directory  
-            os.path.join(working_dir, "flows", "program_match"),
-            # Alternative: relative from current file
-            os.path.join(current_dir, "..", "flows", "program_match"),
-            # Production specific: based on debug info showing flows exists at working dir level
-            os.path.join(working_dir, "flows", "program_match") if os.path.exists(os.path.join(working_dir, "flows")) else None
-        ]
-        
-        # Find the first existing path
-        self.flow_path = None
-        for path in possible_paths:
-            if path and os.path.exists(path):
-                self.flow_path = path
-                break
-        
-        # Special handling for production environment based on debug info
-        if not self.flow_path and os.path.exists("flows"):
-            # flows/ exists in current working directory
+        # Check if flows exists in current working directory (production case)
+        if os.path.exists(os.path.join(working_dir, "flows")):
             self.flow_path = os.path.join(working_dir, "flows", "program_match")
-        
-        # If still none found, use the first as default
-        if not self.flow_path:
-            self.flow_path = possible_paths[0]
+        else:
+            # Local development case - flows is sibling to api
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            project_root = os.path.dirname(current_dir)
+            self.flow_path = os.path.join(project_root, "flows", "program_match")
         
         # Debug: print path information
-        print(f"Current dir: {current_dir}")
         print(f"Working dir: {working_dir}")
         print(f"Flow path: {self.flow_path}")
         print(f"Flow path exists: {os.path.exists(self.flow_path)}")
         
-        # Fallback: try different path strategies
+        # Final verification
         if not os.path.exists(self.flow_path):
-            # Try relative from current working directory
-            fallback_path = os.path.join(os.getcwd(), "flows", "program_match")
-            print(f"Trying fallback path: {fallback_path}")
-            if os.path.exists(fallback_path):
-                self.flow_path = fallback_path
-                print(f"Using fallback path: {self.flow_path}")
-            else:
-                print(f"WARNING: Flow path not found! Current working directory: {os.getcwd()}")
-                # List available directories for debugging
-                try:
-                    print(f"Available in current dir: {os.listdir('.')}")
-                    if os.path.exists('flows'):
-                        print(f"Available in flows/: {os.listdir('flows')}")
-                except Exception as e:
-                    print(f"Error listing directories: {e}")
+            print(f"ERROR: Flow path not found at {self.flow_path}")
+            # List directories for debugging
+            try:
+                print(f"Working dir contents: {os.listdir(working_dir)}")
+                if os.path.exists("flows"):
+                    print(f"flows/ contents: {os.listdir('flows')}")
+            except Exception as e:
+                print(f"Error listing directories: {e}")
     
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
         """Get program list"""
