@@ -148,7 +148,15 @@ class PromptFlowMatcher:
                 # Try to create connection using local approach
                 try:
                     logger.info("Attempting pf_client.connections.create_or_update...")
-                    self.pf_client.connections.create_or_update(connection_config)
+                    # Create connection object from config
+                    from promptflow.entities import AzureOpenAIConnection
+                    connection = AzureOpenAIConnection(
+                        name=connection_config["name"],
+                        api_key=connection_config["api_key"],
+                        api_base=connection_config["api_base"],
+                        api_version=connection_config["api_version"]
+                    )
+                    self.pf_client.connections.create_or_update(connection)
                     logger.info("✅ Azure OpenAI connection created successfully!")
                     attempt_info["success"] = True
                     attempt_info["details"]["method"] = "create_or_update"
