@@ -8,7 +8,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https:///red-sand-0d1794703.2.azurestaticapps.net",  # Production URL
+        "https://red-sand-0d1794703.2.azurestaticapps.net",  # Production URL
     ],
     allow_credentials=True,
     allow_methods=["*"],
