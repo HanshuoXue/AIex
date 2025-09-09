@@ -15,7 +15,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-alex-12345.azurewebsites.net/match",
+        "/api/match",
         {
           method: "POST",
           headers: {
@@ -39,7 +39,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-alex-12345.azurewebsites.net/match/detailed",
+        "/api/match/detailed",
         {
           method: "POST",
           headers: {
@@ -63,7 +63,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-alex-12345.azurewebsites.net/match/all",
+        "/api/match/all",
         {
           method: "POST",
           headers: {
