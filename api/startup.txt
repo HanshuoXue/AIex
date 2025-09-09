@@ -1,13 +1,3 @@
-# Create Azure OpenAI connection for Prompt Flow in current directory
-# Find the connection file dynamically
-CONNECTION_FILE=$(find . -name "azure_openai_connection.yaml" -type f | head -1)
-if [ -n "$CONNECTION_FILE" ]; then
-    echo "Found connection file at: $CONNECTION_FILE"
-    pf connection create --file "$CONNECTION_FILE" --set api_key="$AZURE_OPENAI_KEY" api_base="$AZURE_OPENAI_ENDPOINT" || true
-else
-    echo "Warning: azure_openai_connection.yaml not found"
-fi
-
-# Start the FastAPI application with Gunicorn
-# Using single worker to avoid connection issues
+# Just start the app without any connection setup
+# Let Python code handle everything
 gunicorn -k uvicorn.workers.UvicornWorker -w 1 -t 60 -b 0.0.0.0:8000 main:app

@@ -98,8 +98,22 @@ class PromptFlowMatcher:
                     "api_version": "2024-02-15-preview"
                 }
                 
-                self.pf_client.connections.create_or_update(connection_config)
-                print("✅ Azure OpenAI connection created successfully!")
+                # Try different methods to create connection
+                try:
+                    self.pf_client.connections.create_or_update(connection_config)
+                    print("✅ Azure OpenAI connection created successfully!")
+                except Exception as create_error:
+                    print(f"❌ create_or_update failed: {create_error}")
+                    # Try alternative: direct API creation
+                    from promptflow.azure import PFClient as AzurePFClient
+                    from azure.identity import DefaultAzureCredential
+                    try:
+                        # Create connection using Azure ML workspace if available
+                        azure_client = AzurePFClient(credential=DefaultAzureCredential())
+                        azure_client.connections.create_or_update(connection_config)
+                        print("✅ Connection created via Azure ML!")
+                    except:
+                        print("❌ All connection methods failed!")
             else:
                 print("✅ Azure OpenAI connection already exists")
                 
@@ -159,6 +173,9 @@ class PromptFlowMatcher:
                 "other_reqs": program.get("other_reqs", []),
                 "url": program.get("url")
             }
+            
+            # Ensure connection before EACH flow run
+            self._ensure_connection()
             
             # Run the flow using test method
             result = self.pf_client.test(
