@@ -1,7 +1,10 @@
 # api/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from match_flow import flow_matcher, Candidate
+try:
+    from .match_flow import flow_matcher, Candidate
+except ImportError:
+    from match_flow import flow_matcher, Candidate
 
 app = FastAPI()
 
@@ -9,6 +12,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://red-sand-0d1794703.2.azurestaticapps.net",  # Production URL
+        "http://localhost:3000",  # Local development
+        "http://127.0.0.1:3000",  # Alternative localhost
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -61,7 +66,10 @@ def debug_info():
 def debug_matcher():
     """Get detailed debug info from PromptFlowMatcher"""
     try:
-        from .match_flow import flow_matcher
+        try:
+            from .match_flow import flow_matcher
+        except ImportError:
+            from match_flow import flow_matcher
         import os
         from datetime import datetime
         return {
