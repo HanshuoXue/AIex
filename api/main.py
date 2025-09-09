@@ -25,7 +25,7 @@ def debug_info():
     import os
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
-    flow_path = os.path.join(project_root, "flows", "program_match")
+    flow_path = os.path.join(current_dir, "flows", "program_match")
     
     debug_info = {
         "current_dir": current_dir,
@@ -34,7 +34,7 @@ def debug_info():
         "flow_path_exists": os.path.exists(flow_path),
         "working_directory": os.getcwd(),
         "current_dir_contents": [],
-        "flows_exists": os.path.exists("flows"),
+        "flows_exists": os.path.exists(os.path.join(current_dir, "flows")),
         "flows_contents": []
     }
     
@@ -44,8 +44,9 @@ def debug_info():
         debug_info["current_dir_error"] = str(e)
     
     try:
-        if os.path.exists("flows"):
-            debug_info["flows_contents"] = os.listdir("flows")
+        flows_dir = os.path.join(current_dir, "flows")
+        if os.path.exists(flows_dir):
+            debug_info["flows_contents"] = os.listdir(flows_dir)
     except Exception as e:
         debug_info["flows_error"] = str(e)
     

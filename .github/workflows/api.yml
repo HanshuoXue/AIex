@@ -41,9 +41,9 @@ jobs:
       # zip (code + vendored + flows）
       - name: Zip package
         run: |
-          # Create deployment package with correct structure
+          # Create deployment package - flows is now inside api directory
           cd api
-          zip -r ../api.zip . ../flows/
+          zip -r ../api.zip .
 
       # zip deploy App Service（using Publish Profile）
       - name: Deploy to Azure Web App

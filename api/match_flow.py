@@ -43,21 +43,12 @@ class PromptFlowMatcher:
         # Initialize Prompt Flow client
         self.pf_client = PFClient()
         
-        # Simplified path detection - production first
-        working_dir = os.getcwd()
-        
-        # Check if flows exists in current working directory (production case)
-        if os.path.exists("flows"):
-            # Use absolute path from working directory
-            self.flow_path = os.path.join(working_dir, "flows", "program_match")
-        else:
-            # Local development case - flows is sibling to api
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            project_root = os.path.dirname(current_dir)
-            self.flow_path = os.path.join(project_root, "flows", "program_match")
+        # Super simple path - flows is now in api directory
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.flow_path = os.path.join(current_dir, "flows", "program_match")
         
         # Debug: print path information
-        print(f"Working dir: {working_dir}")
+        print(f"Current dir: {current_dir}")
         print(f"Flow path: {self.flow_path}")
         print(f"Flow path exists: {os.path.exists(self.flow_path)}")
         
