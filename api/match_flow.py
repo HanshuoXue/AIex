@@ -44,8 +44,16 @@ class PromptFlowMatcher:
         self.pf_client = PFClient()
         # Use absolute path to ensure correct path
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        project_root = os.path.dirname(current_dir)
-        self.flow_path = os.path.join(project_root, "flows", "program_match")
+        # In production, flows/ is at the same level as api/
+        # So we need to go up from api/ to find flows/
+        if current_dir.endswith('/api') or 'api' in current_dir:
+            # In deployment, api/ and flows/ are siblings
+            project_root = os.path.dirname(current_dir) if current_dir.endswith('/api') else current_dir
+            self.flow_path = os.path.join(project_root, "flows", "program_match")
+        else:
+            # Fallback for other environments
+            project_root = os.path.dirname(current_dir)
+            self.flow_path = os.path.join(project_root, "flows", "program_match")
         
         # Debug: print path information
         print(f"Current dir: {current_dir}")

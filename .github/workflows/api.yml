@@ -38,11 +38,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install --target="./.python_packages/lib/site-packages" -r requirements.txt
 
-      # zip (code + vendored）
+      # zip (code + vendored + flows）
       - name: Zip package
         run: |
-          cd api
-          zip -r ../api.zip .
+          # Create deployment package with api/ and flows/
+          zip -r api.zip api/ flows/
 
       # zip deploy App Service（using Publish Profile）
       - name: Deploy to Azure Web App

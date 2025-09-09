@@ -19,6 +19,43 @@ app.add_middleware(
 def healthz():
     return {"ok": True}
 
+@app.get("/debug")
+def debug_info():
+    """Debug endpoint to check paths and environment"""
+    import os
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
+    flow_path = os.path.join(project_root, "flows", "program_match")
+    
+    debug_info = {
+        "current_dir": current_dir,
+        "project_root": project_root,
+        "flow_path": flow_path,
+        "flow_path_exists": os.path.exists(flow_path),
+        "working_directory": os.getcwd(),
+        "current_dir_contents": [],
+        "flows_exists": os.path.exists("flows"),
+        "flows_contents": []
+    }
+    
+    try:
+        debug_info["current_dir_contents"] = os.listdir(current_dir)
+    except Exception as e:
+        debug_info["current_dir_error"] = str(e)
+    
+    try:
+        if os.path.exists("flows"):
+            debug_info["flows_contents"] = os.listdir("flows")
+    except Exception as e:
+        debug_info["flows_error"] = str(e)
+    
+    try:
+        debug_info["root_contents"] = os.listdir(project_root)
+    except Exception as e:
+        debug_info["root_error"] = str(e)
+    
+    return debug_info
+
 @app.post("/match")
 async def match(c: Candidate):
     """
