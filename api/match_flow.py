@@ -164,7 +164,6 @@ class PromptFlowMatcher:
                     logger.warning(f"Keyring error, trying alternative method: {keyring_error}")
                     # Try alternative: create connection file directly
                     try:
-                        import os
                         import yaml
                         from pathlib import Path
                         
