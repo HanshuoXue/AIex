@@ -3,7 +3,11 @@ name: Deploy Frontend (SWA - Static export)
 on:
   push:
     branches: [main]
-    paths: ["app/**", ".github/workflows/*.yml"]
+    paths:
+      [
+        "app/**",
+        ".github/workflows/azure-static-web-apps-red-sand-0d1794703.yml",
+      ]
   pull_request:
     branches: [main]
     paths: ["app/**"]
