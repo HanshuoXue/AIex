@@ -230,8 +230,11 @@ class PromptFlowMatcher:
                 "url": program.get("url")
             }
             
-            # Ensure connection before EACH flow run
-            self._ensure_connection()
+            # Try to ensure connection, but don't fail if it doesn't work
+            try:
+                self._ensure_connection()
+            except Exception as conn_error:
+                logger.warning(f"Connection setup failed, but continuing: {conn_error}")
             
             # Run the flow using test method
             result = self.pf_client.test(
