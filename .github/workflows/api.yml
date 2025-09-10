@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - "api/**"
-      - ".github/workflows/**"
+      - ".github/workflows/api.yml"
   workflow_dispatch: {}
 
 jobs:
@@ -14,11 +14,11 @@ jobs:
 
     permissions:
       contents: read
-      packages: write   # 允许推送到 GHCR
+      packages: write # 允许推送到 GHCR
 
     env:
       IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/alex-api:${{ github.sha }}
-      WEBAPP_NAME: api-alex-12345   # ← 改成你的 App Service 名称
+      WEBAPP_NAME: api-alex-12345 # ← 改成你的 App Service 名称
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
       - name: Build & Push image to GHCR
         uses: docker/build-push-action@v6
         with:
-          context: ./api                    # ← Dockerfile 所在目录
+          context: ./api # ← Dockerfile 所在目录
           platforms: linux/amd64
           push: true
           tags: ${{ env.IMAGE_NAME }}
