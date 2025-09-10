@@ -52,34 +52,34 @@ nodes:
     activate:
       when: ${inputs.use_batch}
       is: "false"
-  # Batch evaluation
-  - name: batch_match_prompt
-    type: llm
-    source:
-      type: code
-      path: batch_match_prompt.jinja2
-    inputs:
-      candidate: ${inputs.candidate_profile}
-      programs: ${inputs.programs_batch}
-      deployment_name: gpt-4o-mini
-      max_tokens: 4000
-      temperature: 0.1
-    connection: azure_openai_connection
-    api: chat
-    activate:
-      when: ${inputs.use_batch}
-      is: "true"
-  - name: batch_evaluator
-    type: python
-    source:
-      type: code
-      path: batch_evaluator.py
-    inputs:
-      llm_response: ${batch_match_prompt.output}
-      candidate_data: ${inputs.candidate_profile}
-      programs_data: ${inputs.programs_batch}
-    activate:
-      when: ${inputs.use_batch}
-      is: "true"
+  # Batch evaluation - TEMPORARILY DISABLED
+  # - name: batch_match_prompt
+  #   type: llm
+  #   source:
+  #     type: code
+  #     path: batch_match_prompt.jinja2
+  #   inputs:
+  #     candidate: ${inputs.candidate_profile}
+  #     programs: ${inputs.programs_batch}
+  #     deployment_name: gpt-4o-mini
+  #     max_tokens: 4000
+  #     temperature: 0.1
+  #   connection: azure_openai_connection
+  #   api: chat
+  #   activate:
+  #     when: ${inputs.use_batch}
+  #     is: "true"
+  # - name: batch_evaluator
+  #   type: python
+  #   source:
+  #     type: code
+  #     path: batch_evaluator.py
+  #   inputs:
+  #     llm_response: ${batch_match_prompt.output}
+  #     candidate_data: ${inputs.candidate_profile}
+  #     programs_data: ${inputs.programs_batch}
+  #   activate:
+  #     when: ${inputs.use_batch}
+  #     is: "true"
 environment:
   python_requirements_txt: requirements.txt
