@@ -66,6 +66,23 @@ def debug_info():
     
     return debug_info
 
+@app.get("/debug/search")
+def debug_search():
+    """Debug Azure Search connection"""
+    try:
+        programs = flow_matcher.fetch_programs(query="*", top=5)
+        return {
+            "status": "success",
+            "programs_found": len(programs),
+            "sample_programs": programs[:2] if programs else []
+        }
+    except Exception as e:
+        return {
+            "status": "error", 
+            "error": str(e),
+            "error_type": type(e).__name__
+        }
+
 @app.get("/debug/matcher")
 def debug_matcher():
     """Get detailed debug info from PromptFlowMatcher"""
