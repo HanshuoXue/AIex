@@ -452,8 +452,13 @@ class PromptFlowMatcher:
         # Take exactly top_k programs for batch processing
         programs = programs[:top_k]
         
-        # Use individual evaluation (batch temporarily disabled)
-        evaluations = await self._fallback_individual_evaluation(candidate, programs)
+        # Use batch evaluation for parallel processing (faster)
+        try:
+            evaluations = await self.evaluate_batch_match(candidate, programs)
+        except Exception as e:
+            logger.warning(f"Batch evaluation failed, falling back to serial: {e}")
+            # Fallback to individual evaluation if batch fails
+            evaluations = await self._fallback_individual_evaluation(candidate, programs)
         
         # Separate eligible and rejected matches
         eligible_matches = []
