@@ -84,19 +84,19 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+    <main className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+      <div className="container mx-auto px-4 py-4 flex-1 flex flex-col">
+        <div className="text-center mb-4">
+          <h1 className="text-3xl font-bold text-gray-800 mb-1">
             🎓 New Zealand Study Program Smart Matching System
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-base text-gray-600">
             AI-Powered Personalized Program Recommendation Platform
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1 min-h-0">
+          <div className="flex flex-col">
             <CandidateForm
               onMatch={handleMatch}
               onDetailedMatch={handleDetailedMatch}
@@ -105,7 +105,7 @@ export default function Home() {
             />
           </div>
 
-          <div>
+          <div className="flex flex-col min-h-0">
             <MatchResults results={results} loading={loading} />
           </div>
         </div>
