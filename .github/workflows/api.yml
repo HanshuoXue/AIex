@@ -39,6 +39,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ env.IMAGE_NAME }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       # 更新 App Service 的容器镜像为刚才推到 GHCR 的版本
       - name: Deploy to Azure Web App (Container)
