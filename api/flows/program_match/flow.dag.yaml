@@ -19,9 +19,9 @@ outputs:
   match_result:
     type: object
     reference: ${match_evaluator.output}
-  batch_evaluations:
-    type: object
-    reference: ${batch_evaluator.output}
+  # batch_evaluations:
+  #   type: object
+  #   reference: ${batch_evaluator.output}
 nodes:
   # Single program evaluation
   - name: match_prompt
