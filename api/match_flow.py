@@ -279,7 +279,8 @@ class PromptFlowMatcher:
                 flow=self.flow_path,
                 inputs={
                     "candidate_profile": json.dumps(candidate_data),
-                    "program_details": json.dumps(program_data)
+                    "program_details": json.dumps(program_data),
+                    "use_batch": "false"  # Ensure single evaluation mode
                 }
             )
             
