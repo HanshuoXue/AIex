@@ -75,21 +75,21 @@ export default function CandidateForm({
 
   return (
     <div className="bg-white rounded-xl shadow-lg h-full flex flex-col">
-      <div className="p-6 pb-3 border-b border-gray-100">
-        <h2 className="text-xl font-bold text-gray-800">
+      <div className="p-4 pb-2 border-b border-gray-100">
+        <h2 className="text-lg font-bold text-gray-800">
           📋 Candidate Information
         </h2>
       </div>
-
-      <div className="flex-1 overflow-y-auto p-6 pt-4">
-        <form className="space-y-4">
+      
+      <div className="flex-1 overflow-y-auto p-4 pt-2">
+        <form className="space-y-3">
           {/* Academic background */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-gray-700 mb-3">
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <h3 className="font-semibold text-gray-700 mb-2 text-sm">
               🎓 Academic Background
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">
                   Bachelor&apos;s Major
@@ -125,8 +125,8 @@ export default function CandidateForm({
           </div>
 
           {/* English proficiency */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-gray-700 mb-3">
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <h3 className="font-semibold text-gray-700 mb-2 text-sm">
               🗣️ English Proficiency
             </h3>
 
@@ -178,8 +178,8 @@ export default function CandidateForm({
           </div>
 
           {/* Personal preferences */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-gray-700 mb-3">
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <h3 className="font-semibold text-gray-700 mb-2 text-sm">
               💡 Personal Preferences
             </h3>
 
@@ -251,8 +251,8 @@ export default function CandidateForm({
           </div>
 
           {/* Quick template buttons */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-gray-700 mb-3">
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <h3 className="font-semibold text-gray-700 mb-2 text-sm">
               ⚡ Quick Test Templates
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
