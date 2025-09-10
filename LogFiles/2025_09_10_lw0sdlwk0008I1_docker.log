@@ -1,0 +1,99 @@
+2025-09-10T01:36:27.470Z INFO  - 
+
+2025-09-10T07:48:51.370Z INFO  - Pulling image: mcr.microsoft.com/appsvc/msitokenservice:stage5
+2025-09-10T072025-09-10T07:49:26.063Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: 913eb655-0315-4d3d-8396-c7ba9ed0b49d\"}]}"}
+
+2025-09-10T07:49:26.066Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T07:49:26.076Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T07:48:54.539Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T07:51:05.846Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: a0979ad3-aead-4002-bf5c-db5cca23af51\"}]}"}
+
+2025-09-10T07:51:05.848Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T07:51:05.853Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T07:51:11.302Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T07:50:45.731Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T07:56:53.732Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: b180d429-7903-47f0-a7da-f2278790a024\"}]}"}
+
+2025-09-10T07:56:53.733Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T07:56:53.736Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T07:56:59.295Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T07:56:41.059Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T08:54:45.683Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: 3405e5a8-43e5-4a05-b43c-93365bdfad6e\"}]}"}
+
+2025-09-10T08:54:45.688Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T08:54:45.692Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T08:54:51.586Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T08:54:30.378Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T09:05:44.377Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: 7427faf9-e2f1-4b75-b164-9f88eb4d3a69\"}]}"}
+
+2025-09-10T09:05:44.381Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:05:44.384Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:05:49.931Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T09:05:30.305Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T09:12:08.230Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"unauthorized: authentication required, visit https://aka.ms/acr/authorization for more information."}
+
+2025-09-10T09:12:08.232Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:12:08.243Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:12:14.472Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+11:49.895Z INFO  - docker run -d --expose=8081 --name api-alex-12345_0_1c50571b_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=api-alex-12345.azurewebsites.net -e WEBSITE_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T09:11:49.896Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T09:17:01.329Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unknown: "}
+
+2025-09-10T09:17:01.337Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:17:01.360Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:17:07.154Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+site
+2025-09-10T09:16:49.071Z INFO  - docker run -d --expose=8081 --name api-alex-12345_0_40be69b3_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=api-alex-12345.azurewebsites.net -e WEBSITE_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T09:16:49.071Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T09:20:47.274Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"unknown: "}
+
+2025-09-10T09:20:47.275Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:20:47.291Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:20:53.175Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+ken: 0 Seconds
+2025-09-10T09:20:27.100Z INFO  - Starting container for site
+2025-09-10T09:20:27.100Z INFO  - docker run -d --expose=8081 --name api-alex-12345_0_2a4de27f_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=api-alex-12345.azurewebsites.net -e WEBSITE_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T09:20:27.101Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T09:24:21.376Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"unauthorized: authentication required, visit https://aka.ms/acr/authorization for more information."}
+
+2025-09-10T09:24:21.383Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:24:21.385Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:24:26.940Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+24:08.009Z INFO  - docker run -d --expose=8081 --name api-alex-12345_0_4dcf4933_msiProxy -e WEBSITE_ROLE_INSTANCE_ID=0 -e WEBSITE_HOSTNAME=api-alex-12345.azurewebsites.net -e WEBSITE_INSTANCE_ID=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047 mcr.microsoft.com/appsvc/msitokenservice:stage5 REDACTED
+2025-09-10T09:24:08.009Z INFO  - Logging is not enabled for this container.
+Please use https://aka.ms/linux-diagnostics to enable logging to see container logs here.
+2025-09-10T09:33:13.555Z INFO  - Pulling image: alexregistry.azurecr.io/alex-api:latest
+2025-09-10T09:33:13.953Z INFO  - latest Pulling from alex-api
+2025-09-10T09:33:14.028Z INFO  -  
+2025-09-10T09:33:14.029Z ERROR - no matching manifest for linux/amd64 in the manifest list entriesErr: 0, Message: no matching manifest for linux/amd64 in the manifest list entries
+2025-09-10T09:33:14.032Z INFO  - Pull Image failed, Time taken: 0 Seconds
+2025-09-10T09:33:14.033Z ERROR - Pulling docker image alexregistry.azurecr.io/alex-api:latest failed:
+2025-09-10T09:33:14.146Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: a88aabf0-1e69-475c-ae74-a0a348e33006\"}]}"}
+
+2025-09-10T09:33:14.153Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:33:14.161Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:33:20.183Z INFO  - Stopping site api-alex-12345 because it failed during startup.
+2025-09-10T09:40:49.545Z INFO  - Pulling image: alexregistry.azurecr.io/alex-api:latest
+2025-09-10T09:40:49.884Z INFO  - latest Pulling from alex-api
+2025-09-10T09:40:49.896Z INFO  -  
+2025-09-10T09:40:49.896Z ERROR - no matching manifest for linux/amd64 in the manifest list entriesErr: 0, Message: no matching manifest for linux/amd64 in the manifest list entries
+2025-09-10T09:40:49.904Z INFO  - Pull Image failed, Time taken: 0 Seconds
+2025-09-10T09:40:49.904Z ERROR - Pulling docker image alexregistry.azurecr.io/alex-api:latest failed:
+2025-09-10T09:40:50.014Z ERROR - DockerApiException: Docker API responded with status code=InternalServerError, response={"message":"Head \"https://alexregistry.azurecr.io/v2/alex-api/manifests/latest\": unauthorized: {\"errors\":[{\"code\":\"UNAUTHORIZED\",\"message\":\"authentication required, visit https://aka.ms/acr/authorization for more information. CorrelationId: cd7ca017-6c91-43cb-b970-85839e77ac0b\"}]}"}
+
+2025-09-10T09:40:50.015Z WARN  - Image pull failed. Defaulting to local copy if present.
+2025-09-10T09:40:50.018Z ERROR - Image pull failed: Verify docker image configuration and credentials (if using private repository)
+2025-09-10T09:40:55.549Z INFO  - Stopping site api-alex-12345 because it failed during startup.

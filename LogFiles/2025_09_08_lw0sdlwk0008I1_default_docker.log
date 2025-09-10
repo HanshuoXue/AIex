@@ -1,0 +1,90 @@
+2025-09-08T11:12:24.064232923Z    _____                               
+2025-09-08T11:12:24.064275024Z   /  _  \ __________ _________   ____  
+2025-09-08T11:12:24.064278334Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-09-08T11:12:24.064280501Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-09-08T11:12:24.064282394Z \____|__  /_____ \____/ |__|    \___  >
+2025-09-08T11:12:24.064284559Z         \/      \/                  \/ 
+2025-09-08T11:12:24.064286402Z A P P   S E R V I C E   O N   L I N U X
+2025-09-08T11:12:24.064288263Z 
+2025-09-08T11:12:24.064290033Z Documentation: http://aka.ms/webapp-linux
+2025-09-08T11:12:24.064291890Z Python 3.12.11
+2025-09-08T11:12:24.064293720Z Note: Any data outside '/home' is not persisted
+2025-09-08T11:12:36.613783547Z Starting OpenBSD Secure Shell server: sshd.
+2025-09-08T11:12:36.634971819Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-09-08T11:12:36.684539604Z Updating certificates in /etc/ssl/certs...
+2025-09-08T11:12:44.990411055Z 4 added, 0 removed; done.
+2025-09-08T11:12:44.992301836Z Running hooks in /etc/ca-certificates/update.d...
+2025-09-08T11:12:44.992313221Z done.
+2025-09-08T11:12:45.040884168Z CA certificates copied and updated successfully.
+2025-09-08T11:12:45.191171841Z Site's appCommandLine: startup.sh
+2025-09-08T11:12:45.191194634Z App command line is a file on disk
+2025-09-08T11:12:45.191206745Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand startup.sh
+2025-09-08T11:12:45.312692489Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-09-08T11:12:45.312978968Z Could not find operation ID in manifest. Generating an operation id...
+2025-09-08T11:12:45.313426650Z Build Operation ID: ea9faa66-6b7d-45ac-ba1c-0772a779a484
+2025-09-08T11:12:45.484140089Z Oryx Version: 0.2.20250709.3, Commit: 0cfb8cb7d114b65e539d2f9ccf9804e87b9966ba, ReleaseTagName: 20250709.3
+2025-09-08T11:12:45.495965728Z Writing output script to '/opt/startup/startup.sh'
+2025-09-08T11:12:45.543801647Z WARNING: Could not find virtual environment directory /home/site/wwwroot/antenv.
+2025-09-08T11:12:45.543819775Z WARNING: Could not find package directory /home/site/wwwroot/__oryx_packages__.
+2025-09-08T11:12:45.585056603Z /home/site/wwwroot/startup.sh: line 2: uvicorn: command not found
+
+2025-09-08T11:22:11.927279009Z    _____                               
+2025-09-08T11:22:11.927329104Z   /  _  \ __________ _________   ____  
+2025-09-08T11:22:11.927332326Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-09-08T11:22:11.927334463Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-09-08T11:22:11.927336641Z \____|__  /_____ \____/ |__|    \___  >
+2025-09-08T11:22:11.927338827Z         \/      \/                  \/ 
+2025-09-08T11:22:11.927340842Z A P P   S E R V I C E   O N   L I N U X
+2025-09-08T11:22:11.927342626Z 
+2025-09-08T11:22:11.927344242Z Documentation: http://aka.ms/webapp-linux
+2025-09-08T11:22:11.927346029Z Python 3.12.11
+2025-09-08T11:22:11.927347809Z Note: Any data outside '/home' is not persisted
+2025-09-08T11:22:21.752976578Z Starting OpenBSD Secure Shell server: sshd.
+2025-09-08T11:22:21.862640109Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-09-08T11:22:21.933333298Z Updating certificates in /etc/ssl/certs...
+2025-09-08T11:22:37.395081451Z 4 added, 0 removed; done.
+2025-09-08T11:22:37.395108163Z Running hooks in /etc/ca-certificates/update.d...
+2025-09-08T11:22:37.465396530Z done.
+2025-09-08T11:22:37.484485873Z CA certificates copied and updated successfully.
+2025-09-08T11:22:37.735349845Z Site's appCommandLine: startup.sh
+2025-09-08T11:22:37.745311479Z App command line is a file on disk
+2025-09-08T11:22:37.774186290Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand startup.sh
+2025-09-08T11:22:37.986148431Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-09-08T11:22:37.986174980Z Could not find operation ID in manifest. Generating an operation id...
+2025-09-08T11:22:38.044766134Z Build Operation ID: 544de21a-5e41-4c00-8f4d-ab5fa9f3d324
+2025-09-08T11:22:38.357159581Z Oryx Version: 0.2.20250709.3, Commit: 0cfb8cb7d114b65e539d2f9ccf9804e87b9966ba, ReleaseTagName: 20250709.3
+2025-09-08T11:22:38.368974602Z Writing output script to '/opt/startup/startup.sh'
+2025-09-08T11:22:38.507035006Z WARNING: Could not find virtual environment directory /home/site/wwwroot/antenv.
+2025-09-08T11:22:38.507062571Z WARNING: Could not find package directory /home/site/wwwroot/__oryx_packages__.
+2025-09-08T11:22:38.538719506Z /home/site/wwwroot/startup.sh: line 2: uvicorn: command not found
+
+2025-09-08T11:27:49.410039231Z    _____                               
+2025-09-08T11:27:49.410083589Z   /  _  \ __________ _________   ____  
+2025-09-08T11:27:49.410086752Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2025-09-08T11:27:49.410088875Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2025-09-08T11:27:49.410090744Z \____|__  /_____ \____/ |__|    \___  >
+2025-09-08T11:27:49.410093357Z         \/      \/                  \/ 
+2025-09-08T11:27:49.410095263Z A P P   S E R V I C E   O N   L I N U X
+2025-09-08T11:27:49.410097124Z 
+2025-09-08T11:27:49.410098771Z Documentation: http://aka.ms/webapp-linux
+2025-09-08T11:27:49.410100634Z Python 3.12.11
+2025-09-08T11:27:49.410102374Z Note: Any data outside '/home' is not persisted
+2025-09-08T11:27:56.495836895Z Starting OpenBSD Secure Shell server: sshd.
+2025-09-08T11:27:56.558015429Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2025-09-08T11:27:56.629264769Z Updating certificates in /etc/ssl/certs...
+2025-09-08T11:28:15.533606088Z 4 added, 0 removed; done.
+2025-09-08T11:28:15.534510027Z Running hooks in /etc/ca-certificates/update.d...
+2025-09-08T11:28:15.623299147Z done.
+2025-09-08T11:28:15.623310573Z CA certificates copied and updated successfully.
+2025-09-08T11:28:15.712920450Z Site's appCommandLine: startup.sh
+2025-09-08T11:28:15.712937927Z App command line is a file on disk
+2025-09-08T11:28:15.712941121Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand startup.sh
+2025-09-08T11:28:15.904176502Z Could not find build manifest file at '/home/site/wwwroot/oryx-manifest.toml'
+2025-09-08T11:28:15.904976033Z Could not find operation ID in manifest. Generating an operation id...
+2025-09-08T11:28:15.905702937Z Build Operation ID: ab262c4c-6221-4005-af9c-8c0de59aee3b
+2025-09-08T11:28:16.458706826Z Oryx Version: 0.2.20250709.3, Commit: 0cfb8cb7d114b65e539d2f9ccf9804e87b9966ba, ReleaseTagName: 20250709.3
+2025-09-08T11:28:16.487317193Z Writing output script to '/opt/startup/startup.sh'
+2025-09-08T11:28:16.548145624Z WARNING: Could not find virtual environment directory /home/site/wwwroot/antenv.
+2025-09-08T11:28:16.548903992Z WARNING: Could not find package directory /home/site/wwwroot/__oryx_packages__.
+2025-09-08T11:28:16.600360584Z /home/site/wwwroot/startup.sh: line 2: uvicorn: command not found
+

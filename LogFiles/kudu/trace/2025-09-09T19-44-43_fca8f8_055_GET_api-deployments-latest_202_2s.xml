@@ -1,0 +1,11 @@
+<step title="Incoming Request" date="2025-09-09T19:44:43.045" instance="fca8f8" url="/api/deployments/latest?deployer=OneDeploy&amp;time=2025-09-09_19-38-15Z" method="GET" type="request" pid="769,1,20" Host="api-alex-12345.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployWebAppToAzure_93b2a8734c166ac70374b214e038f5641fc9b695d39cc946faded8ce607cf795" Authorization="Bas..." Content-Type="application/json; charset=utf-8" Cookie="ARRAffinity=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047;Path=/;HttpOnly;Secure;Domain=api-alex-12345.scm.azurewebsites.net; ARRAffinitySameSite=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047;Path=/;HttpOnly;SameSite=None;Secure;Domain=api-alex-12345.scm.azurewebsites.net" Content-Length="0" X-ARR-LOG-ID="21ebf8fd-4053-438c-8393-67936eed2a1c" CLIENT-IP="20.171.125.134:17410" X-SITE-DEPLOYMENT-ID="api-alex-12345" WAS-DEFAULT-HOSTNAME="api-alex-12345.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest?deployer=OneDeploy&amp;time=2025-09-09_19-38-15Z" X-Client-IP="20.171.125.134" X-Client-Port="17410" >
+  <step title="Cleanup Xml Logs" date="2025-09-09T19:44:43.050" >
+    <step title="Cleanup Infos" date="2025-09-09T19:44:43.113" totalFiles="1812" totalCleanup="1652" /><!-- duration: 7ms -->
+  </step><!-- duration: 71ms -->
+  <step title="DeploymentService.GetResult" date="2025-09-09T19:44:43.132" >
+    <step title="DeploymentService.GetLatestDeployment" date="2025-09-09T19:44:43.135" >
+      <step title="DeploymentManager.GetResults" date="2025-09-09T19:44:43.137" /><!-- duration: 2143ms -->
+    </step><!-- duration: 2152ms -->
+  </step><!-- duration: 2157ms -->
+  <step title="Outgoing response" date="2025-09-09T19:44:45.291" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 8ms -->
+</step><!-- duration: 2255ms -->

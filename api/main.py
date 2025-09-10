@@ -24,6 +24,10 @@ app.add_middleware(
 def healthz():
     return {"ok": True}  # Health check endpoint
 
+@app.get("/health")
+def health():
+    return {"status": "healthy"}  # Docker health check endpoint
+
 @app.get("/debug")
 def debug_info():
     """Debug endpoint to check paths and environment"""

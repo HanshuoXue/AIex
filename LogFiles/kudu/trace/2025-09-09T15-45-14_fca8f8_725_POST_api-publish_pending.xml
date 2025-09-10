@@ -1,0 +1,14 @@
+<step title="Incoming Request" date="2025-09-09T15:45:14.467" instance="fca8f8" url="/api/publish?async=true&amp;deployer=GITHUB_ONE_DEPLOY&amp;type=zip&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%226384a9519cfc29fc43a8ffda4fe278a187d711a5%22%2C%22repoName%22%3A%22HanshuoXue%2FAIex%22%2C%22actor%22%3A%22HanshuoXue%22%2C%22slotName%22%3A%22production%22%2C%22commitMessage%22%3A%22%22%7D" method="POST" type="request" pid="771,1,15" Host="api-alex-12345.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployWebAppToAzure_93b2a8734c166ac70374b214e038f5641fc9b695d39cc946faded8ce607cf795" Authorization="Bas..." Content-Type="application/octet-stream" Cookie="ARRAffinity=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047;Path=/;HttpOnly;Secure;Domain=api-alex-12345.scm.azurewebsites.net; ARRAffinitySameSite=fca8f86e2aee5216a9504a5ef5a82caeab7a80b1093c88842a262c639a933047;Path=/;HttpOnly;SameSite=None;Secure;Domain=api-alex-12345.scm.azurewebsites.net" Transfer-Encoding="chunked" X-ARR-LOG-ID="65134ce6-0680-4104-a27e-d81fe4c5a391" CLIENT-IP="52.159.243.25:59456" X-SITE-DEPLOYMENT-ID="api-alex-12345" WAS-DEFAULT-HOSTNAME="api-alex-12345.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/publish?async=true&amp;deployer=GITHUB_ONE_DEPLOY&amp;type=zip&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%226384a9519cfc29fc43a8ffda4fe278a187d711a5%22%2C%22repoName%22%3A%22HanshuoXue%2FAIex%22%2C%22actor%22%3A%22HanshuoXue%22%2C%22slotName%22%3A%22production%22%2C%22commitMessage%22%3A%22%22%7D" X-Client-IP="52.159.243.25" X-Client-Port="59456" >
+  <step title="OneDeploy" date="2025-09-09T15:45:14.536" >
+    <step title="Starting PushDeployAsync" date="2025-09-09T15:45:14.565" /><!-- duration: 40ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/5d770b09-c6f6-4b56-8637-35c87f8afba7.zip" date="2025-09-09T15:45:14.706" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/5d770b09-c6f6-4b56-8637-35c87f8afba7.zip" date="2025-09-09T15:45:14.716" /><!-- duration: 10ms -->
+    </step><!-- duration: 16845ms -->
+    <step title="Removing previous build artifact&apos;s manifest file" date="2025-09-09T15:45:31.592" >
+      <step title="Start deployment in the background" date="2025-09-09T15:45:31.714" >
+        <step title="Acquiring Deployment Lock" date="2025-09-09T15:45:31.934" /><!-- duration: 21ms -->
+        <step title="Acquired Deployment Lock" date="2025-09-09T15:45:32.126" /><!-- duration: 28ms -->
+      </step><!-- duration: 762ms -->
+    </step><!-- duration: 996ms -->
+    <step title="Outgoing response" date="2025-09-09T15:45:32.657" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 12ms -->
+  </step><!-- duration: 18152ms -->

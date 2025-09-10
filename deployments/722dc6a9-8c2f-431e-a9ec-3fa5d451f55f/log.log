@@ -1,0 +1,463 @@
+2025-09-09T18:34:43.2792965Z,Updating submodules.,c95dad27-d04a-4bec-8623-c9c9f7687c02,0
+2025-09-09T18:34:44.6787550Z,Preparing deployment for commit id '722dc6a9-8'.,fe362fe6-a00c-4d06-bccb-3bb1b686e08b,0
+2025-09-09T18:34:45.9831623Z,PreDeployment: context.CleanOutputPath False,b1c39251-bc18-4561-b4fe-54140449c701,0
+2025-09-09T18:34:46.5877560Z,PreDeployment: context.OutputPath /home/site/wwwroot,97c28a7c-ddd3-4940-82ff-099359b0f3fc,0
+2025-09-09T18:34:47.3903317Z,Repository path is /tmp/zipdeploy/extracted,681f87be-971e-44f7-9349-3a65e6d778b0,0
+2025-09-09T18:34:47.8846409Z,Running oryx build...,9ce717e7-c542-41e9-bc54-5ad75b05c879,0
+	2025-09-09T18:34:47.9445925Z,Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.12 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddefcf8c931385 --compress-destination-dir | tee /tmp/oryx-build.log,,0
+	2025-09-09T18:34:55.0001880Z,Operation performed by Microsoft Oryx&comma; https://github.com/Microsoft/Oryx,,0
+	2025-09-09T18:34:55.0508216Z,You can report issues at https://github.com/Microsoft/Oryx/issues,,0
+	2025-09-09T18:34:55.0907493Z,,,0
+	2025-09-09T18:34:55.1614900Z,Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493&comma; Commit: 0649de32f1279969c9023dd41b389cce4bb94493&comma; ReleaseTagName: 20250611.1,,0
+	2025-09-09T18:34:55.1738407Z,,,0
+	2025-09-09T18:34:55.2633412Z,Build Operation ID: 1a830c4397bba753,,0
+	2025-09-09T18:34:55.2925945Z,Repository Commit : 722dc6a9-8c2f-431e-a9ec-3fa5d451f55f,,0
+	2025-09-09T18:34:55.3427997Z,OS Type           : bullseye,,0
+	2025-09-09T18:34:55.3931898Z,Image Type        : githubactions,,0
+	2025-09-09T18:34:55.4226644Z,,,0
+	2025-09-09T18:34:55.4263337Z,Primary SDK Storage URL: https://oryx-cdn.microsoft.io,,0
+	2025-09-09T18:34:55.4425061Z,Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net,,0
+	2025-09-09T18:34:55.4737871Z,Detecting platforms...,,0
+	2025-09-09T18:34:58.3380561Z,Detected following platforms:,,0
+	2025-09-09T18:34:58.3778967Z,  python: 3.12.11,,0
+	2025-09-09T18:34:59.0514845Z,,,0
+	2025-09-09T18:34:59.1823695Z,Using intermediate directory '/tmp/8ddefcf8c931385'.,,0
+	2025-09-09T18:34:59.2139609Z,,,0
+	2025-09-09T18:34:59.2344830Z,Copying files to the intermediate directory...,,0
+	2025-09-09T18:34:59.2842172Z,Done in 0 sec(s).,,0
+	2025-09-09T18:34:59.3323634Z,,,0
+	2025-09-09T18:34:59.3649627Z,Source directory     : /tmp/8ddefcf8c931385,,0
+	2025-09-09T18:34:59.4327500Z,Destination directory: /home/site/wwwroot,,0
+	2025-09-09T18:34:59.4739337Z,,,0
+	2025-09-09T18:35:00.1477995Z,Python Version: /tmp/oryx/platforms/python/3.12.11/bin/python3.12,,0
+	2025-09-09T18:35:00.2063499Z,Creating directory for command manifest file if it does not exist,,0
+	2025-09-09T18:35:00.3000994Z,Removing existing manifest file,,0
+	2025-09-09T18:35:00.3798701Z,Python Virtual Environment: antenv,,0
+	2025-09-09T18:35:00.5598410Z,Creating virtual environment...,,0
+	2025-09-09T18:35:19.5690350Z,Activating virtual environment...,,0
+	2025-09-09T18:35:19.6612372Z,Running pip install...,,0
+	2025-09-09T18:39:07.4617138Z,[18:35:22+0000] Collecting annotated-types==0.7.0 (from -r requirements.txt (line 1)),,0
+	2025-09-09T18:39:07.4889833Z,[18:35:23+0000]   Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB),,0
+	2025-09-09T18:39:07.4995326Z,[18:35:23+0000] Collecting anyio==4.10.0 (from -r requirements.txt (line 2)),,0
+	2025-09-09T18:39:07.5098841Z,[18:35:23+0000]   Using cached anyio-4.10.0-py3-none-any.whl.metadata (4.0 kB),,0
+	2025-09-09T18:39:07.5809556Z,[18:35:23+0000] Collecting click==8.2.1 (from -r requirements.txt (line 3)),,0
+	2025-09-09T18:39:07.6099800Z,[18:35:23+0000]   Using cached click-8.2.1-py3-none-any.whl.metadata (2.5 kB),,0
+	2025-09-09T18:39:07.6305595Z,[18:35:23+0000] Collecting exceptiongroup==1.3.0 (from -r requirements.txt (line 4)),,0
+	2025-09-09T18:39:07.6496967Z,[18:35:23+0000]   Using cached exceptiongroup-1.3.0-py3-none-any.whl.metadata (6.7 kB),,0
+	2025-09-09T18:39:07.6602372Z,[18:35:23+0000] Collecting fastapi==0.116.1 (from -r requirements.txt (line 5)),,0
+	2025-09-09T18:39:07.6808137Z,[18:35:23+0000]   Using cached fastapi-0.116.1-py3-none-any.whl.metadata (28 kB),,0
+	2025-09-09T18:39:07.7030236Z,[18:35:23+0000] Collecting h11==0.16.0 (from -r requirements.txt (line 6)),,0
+	2025-09-09T18:39:07.7515184Z,[18:35:23+0000]   Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB),,0
+	2025-09-09T18:39:07.7701297Z,[18:35:24+0000] Collecting httptools==0.6.4 (from -r requirements.txt (line 7)),,0
+	2025-09-09T18:39:07.8012388Z,[18:35:24+0000]   Using cached httptools-0.6.4-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.6 kB),,0
+	2025-09-09T18:39:07.8608449Z,[18:35:24+0000] Collecting idna==3.10 (from -r requirements.txt (line 8)),,0
+	2025-09-09T18:39:07.8732385Z,[18:35:24+0000]   Using cached idna-3.10-py3-none-any.whl.metadata (10 kB),,0
+	2025-09-09T18:39:07.9021240Z,[18:35:24+0000] Collecting pydantic==2.11.7 (from -r requirements.txt (line 9)),,0
+	2025-09-09T18:39:07.9435908Z,[18:35:24+0000]   Using cached pydantic-2.11.7-py3-none-any.whl.metadata (67 kB),,0
+	2025-09-09T18:39:07.9736771Z,[18:35:28+0000] Collecting pydantic_core==2.33.2 (from -r requirements.txt (line 10)),,0
+	2025-09-09T18:39:08.0117612Z,[18:35:28+0000]   Using cached pydantic_core-2.33.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB),,0
+	2025-09-09T18:39:08.0333386Z,[18:35:29+0000] Collecting python-dotenv==1.1.1 (from -r requirements.txt (line 11)),,0
+	2025-09-09T18:39:08.0649177Z,[18:35:29+0000]   Using cached python_dotenv-1.1.1-py3-none-any.whl.metadata (24 kB),,0
+	2025-09-09T18:39:08.1528971Z,[18:35:29+0000] Collecting PyYAML==6.0.2 (from -r requirements.txt (line 12)),,0
+	2025-09-09T18:39:08.2143753Z,[18:35:29+0000]   Using cached PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB),,0
+	2025-09-09T18:39:08.2859696Z,[18:35:29+0000] Collecting sniffio==1.3.1 (from -r requirements.txt (line 13)),,0
+	2025-09-09T18:39:08.3657697Z,[18:35:29+0000]   Using cached sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB),,0
+	2025-09-09T18:39:08.4149008Z,[18:35:29+0000] Collecting starlette==0.47.3 (from -r requirements.txt (line 14)),,0
+	2025-09-09T18:39:08.4358076Z,[18:35:29+0000]   Using cached starlette-0.47.3-py3-none-any.whl.metadata (6.2 kB),,0
+	2025-09-09T18:39:08.4572230Z,[18:35:29+0000] Collecting typing-inspection==0.4.1 (from -r requirements.txt (line 15)),,0
+	2025-09-09T18:39:08.5146267Z,[18:35:29+0000]   Using cached typing_inspection-0.4.1-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:39:08.5676103Z,[18:35:29+0000] Collecting typing_extensions==4.15.0 (from -r requirements.txt (line 16)),,0
+	2025-09-09T18:39:08.6079655Z,[18:35:29+0000]   Using cached typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB),,0
+	2025-09-09T18:39:08.6770823Z,[18:35:30+0000] Collecting uvicorn==0.35.0 (from -r requirements.txt (line 17)),,0
+	2025-09-09T18:39:08.7361202Z,[18:35:30+0000]   Using cached uvicorn-0.35.0-py3-none-any.whl.metadata (6.5 kB),,0
+	2025-09-09T18:39:08.7963050Z,[18:35:30+0000] Collecting uvloop==0.21.0 (from -r requirements.txt (line 18)),,0
+	2025-09-09T18:39:08.8390155Z,[18:35:30+0000]   Using cached uvloop-0.21.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB),,0
+	2025-09-09T18:39:08.9074389Z,[18:35:30+0000] Collecting watchfiles==1.1.0 (from -r requirements.txt (line 19)),,0
+	2025-09-09T18:39:08.9877416Z,[18:35:30+0000]   Using cached watchfiles-1.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB),,0
+	2025-09-09T18:39:09.0189001Z,[18:35:31+0000] Collecting websockets==15.0.1 (from -r requirements.txt (line 20)),,0
+	2025-09-09T18:39:09.0801333Z,[18:35:31+0000]   Using cached websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB),,0
+	2025-09-09T18:39:09.1201373Z,[18:35:31+0000] Collecting azure-search-documents (from -r requirements.txt (line 22)),,0
+	2025-09-09T18:39:09.2605326Z,[18:35:31+0000]   Using cached azure_search_documents-11.5.3-py3-none-any.whl.metadata (23 kB),,0
+	2025-09-09T18:39:09.3214860Z,[18:35:31+0000] Collecting azure-core (from -r requirements.txt (line 23)),,0
+	2025-09-09T18:39:09.4402640Z,[18:35:31+0000]   Using cached azure_core-1.35.0-py3-none-any.whl.metadata (44 kB),,0
+	2025-09-09T18:39:09.5329694Z,[18:35:31+0000] Collecting azure-identity (from -r requirements.txt (line 24)),,0
+	2025-09-09T18:39:09.7133182Z,[18:35:31+0000]   Using cached azure_identity-1.24.0-py3-none-any.whl.metadata (86 kB),,0
+	2025-09-09T18:39:09.8217733Z,[18:35:31+0000] Collecting promptflow (from -r requirements.txt (line 25)),,0
+	2025-09-09T18:39:09.8941534Z,[18:35:31+0000]   Using cached promptflow-1.18.1-py3-none-any.whl.metadata (28 kB),,0
+	2025-09-09T18:39:09.9944629Z,[18:35:31+0000] Collecting azure-ai-ml (from -r requirements.txt (line 26)),,0
+	2025-09-09T18:39:10.0539556Z,[18:35:31+0000]   Using cached azure_ai_ml-1.29.0-py3-none-any.whl.metadata (40 kB),,0
+	2025-09-09T18:39:10.1053929Z,[18:35:32+0000] Collecting openai (from -r requirements.txt (line 27)),,0
+	2025-09-09T18:39:10.1840195Z,[18:35:32+0000]   Using cached openai-1.107.0-py3-none-any.whl.metadata (29 kB),,0
+	2025-09-09T18:39:10.2268402Z,[18:35:32+0000] Collecting gunicorn (from -r requirements.txt (line 29)),,0
+	2025-09-09T18:39:10.4362096Z,[18:35:32+0000]   Using cached gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB),,0
+	2025-09-09T18:39:10.4962718Z,[18:35:33+0000] Collecting azure-common>=1.1 (from azure-search-documents->-r requirements.txt (line 22)),,0
+	2025-09-09T18:39:10.5970987Z,[18:35:33+0000]   Using cached azure_common-1.1.28-py2.py3-none-any.whl.metadata (5.0 kB),,0
+	2025-09-09T18:39:10.6572937Z,[18:35:33+0000] Collecting isodate>=0.6.0 (from azure-search-documents->-r requirements.txt (line 22)),,0
+	2025-09-09T18:39:10.7582923Z,[18:35:34+0000]   Using cached isodate-0.7.2-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:39:10.8298256Z,[18:35:34+0000] Collecting requests>=2.21.0 (from azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:39:10.8695380Z,[18:35:34+0000]   Using cached requests-2.32.5-py3-none-any.whl.metadata (4.9 kB),,0
+	2025-09-09T18:39:10.8998883Z,[18:35:34+0000] Collecting six>=1.11.0 (from azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:39:10.9784155Z,[18:35:34+0000]   Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB),,0
+	2025-09-09T18:39:11.0320174Z,[18:35:35+0000] Collecting cryptography>=2.5 (from azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:39:11.1595384Z,[18:35:35+0000]   Using cached cryptography-45.0.7-cp311-abi3-manylinux_2_28_x86_64.whl.metadata (5.7 kB),,0
+	2025-09-09T18:39:11.1899541Z,[18:35:35+0000] Collecting msal>=1.30.0 (from azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:39:11.2403753Z,[18:35:35+0000]   Using cached msal-1.33.0-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:39:11.2914438Z,[18:35:35+0000] Collecting msal-extensions>=1.2.0 (from azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:39:11.3318460Z,[18:35:35+0000]   Using cached msal_extensions-1.3.1-py3-none-any.whl.metadata (7.8 kB),,0
+	2025-09-09T18:39:11.4111808Z,[18:35:35+0000] Collecting promptflow-tracing==1.18.1 (from promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:11.4421302Z,[18:35:35+0000]   Using cached promptflow_tracing-1.18.1-py3-none-any.whl.metadata (2.2 kB),,0
+	2025-09-09T18:39:11.4826641Z,[18:35:35+0000] Collecting promptflow-core==1.18.1 (from promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:11.5136433Z,[18:35:35+0000]   Using cached promptflow_core-1.18.1-py3-none-any.whl.metadata (2.7 kB),,0
+	2025-09-09T18:39:11.5729869Z,[18:35:35+0000] Collecting promptflow-devkit==1.18.1 (from promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:11.6238862Z,[18:35:35+0000]   Using cached promptflow_devkit-1.18.1-py3-none-any.whl.metadata (5.7 kB),,0
+	2025-09-09T18:39:11.6841379Z,[18:35:36+0000] Collecting docstring_parser (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:11.7256830Z,[18:35:36+0000]   Using cached docstring_parser-0.17.0-py3-none-any.whl.metadata (3.5 kB),,0
+	2025-09-09T18:39:11.7652495Z,[18:35:36+0000] Collecting filetype>=1.2.0 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:11.8456958Z,[18:35:36+0000]   Using cached filetype-1.2.0-py2.py3-none-any.whl.metadata (6.5 kB),,0
+	2025-09-09T18:39:11.8946297Z,[18:35:36+0000] Collecting flask<4.0.0&comma;>=2.2.3 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:11.9951643Z,[18:35:36+0000]   Using cached flask-3.1.2-py3-none-any.whl.metadata (3.2 kB),,0
+	2025-09-09T18:39:12.0245709Z,[18:35:36+0000] Collecting jsonschema<5.0.0&comma;>=4.0.0 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.0758776Z,[18:35:36+0000]   Using cached jsonschema-4.25.1-py3-none-any.whl.metadata (7.6 kB),,0
+	2025-09-09T18:39:12.1249147Z,[18:35:37+0000] Collecting psutil (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.1753854Z,[18:35:37+0000]   Using cached psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (22 kB),,0
+	2025-09-09T18:39:12.2382496Z,[18:35:37+0000] Collecting python-dateutil<3.0.0&comma;>=2.1.0 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.3084631Z,[18:35:37+0000]   Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB),,0
+	2025-09-09T18:39:12.3587874Z,[18:35:37+0000] Collecting ruamel.yaml<1.0.0&comma;>=0.17.10 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.4175094Z,[18:35:37+0000]   Using cached ruamel.yaml-0.18.15-py3-none-any.whl.metadata (25 kB),,0
+	2025-09-09T18:39:12.4784115Z,[18:35:37+0000] Collecting argcomplete>=3.2.3 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.5299832Z,[18:35:37+0000]   Using cached argcomplete-3.6.2-py3-none-any.whl.metadata (16 kB),,0
+	2025-09-09T18:39:12.5877665Z,[18:35:38+0000] Collecting azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.6299140Z,[18:35:38+0000]   Using cached azure_monitor_opentelemetry_exporter-1.0.0b41-py2.py3-none-any.whl.metadata (33 kB),,0
+	2025-09-09T18:39:12.6882171Z,[18:35:38+0000] Collecting colorama<0.5.0&comma;>=0.4.6 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.7383782Z,[18:35:38+0000]   Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB),,0
+	2025-09-09T18:39:12.8012954Z,[18:35:38+0000] Collecting filelock<4.0.0&comma;>=3.4.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.8495655Z,[18:35:38+0000]   Using cached filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB),,0
+	2025-09-09T18:39:12.8997070Z,[18:35:38+0000] Collecting flask-cors<7.0.0&comma;>=6.0.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.9215796Z,[18:35:38+0000]   Using cached flask_cors-6.0.1-py3-none-any.whl.metadata (5.3 kB),,0
+	2025-09-09T18:39:12.9405143Z,[18:35:38+0000] Collecting flask-restx<2.0.0&comma;>=1.2.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:12.9517937Z,[18:35:38+0000]   Using cached flask_restx-1.3.0-py2.py3-none-any.whl.metadata (9.3 kB),,0
+	2025-09-09T18:39:13.0025833Z,[18:35:38+0000] Collecting gitpython<4.0.0&comma;>=3.1.24 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.0612552Z,[18:35:38+0000]   Using cached gitpython-3.1.45-py3-none-any.whl.metadata (13 kB),,0
+	2025-09-09T18:39:13.1025695Z,[18:35:38+0000] Collecting httpx>=0.25.1 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.1923816Z,[18:35:38+0000]   Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB),,0
+	2025-09-09T18:39:13.2715271Z,[18:35:39+0000] Collecting keyring<25.0.0&comma;>=24.2.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.3320769Z,[18:35:39+0000]   Using cached keyring-24.3.1-py3-none-any.whl.metadata (20 kB),,0
+	2025-09-09T18:39:13.4132908Z,[18:35:39+0000] Collecting marshmallow<4.0.0&comma;>=3.5 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.5046903Z,[18:35:39+0000]   Using cached marshmallow-3.26.1-py3-none-any.whl.metadata (7.3 kB),,0
+	2025-09-09T18:39:13.5561921Z,[18:35:39+0000] Collecting opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.6866800Z,[18:35:39+0000]   Using cached opentelemetry_exporter_otlp_proto_http-1.36.0-py3-none-any.whl.metadata (2.3 kB),,0
+	2025-09-09T18:39:13.8656453Z,[18:35:39+0000] Collecting pandas<3.0.0&comma;>=1.5.3 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.8951175Z,[18:35:39+0000]   Using cached pandas-2.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (91 kB),,0
+	2025-09-09T18:39:13.9366600Z,[18:35:40+0000] Collecting pillow<11.1.0&comma;>=10.1.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:13.9768584Z,[18:35:40+0000]   Using cached pillow-11.0.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.1 kB),,0
+	2025-09-09T18:39:13.9957425Z,[18:35:40+0000] Collecting pydash<8.0.0&comma;>=6.0.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.0667661Z,[18:35:40+0000]   Using cached pydash-7.0.7-py3-none-any.whl.metadata (45 kB),,0
+	2025-09-09T18:39:14.1088315Z,[18:35:42+0000] Collecting sqlalchemy<3.0.0&comma;>=1.4.48 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.1894441Z,[18:35:42+0000]   Using cached sqlalchemy-2.0.43-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB),,0
+	2025-09-09T18:39:14.2571131Z,[18:35:42+0000] Collecting strictyaml<2.0.0&comma;>=1.5.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.2997106Z,[18:35:42+0000]   Using cached strictyaml-1.7.3-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:39:14.3395990Z,[18:35:42+0000] Collecting tabulate<1.0.0&comma;>=0.9.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.4179972Z,[18:35:42+0000]   Using cached tabulate-0.9.0-py3-none-any.whl.metadata (34 kB),,0
+	2025-09-09T18:39:14.4307288Z,[18:35:42+0000] Collecting waitress<4.0.0&comma;>=3.0.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.4992502Z,[18:35:42+0000]   Using cached waitress-3.0.2-py3-none-any.whl.metadata (5.8 kB),,0
+	2025-09-09T18:39:14.5505348Z,[18:35:42+0000] Collecting opentelemetry-sdk<2.0.0&comma;>=1.22.0 (from promptflow-tracing==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.6201710Z,[18:35:42+0000]   Using cached opentelemetry_sdk-1.36.0-py3-none-any.whl.metadata (1.5 kB),,0
+	2025-09-09T18:39:14.6622100Z,[18:35:42+0000] Collecting tiktoken>=0.4.0 (from promptflow-tracing==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:14.7229659Z,[18:35:42+0000]   Using cached tiktoken-0.11.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB),,0
+	2025-09-09T18:39:14.7922523Z,[18:35:42+0000] Collecting azure-mgmt-core>=1.3.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:14.8417343Z,[18:35:42+0000]   Using cached azure_mgmt_core-1.6.0-py3-none-any.whl.metadata (4.6 kB),,0
+	2025-09-09T18:39:14.8632180Z,[18:35:43+0000] Collecting tqdm<5.0.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:14.9339797Z,[18:35:43+0000]   Using cached tqdm-4.67.1-py3-none-any.whl.metadata (57 kB),,0
+	2025-09-09T18:39:14.9844553Z,[18:35:43+0000] Collecting pyjwt<3.0.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:15.0035716Z,[18:35:43+0000]   Using cached PyJWT-2.10.1-py3-none-any.whl.metadata (4.0 kB),,0
+	2025-09-09T18:39:15.0335708Z,[18:35:43+0000] Collecting azure-storage-blob>=12.10.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:15.0818262Z,[18:35:43+0000]   Using cached azure_storage_blob-12.26.0-py3-none-any.whl.metadata (26 kB),,0
+	2025-09-09T18:39:15.0940773Z,[18:35:43+0000] Collecting azure-storage-file-share (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:15.1420657Z,[18:35:43+0000]   Using cached azure_storage_file_share-12.22.0-py3-none-any.whl.metadata (50 kB),,0
+	2025-09-09T18:39:15.1535080Z,[18:35:43+0000] Collecting azure-storage-file-datalake>=12.2.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:15.2131589Z,[18:35:43+0000]   Using cached azure_storage_file_datalake-12.21.0-py3-none-any.whl.metadata (16 kB),,0
+	2025-09-09T18:39:15.2736018Z,[18:35:43+0000] Collecting azure-monitor-opentelemetry (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:15.3460861Z,[18:35:43+0000]   Using cached azure_monitor_opentelemetry-1.8.0-py3-none-any.whl.metadata (23 kB),,0
+	2025-09-09T18:39:15.4056549Z,[18:35:43+0000] Collecting distro<2&comma;>=1.7.0 (from openai->-r requirements.txt (line 27)),,0
+	2025-09-09T18:39:15.4656427Z,[18:35:43+0000]   Using cached distro-1.9.0-py3-none-any.whl.metadata (6.8 kB),,0
+	2025-09-09T18:39:15.5268550Z,[18:35:44+0000] Collecting jiter<1&comma;>=0.4.0 (from openai->-r requirements.txt (line 27)),,0
+	2025-09-09T18:39:15.6263022Z,[18:35:44+0000]   Using cached jiter-0.10.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB),,0
+	2025-09-09T18:39:15.6668188Z,[18:35:44+0000] Collecting packaging (from gunicorn->-r requirements.txt (line 29)),,0
+	2025-09-09T18:39:15.7679695Z,[18:35:44+0000]   Using cached packaging-25.0-py3-none-any.whl.metadata (3.3 kB),,0
+	2025-09-09T18:39:15.8363429Z,[18:35:45+0000] Collecting cffi>=1.14 (from cryptography>=2.5->azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:39:15.9592577Z,[18:35:45+0000]   Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB),,0
+	2025-09-09T18:39:16.0699166Z,[18:35:45+0000] Collecting certifi (from httpx>=0.25.1->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:16.1299729Z,[18:35:45+0000]   Using cached certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB),,0
+	2025-09-09T18:39:16.2191034Z,[18:35:45+0000] Collecting httpcore==1.* (from httpx>=0.25.1->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:16.2504813Z,[18:35:45+0000]   Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB),,0
+	2025-09-09T18:39:16.2894450Z,[18:35:45+0000] Collecting attrs>=22.2.0 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:16.3512921Z,[18:35:45+0000]   Using cached attrs-25.3.0-py3-none-any.whl.metadata (10 kB),,0
+	2025-09-09T18:39:16.3995226Z,[18:35:45+0000] Collecting jsonschema-specifications>=2023.03.6 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:16.4402976Z,[18:35:45+0000]   Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB),,0
+	2025-09-09T18:39:16.4616533Z,[18:35:45+0000] Collecting referencing>=0.28.4 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:16.5006812Z,[18:35:45+0000]   Using cached referencing-0.36.2-py3-none-any.whl.metadata (2.8 kB),,0
+	2025-09-09T18:39:16.5231668Z,[18:35:46+0000] Collecting rpds-py>=0.7.1 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:16.5735232Z,[18:35:46+0000]   Using cached rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB),,0
+	2025-09-09T18:39:16.6328160Z,[18:35:47+0000] Collecting charset_normalizer<4&comma;>=2 (from requests>=2.21.0->azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:39:16.6725465Z,[18:35:47+0000]   Using cached charset_normalizer-3.4.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB),,0
+	2025-09-09T18:39:16.7436433Z,[18:35:47+0000] Collecting urllib3<3&comma;>=1.21.1 (from requests>=2.21.0->azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:39:16.7845331Z,[18:35:47+0000]   Using cached urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB),,0
+	2025-09-09T18:39:16.8448539Z,[18:35:47+0000] Collecting azure-core-tracing-opentelemetry~=1.0.0b11 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:16.8929617Z,[18:35:47+0000]   Using cached azure_core_tracing_opentelemetry-1.0.0b12-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:39:16.9327232Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-django~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:16.9844097Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_django-0.57b0-py3-none-any.whl.metadata (2.3 kB),,0
+	2025-09-09T18:39:17.1341916Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-fastapi~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.1943215Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_fastapi-0.57b0-py3-none-any.whl.metadata (2.2 kB),,0
+	2025-09-09T18:39:17.2353963Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-flask~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.3174398Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_flask-0.57b0-py3-none-any.whl.metadata (2.2 kB),,0
+	2025-09-09T18:39:17.4264767Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-psycopg2~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.4656789Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_psycopg2-0.57b0-py3-none-any.whl.metadata (2.1 kB),,0
+	2025-09-09T18:39:17.5265500Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-requests~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.5480151Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_requests-0.57b0-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:39:17.5995069Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-urllib~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.6294570Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_urllib-0.57b0-py3-none-any.whl.metadata (3.4 kB),,0
+	2025-09-09T18:39:17.6875524Z,[18:35:48+0000] Collecting opentelemetry-instrumentation-urllib3~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.7197303Z,[18:35:48+0000]   Using cached opentelemetry_instrumentation_urllib3-0.57b0-py3-none-any.whl.metadata (4.2 kB),,0
+	2025-09-09T18:39:17.7694807Z,[18:35:48+0000] Collecting opentelemetry-resource-detector-azure~=0.1.5 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.8096486Z,[18:35:48+0000]   Using cached opentelemetry_resource_detector_azure-0.1.5-py3-none-any.whl.metadata (5.3 kB),,0
+	2025-09-09T18:39:17.8695928Z,[18:35:48+0000] Collecting opentelemetry-api>=1.12.0 (from azure-core-tracing-opentelemetry~=1.0.0b11->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:17.9008559Z,[18:35:48+0000]   Using cached opentelemetry_api-1.36.0-py3-none-any.whl.metadata (1.5 kB),,0
+	2025-09-09T18:39:17.9490443Z,[18:35:48+0000] Collecting fixedint==0.1.6 (from azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:17.9907662Z,[18:35:48+0000]   Using cached fixedint-0.1.6-py3-none-any.whl.metadata (4.8 kB),,0
+	2025-09-09T18:39:18.0501487Z,[18:35:48+0000] Collecting msrest>=0.6.10 (from azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.1004437Z,[18:35:48+0000]   Using cached msrest-0.7.1-py3-none-any.whl.metadata (21 kB),,0
+	2025-09-09T18:39:18.1411285Z,[18:35:49+0000] Collecting pycparser (from cffi>=1.14->cryptography>=2.5->azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:39:18.1725567Z,[18:35:49+0000]   Using cached pycparser-2.23-py3-none-any.whl.metadata (993 bytes),,0
+	2025-09-09T18:39:18.2216314Z,[18:35:49+0000] Collecting blinker>=1.9.0 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.2629877Z,[18:35:49+0000]   Using cached blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB),,0
+	2025-09-09T18:39:18.3006265Z,[18:35:49+0000] Collecting itsdangerous>=2.2.0 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.3719146Z,[18:35:49+0000]   Using cached itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB),,0
+	2025-09-09T18:39:18.4313507Z,[18:35:49+0000] Collecting jinja2>=3.1.2 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.4832197Z,[18:35:49+0000]   Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB),,0
+	2025-09-09T18:39:18.5247123Z,[18:35:49+0000] Collecting markupsafe>=2.1.1 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.5527544Z,[18:35:49+0000]   Using cached MarkupSafe-3.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB),,0
+	2025-09-09T18:39:18.5725458Z,[18:35:49+0000] Collecting werkzeug>=3.1.0 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.5847569Z,[18:35:49+0000]   Using cached werkzeug-3.1.3-py3-none-any.whl.metadata (3.7 kB),,0
+	2025-09-09T18:39:18.6320651Z,[18:35:49+0000] Collecting aniso8601>=0.82 (from flask-restx<2.0.0&comma;>=1.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.7157064Z,[18:35:49+0000]   Using cached aniso8601-10.0.1-py2.py3-none-any.whl.metadata (23 kB),,0
+	2025-09-09T18:39:18.7637593Z,[18:35:50+0000] Collecting pytz (from flask-restx<2.0.0&comma;>=1.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.8161828Z,[18:35:50+0000]   Using cached pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB),,0
+	2025-09-09T18:39:18.9034464Z,[18:35:50+0000] Collecting importlib-resources (from flask-restx<2.0.0&comma;>=1.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:18.9543913Z,[18:35:50+0000]   Using cached importlib_resources-6.5.2-py3-none-any.whl.metadata (3.9 kB),,0
+	2025-09-09T18:39:18.9945843Z,[18:35:50+0000] Collecting gitdb<5&comma;>=4.0.1 (from gitpython<4.0.0&comma;>=3.1.24->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.0267261Z,[18:35:50+0000]   Using cached gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB),,0
+	2025-09-09T18:39:19.0571262Z,[18:35:50+0000] Collecting jaraco.classes (from keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.1044901Z,[18:35:50+0000]   Using cached jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:39:19.1387355Z,[18:35:50+0000] Collecting SecretStorage>=3.2 (from keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.1685612Z,[18:35:50+0000]   Using cached secretstorage-3.4.0-py3-none-any.whl.metadata (3.9 kB),,0
+	2025-09-09T18:39:19.2386236Z,[18:35:50+0000] Collecting jeepney>=0.4.2 (from keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.3086323Z,[18:35:50+0000]   Using cached jeepney-0.9.0-py3-none-any.whl.metadata (1.2 kB),,0
+	2025-09-09T18:39:19.3303227Z,[18:35:50+0000] Collecting googleapis-common-protos~=1.52 (from opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.3591119Z,[18:35:50+0000]   Using cached googleapis_common_protos-1.70.0-py3-none-any.whl.metadata (9.3 kB),,0
+	2025-09-09T18:39:19.4318186Z,[18:35:50+0000] Collecting opentelemetry-exporter-otlp-proto-common==1.36.0 (from opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.5393810Z,[18:35:50+0000]   Using cached opentelemetry_exporter_otlp_proto_common-1.36.0-py3-none-any.whl.metadata (1.8 kB),,0
+	2025-09-09T18:39:19.5715412Z,[18:35:50+0000] Collecting opentelemetry-proto==1.36.0 (from opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.5925829Z,[18:35:50+0000]   Using cached opentelemetry_proto-1.36.0-py3-none-any.whl.metadata (2.3 kB),,0
+	2025-09-09T18:39:19.6212229Z,[18:35:51+0000] Collecting protobuf<7.0&comma;>=5.0 (from opentelemetry-proto==1.36.0->opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:19.7214404Z,[18:35:51+0000]   Using cached protobuf-6.32.0-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes),,0
+	2025-09-09T18:39:19.7510146Z,[18:35:52+0000] Collecting opentelemetry-instrumentation-wsgi==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:19.7912229Z,[18:35:52+0000]   Using cached opentelemetry_instrumentation_wsgi-0.57b0-py3-none-any.whl.metadata (2.1 kB),,0
+	2025-09-09T18:39:19.8314733Z,[18:35:52+0000] Collecting opentelemetry-instrumentation==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:19.8623060Z,[18:35:52+0000]   Using cached opentelemetry_instrumentation-0.57b0-py3-none-any.whl.metadata (6.7 kB),,0
+	2025-09-09T18:39:19.8926576Z,[18:35:52+0000] Collecting opentelemetry-semantic-conventions==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:19.9223293Z,[18:35:52+0000]   Using cached opentelemetry_semantic_conventions-0.57b0-py3-none-any.whl.metadata (2.4 kB),,0
+	2025-09-09T18:39:19.9437589Z,[18:35:52+0000] Collecting opentelemetry-util-http==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:19.9721614Z,[18:35:52+0000]   Using cached opentelemetry_util_http-0.57b0-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:39:19.9946445Z,[18:35:52+0000] Collecting wrapt<2.0.0&comma;>=1.0.0 (from opentelemetry-instrumentation==0.57b0->opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:20.0226999Z,[18:35:53+0000]   Using cached wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB),,0
+	2025-09-09T18:39:20.0532878Z,[18:35:54+0000] Collecting importlib-metadata<8.8.0&comma;>=6.0 (from opentelemetry-api>=1.12.0->azure-core-tracing-opentelemetry~=1.0.0b11->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:20.0844845Z,[18:35:54+0000]   Using cached importlib_metadata-8.7.0-py3-none-any.whl.metadata (4.8 kB),,0
+	2025-09-09T18:39:20.1432314Z,[18:35:54+0000] Collecting opentelemetry-instrumentation-asgi==0.57b0 (from opentelemetry-instrumentation-fastapi~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:20.1647766Z,[18:35:55+0000]   Using cached opentelemetry_instrumentation_asgi-0.57b0-py3-none-any.whl.metadata (2.0 kB),,0
+	2025-09-09T18:39:20.2041880Z,[18:35:55+0000] Collecting asgiref~=3.0 (from opentelemetry-instrumentation-asgi==0.57b0->opentelemetry-instrumentation-fastapi~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:20.2444518Z,[18:35:55+0000]   Using cached asgiref-3.9.1-py3-none-any.whl.metadata (9.3 kB),,0
+	2025-09-09T18:39:20.2561406Z,[18:35:55+0000] Collecting opentelemetry-instrumentation-dbapi==0.57b0 (from opentelemetry-instrumentation-psycopg2~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:20.2859833Z,[18:35:55+0000]   Using cached opentelemetry_instrumentation_dbapi-0.57b0-py3-none-any.whl.metadata (2.0 kB),,0
+	2025-09-09T18:39:20.3067045Z,[18:35:58+0000] Collecting numpy>=1.26.0 (from pandas<3.0.0&comma;>=1.5.3->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.3557321Z,[18:35:58+0000]   Using cached numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB),,0
+	2025-09-09T18:39:20.3949174Z,[18:35:59+0000] Collecting tzdata>=2022.7 (from pandas<3.0.0&comma;>=1.5.3->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.4254576Z,[18:35:59+0000]   Using cached tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB),,0
+	2025-09-09T18:39:20.4952509Z,[18:36:00+0000] Collecting ruamel.yaml.clib>=0.2.7 (from ruamel.yaml<1.0.0&comma;>=0.17.10->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.5563675Z,[18:36:00+0000]   Using cached ruamel.yaml.clib-0.2.12-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.7 kB),,0
+	2025-09-09T18:39:20.6257907Z,[18:36:01+0000] Collecting greenlet>=1 (from sqlalchemy<3.0.0&comma;>=1.4.48->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.6666993Z,[18:36:01+0000]   Using cached greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB),,0
+	2025-09-09T18:39:20.7165832Z,[18:36:05+0000] Collecting regex>=2022.1.18 (from tiktoken>=0.4.0->promptflow-tracing==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.7572832Z,[18:36:05+0000]   Using cached regex-2025.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB),,0
+	2025-09-09T18:39:20.7867934Z,[18:36:05+0000] Collecting smmap<6&comma;>=3.0.1 (from gitdb<5&comma;>=4.0.1->gitpython<4.0.0&comma;>=3.1.24->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.8176536Z,[18:36:06+0000]   Using cached smmap-5.0.2-py3-none-any.whl.metadata (4.3 kB),,0
+	2025-09-09T18:39:20.8495195Z,[18:36:06+0000] Collecting requests-oauthlib>=0.5.0 (from msrest>=0.6.10->azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:20.8899401Z,[18:36:06+0000]   Using cached requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:39:20.9398364Z,[18:36:07+0000] Collecting more-itertools (from jaraco.classes->keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:21.0090174Z,[18:36:07+0000]   Using cached more_itertools-10.8.0-py3-none-any.whl.metadata (39 kB),,0
+	2025-09-09T18:39:21.0489081Z,[18:36:07+0000] Collecting zipp>=3.20 (from importlib-metadata<8.8.0&comma;>=6.0->opentelemetry-api>=1.12.0->azure-core-tracing-opentelemetry~=1.0.0b11->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:39:21.0788810Z,[18:36:07+0000]   Using cached zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB),,0
+	2025-09-09T18:39:21.1087067Z,[18:36:07+0000] Collecting oauthlib>=3.0.0 (from requests-oauthlib>=0.5.0->msrest>=0.6.10->azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:39:21.1302538Z,[18:36:07+0000]   Using cached oauthlib-3.3.1-py3-none-any.whl.metadata (7.9 kB),,0
+	2025-09-09T18:39:21.1701511Z,[18:36:07+0000] Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB),,0
+	2025-09-09T18:39:21.2423157Z,[18:36:07+0000] Using cached anyio-4.10.0-py3-none-any.whl (107 kB),,0
+	2025-09-09T18:39:21.3203185Z,[18:36:07+0000] Using cached click-8.2.1-py3-none-any.whl (102 kB),,0
+	2025-09-09T18:39:21.3817250Z,[18:36:07+0000] Using cached exceptiongroup-1.3.0-py3-none-any.whl (16 kB),,0
+	2025-09-09T18:39:21.4109505Z,[18:36:07+0000] Using cached fastapi-0.116.1-py3-none-any.whl (95 kB),,0
+	2025-09-09T18:39:21.4409559Z,[18:36:07+0000] Using cached h11-0.16.0-py3-none-any.whl (37 kB),,0
+	2025-09-09T18:39:21.4817183Z,[18:36:07+0000] Using cached httptools-0.6.4-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (510 kB),,0
+	2025-09-09T18:39:21.4927386Z,[18:36:07+0000] Using cached idna-3.10-py3-none-any.whl (70 kB),,0
+	2025-09-09T18:39:21.5337600Z,[18:36:07+0000] Using cached pydantic-2.11.7-py3-none-any.whl (444 kB),,0
+	2025-09-09T18:39:21.5635156Z,[18:36:07+0000] Using cached pydantic_core-2.33.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.0 MB),,0
+	2025-09-09T18:39:21.6029285Z,[18:36:07+0000] Using cached python_dotenv-1.1.1-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:39:21.6422987Z,[18:36:07+0000] Using cached PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (767 kB),,0
+	2025-09-09T18:39:21.6639073Z,[18:36:07+0000] Using cached sniffio-1.3.1-py3-none-any.whl (10 kB),,0
+	2025-09-09T18:39:21.6939411Z,[18:36:07+0000] Using cached starlette-0.47.3-py3-none-any.whl (72 kB),,0
+	2025-09-09T18:39:21.7433240Z,[18:36:07+0000] Using cached typing_inspection-0.4.1-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:39:21.7652776Z,[18:36:07+0000] Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB),,0
+	2025-09-09T18:39:21.7951359Z,[18:36:07+0000] Using cached uvicorn-0.35.0-py3-none-any.whl (66 kB),,0
+	2025-09-09T18:39:21.8249994Z,[18:36:07+0000] Using cached uvloop-0.21.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.7 MB),,0
+	2025-09-09T18:39:21.8554373Z,[18:36:07+0000] Using cached watchfiles-1.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (452 kB),,0
+	2025-09-09T18:39:21.8941076Z,[18:36:07+0000] Using cached websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (182 kB),,0
+	2025-09-09T18:39:21.9250341Z,[18:36:07+0000] Using cached azure_search_documents-11.5.3-py3-none-any.whl (298 kB),,0
+	2025-09-09T18:39:21.9842613Z,[18:36:07+0000] Using cached azure_core-1.35.0-py3-none-any.whl (210 kB),,0
+	2025-09-09T18:39:22.0241644Z,[18:36:07+0000] Using cached azure_identity-1.24.0-py3-none-any.whl (187 kB),,0
+	2025-09-09T18:39:22.0366557Z,[18:36:07+0000] Using cached promptflow-1.18.1-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:39:22.0645040Z,[18:36:07+0000] Using cached promptflow_core-1.18.1-py3-none-any.whl (988 kB),,0
+	2025-09-09T18:39:22.0713072Z,[18:36:07+0000] Using cached promptflow_devkit-1.18.1-py3-none-any.whl (7.0 MB),,0
+	2025-09-09T18:39:22.0848150Z,[18:36:08+0000] Using cached promptflow_tracing-1.18.1-py3-none-any.whl (26 kB),,0
+	2025-09-09T18:39:22.1046040Z,[18:36:08+0000] Using cached azure_ai_ml-1.29.0-py3-none-any.whl (13.2 MB),,0
+	2025-09-09T18:39:22.1154910Z,[18:36:08+0000] Using cached openai-1.107.0-py3-none-any.whl (950 kB),,0
+	2025-09-09T18:39:22.1562079Z,[18:36:08+0000] Using cached gunicorn-23.0.0-py3-none-any.whl (85 kB),,0
+	2025-09-09T18:39:22.1979790Z,[18:36:08+0000] Using cached azure_common-1.1.28-py2.py3-none-any.whl (14 kB),,0
+	2025-09-09T18:39:22.2367127Z,[18:36:08+0000] Using cached azure_mgmt_core-1.6.0-py3-none-any.whl (29 kB),,0
+	2025-09-09T18:39:22.2958593Z,[18:36:08+0000] Using cached azure_storage_blob-12.26.0-py3-none-any.whl (412 kB),,0
+	2025-09-09T18:39:22.3173639Z,[18:36:08+0000] Using cached azure_storage_file_datalake-12.21.0-py3-none-any.whl (264 kB),,0
+	2025-09-09T18:39:22.3481990Z,[18:36:08+0000] Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB),,0
+	2025-09-09T18:39:22.3857226Z,[18:36:08+0000] Using cached cryptography-45.0.7-cp311-abi3-manylinux_2_28_x86_64.whl (4.5 MB),,0
+	2025-09-09T18:39:22.4064546Z,[18:36:08+0000] Using cached distro-1.9.0-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:39:22.4367967Z,[18:36:08+0000] Using cached httpx-0.28.1-py3-none-any.whl (73 kB),,0
+	2025-09-09T18:39:22.4576908Z,[18:36:08+0000] Using cached httpcore-1.0.9-py3-none-any.whl (78 kB),,0
+	2025-09-09T18:39:22.4767315Z,[18:36:08+0000] Using cached isodate-0.7.2-py3-none-any.whl (22 kB),,0
+	2025-09-09T18:39:22.5073083Z,[18:36:08+0000] Using cached jiter-0.10.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (352 kB),,0
+	2025-09-09T18:39:22.5271196Z,[18:36:08+0000] Using cached jsonschema-4.25.1-py3-none-any.whl (90 kB),,0
+	2025-09-09T18:39:22.5985588Z,[18:36:08+0000] Using cached marshmallow-3.26.1-py3-none-any.whl (50 kB),,0
+	2025-09-09T18:39:22.6383457Z,[18:36:08+0000] Using cached msal-1.33.0-py3-none-any.whl (116 kB),,0
+	2025-09-09T18:39:22.6679298Z,[18:36:08+0000] Using cached msal_extensions-1.3.1-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:39:22.6799827Z,[18:36:08+0000] Using cached packaging-25.0-py3-none-any.whl (66 kB),,0
+	2025-09-09T18:39:22.7104623Z,[18:36:08+0000] Using cached pydash-7.0.7-py3-none-any.whl (110 kB),,0
+	2025-09-09T18:39:22.7407104Z,[18:36:08+0000] Using cached PyJWT-2.10.1-py3-none-any.whl (22 kB),,0
+	2025-09-09T18:39:22.7688637Z,[18:36:08+0000] Using cached requests-2.32.5-py3-none-any.whl (64 kB),,0
+	2025-09-09T18:39:22.7994987Z,[18:36:08+0000] Using cached six-1.17.0-py2.py3-none-any.whl (11 kB),,0
+	2025-09-09T18:39:22.8296246Z,[18:36:08+0000] Using cached strictyaml-1.7.3-py3-none-any.whl (123 kB),,0
+	2025-09-09T18:39:22.8585189Z,[18:36:08+0000] Using cached tqdm-4.67.1-py3-none-any.whl (78 kB),,0
+	2025-09-09T18:39:22.8803540Z,[18:36:08+0000] Using cached azure_monitor_opentelemetry-1.8.0-py3-none-any.whl (27 kB),,0
+	2025-09-09T18:39:22.9107497Z,[18:36:08+0000] Using cached azure_storage_file_share-12.22.0-py3-none-any.whl (291 kB),,0
+	2025-09-09T18:39:22.9397913Z,[18:36:08+0000] Using cached argcomplete-3.6.2-py3-none-any.whl (43 kB),,0
+	2025-09-09T18:39:22.9602110Z,[18:36:08+0000] Using cached attrs-25.3.0-py3-none-any.whl (63 kB),,0
+	2025-09-09T18:39:22.9993960Z,[18:36:08+0000] Using cached azure_core_tracing_opentelemetry-1.0.0b12-py3-none-any.whl (11 kB),,0
+	2025-09-09T18:39:23.0404238Z,[18:36:08+0000] Using cached azure_monitor_opentelemetry_exporter-1.0.0b41-py2.py3-none-any.whl (162 kB),,0
+	2025-09-09T18:39:23.0624573Z,[18:36:08+0000] Using cached fixedint-0.1.6-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:39:23.1019962Z,[18:36:08+0000] Using cached certifi-2025.8.3-py3-none-any.whl (161 kB),,0
+	2025-09-09T18:39:23.1307947Z,[18:36:08+0000] Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB),,0
+	2025-09-09T18:39:23.1414974Z,[18:36:09+0000] Using cached charset_normalizer-3.4.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (151 kB),,0
+	2025-09-09T18:39:23.1710554Z,[18:36:09+0000] Using cached filelock-3.19.1-py3-none-any.whl (15 kB),,0
+	2025-09-09T18:39:23.1908236Z,[18:36:09+0000] Using cached filetype-1.2.0-py2.py3-none-any.whl (19 kB),,0
+	2025-09-09T18:39:23.2108159Z,[18:36:09+0000] Using cached flask-3.1.2-py3-none-any.whl (103 kB),,0
+	2025-09-09T18:39:23.2615057Z,[18:36:09+0000] Using cached flask_cors-6.0.1-py3-none-any.whl (13 kB),,0
+	2025-09-09T18:39:23.3313227Z,[18:36:09+0000] Using cached flask_restx-1.3.0-py2.py3-none-any.whl (2.8 MB),,0
+	2025-09-09T18:39:23.3530800Z,[18:36:09+0000] Using cached gitpython-3.1.45-py3-none-any.whl (208 kB),,0
+	2025-09-09T18:39:23.3636889Z,[18:36:09+0000] Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB),,0
+	2025-09-09T18:39:23.3830487Z,[18:36:09+0000] Using cached keyring-24.3.1-py3-none-any.whl (38 kB),,0
+	2025-09-09T18:39:23.4116704Z,[18:36:09+0000] Using cached opentelemetry_exporter_otlp_proto_http-1.36.0-py3-none-any.whl (18 kB),,0
+	2025-09-09T18:39:23.4445213Z,[18:36:09+0000] Using cached opentelemetry_exporter_otlp_proto_common-1.36.0-py3-none-any.whl (18 kB),,0
+	2025-09-09T18:39:23.6143579Z,[18:36:09+0000] Using cached opentelemetry_proto-1.36.0-py3-none-any.whl (72 kB),,0
+	2025-09-09T18:39:23.6355262Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_django-0.57b0-py3-none-any.whl (19 kB),,0
+	2025-09-09T18:39:23.7745938Z,[18:36:09+0000] Using cached opentelemetry_instrumentation-0.57b0-py3-none-any.whl (32 kB),,0
+	2025-09-09T18:39:23.8251995Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_wsgi-0.57b0-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:39:23.8654422Z,[18:36:09+0000] Using cached opentelemetry_semantic_conventions-0.57b0-py3-none-any.whl (201 kB),,0
+	2025-09-09T18:39:23.8968458Z,[18:36:09+0000] Using cached opentelemetry_api-1.36.0-py3-none-any.whl (65 kB),,0
+	2025-09-09T18:39:23.9668519Z,[18:36:09+0000] Using cached opentelemetry_util_http-0.57b0-py3-none-any.whl (7.6 kB),,0
+	2025-09-09T18:39:23.9969905Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_fastapi-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:39:24.0474874Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_asgi-0.57b0-py3-none-any.whl (16 kB),,0
+	2025-09-09T18:39:24.0684295Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_flask-0.57b0-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:39:24.1574800Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_psycopg2-0.57b0-py3-none-any.whl (10 kB),,0
+	2025-09-09T18:39:24.2170241Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_dbapi-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:39:24.2895540Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_requests-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:39:24.3672652Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_urllib-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:39:24.4294653Z,[18:36:09+0000] Using cached opentelemetry_instrumentation_urllib3-0.57b0-py3-none-any.whl (13 kB),,0
+	2025-09-09T18:39:24.4505341Z,[18:36:09+0000] Using cached opentelemetry_resource_detector_azure-0.1.5-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:39:24.4904808Z,[18:36:09+0000] Using cached opentelemetry_sdk-1.36.0-py3-none-any.whl (119 kB),,0
+	2025-09-09T18:39:24.5609462Z,[18:36:09+0000] Using cached pandas-2.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.0 MB),,0
+	2025-09-09T18:39:24.5995200Z,[18:36:10+0000] Using cached pillow-11.0.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.4 MB),,0
+	2025-09-09T18:39:24.6391805Z,[18:36:10+0000] Using cached psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (277 kB),,0
+	2025-09-09T18:39:24.6797932Z,[18:36:10+0000] Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB),,0
+	2025-09-09T18:39:24.7015235Z,[18:36:10+0000] Using cached referencing-0.36.2-py3-none-any.whl (26 kB),,0
+	2025-09-09T18:39:24.7307895Z,[18:36:10+0000] Using cached rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (386 kB),,0
+	2025-09-09T18:39:24.7520757Z,[18:36:10+0000] Using cached ruamel.yaml-0.18.15-py3-none-any.whl (119 kB),,0
+	2025-09-09T18:39:24.7714211Z,[18:36:10+0000] Using cached sqlalchemy-2.0.43-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB),,0
+	2025-09-09T18:39:24.8198904Z,[18:36:10+0000] Using cached tabulate-0.9.0-py3-none-any.whl (35 kB),,0
+	2025-09-09T18:39:24.8417711Z,[18:36:10+0000] Using cached tiktoken-0.11.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.2 MB),,0
+	2025-09-09T18:39:24.8709614Z,[18:36:10+0000] Using cached urllib3-2.5.0-py3-none-any.whl (129 kB),,0
+	2025-09-09T18:39:24.9108088Z,[18:36:10+0000] Using cached waitress-3.0.2-py3-none-any.whl (56 kB),,0
+	2025-09-09T18:39:24.9412945Z,[18:36:10+0000] Using cached docstring_parser-0.17.0-py3-none-any.whl (36 kB),,0
+	2025-09-09T18:39:24.9910027Z,[18:36:10+0000] Using cached aniso8601-10.0.1-py2.py3-none-any.whl (52 kB),,0
+	2025-09-09T18:39:25.0614705Z,[18:36:10+0000] Using cached blinker-1.9.0-py3-none-any.whl (8.5 kB),,0
+	2025-09-09T18:39:25.1036877Z,[18:36:10+0000] Using cached gitdb-4.0.12-py3-none-any.whl (62 kB),,0
+	2025-09-09T18:39:25.1337546Z,[18:36:10+0000] Using cached googleapis_common_protos-1.70.0-py3-none-any.whl (294 kB),,0
+	2025-09-09T18:39:25.1918329Z,[18:36:10+0000] Using cached greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (607 kB),,0
+	2025-09-09T18:39:25.2048441Z,[18:36:10+0000] Using cached itsdangerous-2.2.0-py3-none-any.whl (16 kB),,0
+	2025-09-09T18:39:25.2427293Z,[18:36:10+0000] Using cached jeepney-0.9.0-py3-none-any.whl (49 kB),,0
+	2025-09-09T18:39:25.3047805Z,[18:36:10+0000] Using cached jinja2-3.1.6-py3-none-any.whl (134 kB),,0
+	2025-09-09T18:39:25.3550171Z,[18:36:10+0000] Using cached MarkupSafe-3.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (23 kB),,0
+	2025-09-09T18:39:25.3831472Z,[18:36:10+0000] Using cached msrest-0.7.1-py3-none-any.whl (85 kB),,0
+	2025-09-09T18:39:25.4256027Z,[18:36:10+0000] Using cached numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB),,0
+	2025-09-09T18:39:25.4564417Z,[18:36:10+0000] Using cached pytz-2025.2-py2.py3-none-any.whl (509 kB),,0
+	2025-09-09T18:39:25.4960913Z,[18:36:11+0000] Using cached regex-2025.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB),,0
+	2025-09-09T18:39:25.5257353Z,[18:36:11+0000] Using cached ruamel.yaml.clib-0.2.12-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (754 kB),,0
+	2025-09-09T18:39:25.5662173Z,[18:36:11+0000] Using cached secretstorage-3.4.0-py3-none-any.whl (15 kB),,0
+	2025-09-09T18:39:25.6373716Z,[18:36:11+0000] Using cached tzdata-2025.2-py2.py3-none-any.whl (347 kB),,0
+	2025-09-09T18:39:25.6757311Z,[18:36:11+0000] Using cached werkzeug-3.1.3-py3-none-any.whl (224 kB),,0
+	2025-09-09T18:39:25.7071734Z,[18:36:11+0000] Using cached wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (88 kB),,0
+	2025-09-09T18:39:25.7367797Z,[18:36:11+0000] Using cached importlib_resources-6.5.2-py3-none-any.whl (37 kB),,0
+	2025-09-09T18:39:25.7771213Z,[18:36:11+0000] Using cached jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB),,0
+	2025-09-09T18:39:25.8074527Z,[18:36:11+0000] Using cached pycparser-2.23-py3-none-any.whl (118 kB),,0
+	2025-09-09T18:39:25.8481148Z,[18:36:11+0000] Using cached asgiref-3.9.1-py3-none-any.whl (23 kB),,0
+	2025-09-09T18:39:25.8964786Z,[18:36:11+0000] Using cached importlib_metadata-8.7.0-py3-none-any.whl (27 kB),,0
+	2025-09-09T18:39:25.9370559Z,[18:36:11+0000] Using cached protobuf-6.32.0-cp39-abi3-manylinux2014_x86_64.whl (322 kB),,0
+	2025-09-09T18:39:25.9673375Z,[18:36:11+0000] Using cached requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB),,0
+	2025-09-09T18:39:26.0266597Z,[18:36:11+0000] Using cached smmap-5.0.2-py3-none-any.whl (24 kB),,0
+	2025-09-09T18:39:26.0468275Z,[18:36:11+0000] Using cached more_itertools-10.8.0-py3-none-any.whl (69 kB),,0
+	2025-09-09T18:39:26.0677153Z,[18:36:11+0000] Using cached oauthlib-3.3.1-py3-none-any.whl (160 kB),,0
+	2025-09-09T18:39:26.1267592Z,[18:36:11+0000] Using cached zipp-3.23.0-py3-none-any.whl (10 kB),,0
+	2025-09-09T18:39:26.1999385Z,[18:36:14+0000] Installing collected packages: pytz&comma; fixedint&comma; filetype&comma; azure-common&comma; aniso8601&comma; zipp&comma; wrapt&comma; websockets&comma; waitress&comma; uvloop&comma; urllib3&comma; tzdata&comma; typing_extensions&comma; tqdm&comma; tabulate&comma; sniffio&comma; smmap&comma; six&comma; ruamel.yaml.clib&comma; rpds-py&comma; regex&comma; PyYAML&comma; python-dotenv&comma; pyjwt&comma; pycparser&comma; psutil&comma; protobuf&comma; pillow&comma; packaging&comma; opentelemetry-util-http&comma; oauthlib&comma; numpy&comma; more-itertools&comma; markupsafe&comma; jiter&comma; jeepney&comma; itsdangerous&comma; isodate&comma; importlib-resources&comma; idna&comma; httptools&comma; h11&comma; greenlet&comma; filelock&comma; docstring_parser&comma; distro&comma; colorama&comma; click&comma; charset_normalizer&comma; certifi&comma; blinker&comma; attrs&comma; asgiref&comma; argcomplete&comma; annotated-types&comma; werkzeug&comma; uvicorn&comma; typing-inspection&comma; sqlalchemy&comma; ruamel.yaml&comma; requests&comma; referencing&comma; python-dateutil&comma; pydash&comma; pydantic_core&comma; opentelemetry-proto&comma; marshmallow&comma; jinja2&comma; jaraco.classes&comma; importlib-metadata&comma; httpcore&comma; gunicorn&comma; googleapis-common-protos&comma; gitdb&comma; exceptiongroup&comma; cffi&comma; anyio&comma; watchfiles&comma; tiktoken&comma; strictyaml&comma; starlette&comma; requests-oauthlib&comma; pydantic&comma; pandas&comma; opentelemetry-exporter-otlp-proto-common&comma; opentelemetry-api&comma; jsonschema-specifications&comma; httpx&comma; gitpython&comma; flask&comma; cryptography&comma; azure-core&comma; SecretStorage&comma; opentelemetry-semantic-conventions&comma; openai&comma; msrest&comma; jsonschema&comma; flask-cors&comma; fastapi&comma; azure-storage-file-share&comma; azure-storage-blob&comma; azure-search-documents&comma; azure-mgmt-core&comma; azure-core-tracing-opentelemetry&comma; opentelemetry-sdk&comma; opentelemetry-instrumentation&comma; msal&comma; keyring&comma; flask-restx&comma; azure-storage-file-datalake&comma; promptflow-tracing&comma; opentelemetry-resource-detector-azure&comma; opentelemetry-instrumentation-wsgi&comma; opentelemetry-instrumentation-urllib3&comma; opentelemetry-instrumentation-urllib&comma; opentelemetry-instrumentation-requests&comma; opentelemetry-instrumentation-dbapi&comma; opentelemetry-instrumentation-asgi&comma; opentelemetry-exporter-otlp-proto-http&comma; msal-extensions&comma; promptflow-core&comma; opentelemetry-instrumentation-psycopg2&comma; opentelemetry-instrumentation-flask&comma; opentelemetry-instrumentation-fastapi&comma; opentelemetry-instrumentation-django&comma; azure-identity&comma; azure-monitor-opentelemetry-exporter&comma; promptflow-devkit&comma; azure-monitor-opentelemetry&comma; promptflow&comma; azure-ai-ml,,0
+	2025-09-09T18:39:26.2286357Z,[18:39:02+0000] Successfully installed PyYAML-6.0.2 SecretStorage-3.4.0 aniso8601-10.0.1 annotated-types-0.7.0 anyio-4.10.0 argcomplete-3.6.2 asgiref-3.9.1 attrs-25.3.0 azure-ai-ml-1.29.0 azure-common-1.1.28 azure-core-1.35.0 azure-core-tracing-opentelemetry-1.0.0b12 azure-identity-1.24.0 azure-mgmt-core-1.6.0 azure-monitor-opentelemetry-1.8.0 azure-monitor-opentelemetry-exporter-1.0.0b41 azure-search-documents-11.5.3 azure-storage-blob-12.26.0 azure-storage-file-datalake-12.21.0 azure-storage-file-share-12.22.0 blinker-1.9.0 certifi-2025.8.3 cffi-2.0.0 charset_normalizer-3.4.3 click-8.2.1 colorama-0.4.6 cryptography-45.0.7 distro-1.9.0 docstring_parser-0.17.0 exceptiongroup-1.3.0 fastapi-0.116.1 filelock-3.19.1 filetype-1.2.0 fixedint-0.1.6 flask-3.1.2 flask-cors-6.0.1 flask-restx-1.3.0 gitdb-4.0.12 gitpython-3.1.45 googleapis-common-protos-1.70.0 greenlet-3.2.4 gunicorn-23.0.0 h11-0.16.0 httpcore-1.0.9 httptools-0.6.4 httpx-0.28.1 idna-3.10 importlib-metadata-8.7.0 importlib-resources-6.5.2 isodate-0.7.2 itsdangerous-2.2.0 jaraco.classes-3.4.0 jeepney-0.9.0 jinja2-3.1.6 jiter-0.10.0 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 keyring-24.3.1 markupsafe-3.0.2 marshmallow-3.26.1 more-itertools-10.8.0 msal-1.33.0 msal-extensions-1.3.1 msrest-0.7.1 numpy-2.3.3 oauthlib-3.3.1 openai-1.107.0 opentelemetry-api-1.36.0 opentelemetry-exporter-otlp-proto-common-1.36.0 opentelemetry-exporter-otlp-proto-http-1.36.0 opentelemetry-instrumentation-0.57b0 opentelemetry-instrumentation-asgi-0.57b0 opentelemetry-instrumentation-dbapi-0.57b0 opentelemetry-instrumentation-django-0.57b0 opentelemetry-instrumentation-fastapi-0.57b0 opentelemetry-instrumentation-flask-0.57b0 opentelemetry-instrumentation-psycopg2-0.57b0 opentelemetry-instrumentation-requests-0.57b0 opentelemetry-instrumentation-urllib-0.57b0 opentelemetry-instrumentation-urllib3-0.57b0 opentelemetry-instrumentation-wsgi-0.57b0 opentelemetry-proto-1.36.0 opentelemetry-resource-detector-azure-0.1.5 opentelemetry-sdk-1.36.0 opentelemetry-semantic-conventions-0.57b0 opentelemetry-util-http-0.57b0 packaging-25.0 pandas-2.3.2 pillow-11.0.0 promptflow-1.18.1 promptflow-core-1.18.1 promptflow-devkit-1.18.1 promptflow-tracing-1.18.1 protobuf-6.32.0 psutil-7.0.0 pycparser-2.23 pydantic-2.11.7 pydantic_core-2.33.2 pydash-7.0.7 pyjwt-2.10.1 python-dateutil-2.9.0.post0 python-dotenv-1.1.1 pytz-2025.2 referencing-0.36.2 regex-2025.9.1 requests-2.32.5 requests-oauthlib-2.0.0 rpds-py-0.27.1 ruamel.yaml-0.18.15 ruamel.yaml.clib-0.2.12 six-1.17.0 smmap-5.0.2 sniffio-1.3.1 sqlalchemy-2.0.43 starlette-0.47.3 strictyaml-1.7.3 tabulate-0.9.0 tiktoken-0.11.0 tqdm-4.67.1 typing-inspection-0.4.1 typing_extensions-4.15.0 tzdata-2025.2 urllib3-2.5.0 uvicorn-0.35.0 uvloop-0.21.0 waitress-3.0.2 watchfiles-1.1.0 websockets-15.0.1 werkzeug-3.1.3 wrapt-1.17.3 zipp-3.23.0,,0
+	2025-09-09T18:39:26.2485145Z,,,0
+	2025-09-09T18:39:26.2776870Z,[notice] A new release of pip is available: 25.0.1 -> 25.2,,0
+	2025-09-09T18:39:26.3301087Z,[notice] To update&comma; run: pip install --upgrade pip,,0
+	2025-09-09T18:39:26.3708940Z,Not a vso image&comma; so not writing build commands,,0
+	2025-09-09T18:39:26.4193294Z,Preparing output...,,0
+	2025-09-09T18:39:31.7421962Z,,,0
+	2025-09-09T18:39:31.7893019Z,Copying files to destination directory '/tmp/_preCompressedDestinationDir'...,,0
+	2025-09-09T18:40:02.0358221Z,Done in 31 sec(s).,,0
+	2025-09-09T18:40:02.1262920Z,Compressing content of directory '/tmp/_preCompressedDestinationDir'...,,0
+	2025-09-09T18:41:45.3694367Z,Copied the compressed output to '/home/site/wwwroot',,0
+	2025-09-09T18:41:46.3022621Z,,,0
+	2025-09-09T18:41:46.3142120Z,Removing existing manifest file,,0
+	2025-09-09T18:41:46.3449672Z,Creating a manifest file...,,0
+	2025-09-09T18:41:46.3823293Z,Manifest file created.,,0
+	2025-09-09T18:41:46.4043773Z,Copying .ostype to manifest output directory.,,0
+	2025-09-09T18:41:46.4245057Z,,,0
+	2025-09-09T18:41:46.4352261Z,Done in 406 sec(s).,,0
+2025-09-09T18:41:46.6904364Z,Running post deployment command(s)...,b24923c1-9a4a-41f9-815f-bc95623d95d4,0
+2025-09-09T18:41:46.8599772Z,,7251ae10-f75f-49a5-a5bc-569d531b802d,0
+2025-09-09T18:41:46.9754662Z,Generating summary of Oryx build,1473a648-35b3-4d07-97fd-d09e77c5f020,0
+2025-09-09T18:41:47.1562029Z,Parsing the build logs,bd916ab1-fad5-48b0-8c04-e3bf578361de,0
+2025-09-09T18:41:47.3527168Z,Found 0 issue(s),85f5cab1-1fa2-4ff0-af16-bb70933e7264,0
+2025-09-09T18:41:47.4698865Z,,5a08b469-9669-4962-9301-ffe8c55372d5,0
+2025-09-09T18:41:47.5705132Z,Build Summary :,03e1d47f-ff55-446b-8337-414141aaf25f,0
+2025-09-09T18:41:47.6875215Z,===============,1932b82d-5c78-47d9-8224-84f1c917563c,0
+2025-09-09T18:41:47.7970385Z,Errors (0),cb0af023-a2ec-4eb2-b25d-5b57a4db17a6,0
+2025-09-09T18:41:47.9072668Z,Warnings (0),59bb6712-fe91-453b-a40f-bb84313600ea,0
+2025-09-09T18:41:48.0121752Z,,e958468f-5a1e-45ed-8c12-8ef15d532c2f,0
+2025-09-09T18:41:48.1259251Z,Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path,803437f3-a6df-4924-bdf3-d0f5a904fa83,0
+2025-09-09T18:41:48.3285147Z,Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy,949917c9-2ac8-4861-a4cf-52703ace45a1,0

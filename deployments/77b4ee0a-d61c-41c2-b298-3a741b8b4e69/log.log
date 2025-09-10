@@ -1,0 +1,492 @@
+2025-09-09T18:22:52.2183205Z,Updating submodules.,531d09de-d880-46b6-bf6c-cb4465c4440f,0
+2025-09-09T18:22:53.3433749Z,Preparing deployment for commit id '77b4ee0a-d'.,f38284f6-a624-457f-bd7e-f9c1c2665fad,0
+2025-09-09T18:22:53.6874077Z,PreDeployment: context.CleanOutputPath False,3e28a9a7-4350-4ec8-9d44-beabead21558,0
+2025-09-09T18:22:53.8016968Z,PreDeployment: context.OutputPath /home/site/wwwroot,418832c0-e689-4985-a50e-f009cb564320,0
+2025-09-09T18:22:53.9539823Z,Repository path is /tmp/zipdeploy/extracted,8e142f3e-7989-44d8-b0df-41f048bc8515,0
+2025-09-09T18:22:54.0763494Z,Running oryx build...,9c94f20f-6c91-47e1-9ddc-11a3cbc10b9a,0
+	2025-09-09T18:22:54.0798921Z,Command: oryx build /tmp/zipdeploy/extracted -o /home/site/wwwroot --platform python --platform-version 3.12 -p virtualenv_name=antenv --log-file /tmp/build-debug.log  -i /tmp/8ddefcde45aa2f9 --compress-destination-dir | tee /tmp/oryx-build.log,,0
+	2025-09-09T18:22:57.3770933Z,Operation performed by Microsoft Oryx&comma; https://github.com/Microsoft/Oryx,,0
+	2025-09-09T18:22:57.4352634Z,You can report issues at https://github.com/Microsoft/Oryx/issues,,0
+	2025-09-09T18:22:57.4774750Z,,,0
+	2025-09-09T18:22:57.5156441Z,Oryx Version: 0.2.20250611.1+0649de32f1279969c9023dd41b389cce4bb94493&comma; Commit: 0649de32f1279969c9023dd41b389cce4bb94493&comma; ReleaseTagName: 20250611.1,,0
+	2025-09-09T18:22:57.5759838Z,,,0
+	2025-09-09T18:22:57.6182790Z,Build Operation ID: 5fa4de26eb5d85d2,,0
+	2025-09-09T18:22:57.6776857Z,Repository Commit : 77b4ee0a-d61c-41c2-b298-3a741b8b4e69,,0
+	2025-09-09T18:22:57.6989474Z,OS Type           : bullseye,,0
+	2025-09-09T18:22:57.7701628Z,Image Type        : githubactions,,0
+	2025-09-09T18:22:57.8275620Z,,,0
+	2025-09-09T18:22:57.8498002Z,Primary SDK Storage URL: https://oryx-cdn.microsoft.io,,0
+	2025-09-09T18:22:57.8891586Z,Backup SDK Storage URL: https://oryxsdks-cdn.azureedge.net,,0
+	2025-09-09T18:22:57.9108169Z,Detecting platforms...,,0
+	2025-09-09T18:23:03.6341771Z,Detected following platforms:,,0
+	2025-09-09T18:23:03.6742908Z,  python: 3.12.11,,0
+	2025-09-09T18:23:03.7431950Z,Version '3.12.11' of platform 'python' is not installed. Generating script to install it...,,0
+	2025-09-09T18:23:04.1066076Z,,,0
+	2025-09-09T18:23:04.1984331Z,Using intermediate directory '/tmp/8ddefcde45aa2f9'.,,0
+	2025-09-09T18:23:04.2264941Z,,,0
+	2025-09-09T18:23:04.2484236Z,Copying files to the intermediate directory...,,0
+	2025-09-09T18:23:37.3359392Z,Done in 33 sec(s).,,0
+	2025-09-09T18:23:37.3666031Z,,,0
+	2025-09-09T18:23:37.3694914Z,Source directory     : /tmp/8ddefcde45aa2f9,,0
+	2025-09-09T18:23:37.4047961Z,Destination directory: /home/site/wwwroot,,0
+	2025-09-09T18:23:37.4455633Z,,,0
+	2025-09-09T18:23:37.4669064Z,,,0
+	2025-09-09T18:23:37.4853103Z,Downloading and extracting 'python' version '3.12.11' to '/tmp/oryx/platforms/python/3.12.11'...,,0
+	2025-09-09T18:23:37.5624062Z,Detected image debian flavor: bullseye.,,0
+	2025-09-09T18:23:40.1425759Z,Downloaded in 3 sec(s).,,0
+	2025-09-09T18:23:40.1822423Z,Verifying checksum...,,0
+	2025-09-09T18:23:40.3413963Z,Extracting contents...,,0
+	2025-09-09T18:23:58.3340936Z,performing sha512 checksum for: python...,,0
+	2025-09-09T18:24:00.7746347Z,Done in 23 sec(s).,,0
+	2025-09-09T18:24:00.8380676Z,,,0
+	2025-09-09T18:24:00.8580395Z,image detector file exists&comma; platform is python..,,0
+	2025-09-09T18:24:00.9175205Z,OS detector file exists&comma; OS is bullseye..,,0
+	2025-09-09T18:24:01.2298162Z,Python Version: /tmp/oryx/platforms/python/3.12.11/bin/python3.12,,0
+	2025-09-09T18:24:01.2495788Z,Creating directory for command manifest file if it does not exist,,0
+	2025-09-09T18:24:01.2900852Z,Removing existing manifest file,,0
+	2025-09-09T18:24:01.3392147Z,Python Virtual Environment: antenv,,0
+	2025-09-09T18:24:01.3784624Z,Creating virtual environment...,,0
+	2025-09-09T18:24:17.5366360Z,Activating virtual environment...,,0
+	2025-09-09T18:24:17.6077422Z,Running pip install...,,0
+	2025-09-09T18:28:42.3574527Z,[18:24:20+0000] Collecting annotated-types==0.7.0 (from -r requirements.txt (line 1)),,0
+	2025-09-09T18:28:42.4060930Z,[18:24:20+0000]   Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB),,0
+	2025-09-09T18:28:42.4456335Z,[18:24:20+0000] Collecting anyio==4.10.0 (from -r requirements.txt (line 2)),,0
+	2025-09-09T18:28:42.4654382Z,[18:24:20+0000]   Downloading anyio-4.10.0-py3-none-any.whl.metadata (4.0 kB),,0
+	2025-09-09T18:28:42.4851764Z,[18:24:20+0000] Collecting click==8.2.1 (from -r requirements.txt (line 3)),,0
+	2025-09-09T18:28:42.4957860Z,[18:24:20+0000]   Downloading click-8.2.1-py3-none-any.whl.metadata (2.5 kB),,0
+	2025-09-09T18:28:42.5355945Z,[18:24:20+0000] Collecting exceptiongroup==1.3.0 (from -r requirements.txt (line 4)),,0
+	2025-09-09T18:28:42.5763572Z,[18:24:20+0000]   Downloading exceptiongroup-1.3.0-py3-none-any.whl.metadata (6.7 kB),,0
+	2025-09-09T18:28:42.5964330Z,[18:24:20+0000] Collecting fastapi==0.116.1 (from -r requirements.txt (line 5)),,0
+	2025-09-09T18:28:42.6261745Z,[18:24:20+0000]   Downloading fastapi-0.116.1-py3-none-any.whl.metadata (28 kB),,0
+	2025-09-09T18:28:42.6559857Z,[18:24:20+0000] Collecting h11==0.16.0 (from -r requirements.txt (line 6)),,0
+	2025-09-09T18:28:42.7074948Z,[18:24:20+0000]   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB),,0
+	2025-09-09T18:28:42.7269062Z,[18:24:20+0000] Collecting httptools==0.6.4 (from -r requirements.txt (line 7)),,0
+	2025-09-09T18:28:42.7679996Z,[18:24:20+0000]   Downloading httptools-0.6.4-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.6 kB),,0
+	2025-09-09T18:28:42.8069255Z,[18:24:20+0000] Collecting idna==3.10 (from -r requirements.txt (line 8)),,0
+	2025-09-09T18:28:42.8491996Z,[18:24:20+0000]   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB),,0
+	2025-09-09T18:28:42.8897967Z,[18:24:21+0000] Collecting pydantic==2.11.7 (from -r requirements.txt (line 9)),,0
+	2025-09-09T18:28:42.9093260Z,[18:24:21+0000]   Downloading pydantic-2.11.7-py3-none-any.whl.metadata (67 kB),,0
+	2025-09-09T18:28:42.9496311Z,[18:24:24+0000] Collecting pydantic_core==2.33.2 (from -r requirements.txt (line 10)),,0
+	2025-09-09T18:28:42.9595148Z,[18:24:24+0000]   Downloading pydantic_core-2.33.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB),,0
+	2025-09-09T18:28:42.9892097Z,[18:24:24+0000] Collecting python-dotenv==1.1.1 (from -r requirements.txt (line 11)),,0
+	2025-09-09T18:28:43.0399149Z,[18:24:24+0000]   Downloading python_dotenv-1.1.1-py3-none-any.whl.metadata (24 kB),,0
+	2025-09-09T18:28:43.1386677Z,[18:24:24+0000] Collecting PyYAML==6.0.2 (from -r requirements.txt (line 12)),,0
+	2025-09-09T18:28:43.1792674Z,[18:24:24+0000]   Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB),,0
+	2025-09-09T18:28:43.2014313Z,[18:24:24+0000] Collecting sniffio==1.3.1 (from -r requirements.txt (line 13)),,0
+	2025-09-09T18:28:43.2421033Z,[18:24:24+0000]   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB),,0
+	2025-09-09T18:28:43.2709406Z,[18:24:25+0000] Collecting starlette==0.47.3 (from -r requirements.txt (line 14)),,0
+	2025-09-09T18:28:43.2911129Z,[18:24:25+0000]   Downloading starlette-0.47.3-py3-none-any.whl.metadata (6.2 kB),,0
+	2025-09-09T18:28:43.3113735Z,[18:24:25+0000] Collecting typing-inspection==0.4.1 (from -r requirements.txt (line 15)),,0
+	2025-09-09T18:28:43.3321373Z,[18:24:25+0000]   Downloading typing_inspection-0.4.1-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:28:43.3813563Z,[18:24:25+0000] Collecting typing_extensions==4.15.0 (from -r requirements.txt (line 16)),,0
+	2025-09-09T18:28:43.4030365Z,[18:24:25+0000]   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB),,0
+	2025-09-09T18:28:43.4521933Z,[18:24:25+0000] Collecting uvicorn==0.35.0 (from -r requirements.txt (line 17)),,0
+	2025-09-09T18:28:43.4717930Z,[18:24:25+0000]   Downloading uvicorn-0.35.0-py3-none-any.whl.metadata (6.5 kB),,0
+	2025-09-09T18:28:43.4902213Z,[18:24:25+0000] Collecting uvloop==0.21.0 (from -r requirements.txt (line 18)),,0
+	2025-09-09T18:28:43.5119059Z,[18:24:25+0000]   Downloading uvloop-0.21.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB),,0
+	2025-09-09T18:28:43.5235008Z,[18:24:26+0000] Collecting watchfiles==1.1.0 (from -r requirements.txt (line 19)),,0
+	2025-09-09T18:28:43.5638527Z,[18:24:26+0000]   Downloading watchfiles-1.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB),,0
+	2025-09-09T18:28:43.6142902Z,[18:24:26+0000] Collecting websockets==15.0.1 (from -r requirements.txt (line 20)),,0
+	2025-09-09T18:28:43.6722008Z,[18:24:26+0000]   Downloading websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB),,0
+	2025-09-09T18:28:43.6847696Z,[18:24:26+0000] Collecting azure-search-documents (from -r requirements.txt (line 22)),,0
+	2025-09-09T18:28:43.7232607Z,[18:24:26+0000]   Downloading azure_search_documents-11.5.3-py3-none-any.whl.metadata (23 kB),,0
+	2025-09-09T18:28:43.7437256Z,[18:24:26+0000] Collecting azure-core (from -r requirements.txt (line 23)),,0
+	2025-09-09T18:28:43.7720411Z,[18:24:26+0000]   Downloading azure_core-1.35.0-py3-none-any.whl.metadata (44 kB),,0
+	2025-09-09T18:28:43.7927030Z,[18:24:27+0000] Collecting azure-identity (from -r requirements.txt (line 24)),,0
+	2025-09-09T18:28:43.8045673Z,[18:24:27+0000]   Downloading azure_identity-1.24.0-py3-none-any.whl.metadata (86 kB),,0
+	2025-09-09T18:28:43.8340078Z,[18:24:27+0000] Collecting promptflow (from -r requirements.txt (line 25)),,0
+	2025-09-09T18:28:43.8440273Z,[18:24:27+0000]   Downloading promptflow-1.18.1-py3-none-any.whl.metadata (28 kB),,0
+	2025-09-09T18:28:43.8641766Z,[18:24:27+0000] Collecting azure-ai-ml (from -r requirements.txt (line 26)),,0
+	2025-09-09T18:28:43.8933067Z,[18:24:27+0000]   Downloading azure_ai_ml-1.29.0-py3-none-any.whl.metadata (40 kB),,0
+	2025-09-09T18:28:43.9048847Z,[18:24:27+0000] Collecting openai (from -r requirements.txt (line 27)),,0
+	2025-09-09T18:28:43.9253024Z,[18:24:27+0000]   Downloading openai-1.107.0-py3-none-any.whl.metadata (29 kB),,0
+	2025-09-09T18:28:43.9631730Z,[18:24:27+0000] Collecting gunicorn (from -r requirements.txt (line 29)),,0
+	2025-09-09T18:28:44.0031559Z,[18:24:27+0000]   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB),,0
+	2025-09-09T18:28:44.0081118Z,[18:24:28+0000] Collecting azure-common>=1.1 (from azure-search-documents->-r requirements.txt (line 22)),,0
+	2025-09-09T18:28:44.0445368Z,[18:24:28+0000]   Downloading azure_common-1.1.28-py2.py3-none-any.whl.metadata (5.0 kB),,0
+	2025-09-09T18:28:44.0637952Z,[18:24:28+0000] Collecting isodate>=0.6.0 (from azure-search-documents->-r requirements.txt (line 22)),,0
+	2025-09-09T18:28:44.0756955Z,[18:24:28+0000]   Downloading isodate-0.7.2-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:28:44.0948055Z,[18:24:28+0000] Collecting requests>=2.21.0 (from azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:28:44.1149863Z,[18:24:28+0000]   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB),,0
+	2025-09-09T18:28:44.1370517Z,[18:24:28+0000] Collecting six>=1.11.0 (from azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:28:44.1654745Z,[18:24:28+0000]   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB),,0
+	2025-09-09T18:28:44.1774441Z,[18:24:29+0000] Collecting cryptography>=2.5 (from azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:28:44.2645951Z,[18:24:29+0000]   Downloading cryptography-45.0.7-cp311-abi3-manylinux_2_28_x86_64.whl.metadata (5.7 kB),,0
+	2025-09-09T18:28:44.2861231Z,[18:24:29+0000] Collecting msal>=1.30.0 (from azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:28:44.3159906Z,[18:24:29+0000]   Downloading msal-1.33.0-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:28:44.3460179Z,[18:24:29+0000] Collecting msal-extensions>=1.2.0 (from azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:28:44.3676532Z,[18:24:29+0000]   Downloading msal_extensions-1.3.1-py3-none-any.whl.metadata (7.8 kB),,0
+	2025-09-09T18:28:44.3958862Z,[18:24:29+0000] Collecting promptflow-tracing==1.18.1 (from promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:44.4268405Z,[18:24:29+0000]   Downloading promptflow_tracing-1.18.1-py3-none-any.whl.metadata (2.2 kB),,0
+	2025-09-09T18:28:44.5166527Z,[18:24:29+0000] Collecting promptflow-core==1.18.1 (from promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:44.5458227Z,[18:24:29+0000]   Downloading promptflow_core-1.18.1-py3-none-any.whl.metadata (2.7 kB),,0
+	2025-09-09T18:28:44.5779110Z,[18:24:29+0000] Collecting promptflow-devkit==1.18.1 (from promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:44.6084610Z,[18:24:29+0000]   Downloading promptflow_devkit-1.18.1-py3-none-any.whl.metadata (5.7 kB),,0
+	2025-09-09T18:28:44.6390485Z,[18:24:30+0000] Collecting docstring_parser (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:44.7068253Z,[18:24:30+0000]   Downloading docstring_parser-0.17.0-py3-none-any.whl.metadata (3.5 kB),,0
+	2025-09-09T18:28:44.7974288Z,[18:24:30+0000] Collecting filetype>=1.2.0 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:44.8881463Z,[18:24:30+0000]   Downloading filetype-1.2.0-py2.py3-none-any.whl.metadata (6.5 kB),,0
+	2025-09-09T18:28:44.9585989Z,[18:24:30+0000] Collecting flask<4.0.0&comma;>=2.2.3 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:44.9900429Z,[18:24:30+0000]   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB),,0
+	2025-09-09T18:28:45.0493903Z,[18:24:30+0000] Collecting jsonschema<5.0.0&comma;>=4.0.0 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.1212600Z,[18:24:30+0000]   Downloading jsonschema-4.25.1-py3-none-any.whl.metadata (7.6 kB),,0
+	2025-09-09T18:28:45.1909473Z,[18:24:30+0000] Collecting psutil (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.2303247Z,[18:24:30+0000]   Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (22 kB),,0
+	2025-09-09T18:28:45.3028292Z,[18:24:31+0000] Collecting python-dateutil<3.0.0&comma;>=2.1.0 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.3818398Z,[18:24:31+0000]   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB),,0
+	2025-09-09T18:28:45.4706144Z,[18:24:31+0000] Collecting ruamel.yaml<1.0.0&comma;>=0.17.10 (from promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.5307196Z,[18:24:31+0000]   Downloading ruamel.yaml-0.18.15-py3-none-any.whl.metadata (25 kB),,0
+	2025-09-09T18:28:45.5523497Z,[18:24:32+0000] Collecting argcomplete>=3.2.3 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.5926537Z,[18:24:32+0000]   Downloading argcomplete-3.6.2-py3-none-any.whl.metadata (16 kB),,0
+	2025-09-09T18:28:45.6339318Z,[18:24:32+0000] Collecting azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.6711229Z,[18:24:32+0000]   Downloading azure_monitor_opentelemetry_exporter-1.0.0b41-py2.py3-none-any.whl.metadata (33 kB),,0
+	2025-09-09T18:28:45.7440999Z,[18:24:32+0000] Collecting colorama<0.5.0&comma;>=0.4.6 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.7749955Z,[18:24:32+0000]   Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB),,0
+	2025-09-09T18:28:45.7945272Z,[18:24:32+0000] Collecting filelock<4.0.0&comma;>=3.4.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.8452721Z,[18:24:32+0000]   Downloading filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB),,0
+	2025-09-09T18:28:45.9151750Z,[18:24:32+0000] Collecting flask-cors<7.0.0&comma;>=6.0.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:45.9543770Z,[18:24:32+0000]   Downloading flask_cors-6.0.1-py3-none-any.whl.metadata (5.3 kB),,0
+	2025-09-09T18:28:45.9945947Z,[18:24:32+0000] Collecting flask-restx<2.0.0&comma;>=1.2.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.0434598Z,[18:24:32+0000]   Downloading flask_restx-1.3.0-py2.py3-none-any.whl.metadata (9.3 kB),,0
+	2025-09-09T18:28:46.0951101Z,[18:24:32+0000] Collecting gitpython<4.0.0&comma;>=3.1.24 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.1347843Z,[18:24:32+0000]   Downloading gitpython-3.1.45-py3-none-any.whl.metadata (13 kB),,0
+	2025-09-09T18:28:46.1763479Z,[18:24:33+0000] Collecting httpx>=0.25.1 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.2141671Z,[18:24:33+0000]   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB),,0
+	2025-09-09T18:28:46.2456413Z,[18:24:33+0000] Collecting keyring<25.0.0&comma;>=24.2.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.3045135Z,[18:24:33+0000]   Downloading keyring-24.3.1-py3-none-any.whl.metadata (20 kB),,0
+	2025-09-09T18:28:46.3761942Z,[18:24:33+0000] Collecting marshmallow<4.0.0&comma;>=3.5 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.4261454Z,[18:24:33+0000]   Downloading marshmallow-3.26.1-py3-none-any.whl.metadata (7.3 kB),,0
+	2025-09-09T18:28:46.4552062Z,[18:24:33+0000] Collecting opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.4763462Z,[18:24:33+0000]   Downloading opentelemetry_exporter_otlp_proto_http-1.36.0-py3-none-any.whl.metadata (2.3 kB),,0
+	2025-09-09T18:28:46.5065367Z,[18:24:34+0000] Collecting pandas<3.0.0&comma;>=1.5.3 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.5564367Z,[18:24:34+0000]   Downloading pandas-2.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (91 kB),,0
+	2025-09-09T18:28:46.5953289Z,[18:24:34+0000] Collecting pillow<11.1.0&comma;>=10.1.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.6658971Z,[18:24:34+0000]   Downloading pillow-11.0.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.1 kB),,0
+	2025-09-09T18:28:46.7170190Z,[18:24:35+0000] Collecting pydash<8.0.0&comma;>=6.0.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.7675442Z,[18:24:35+0000]   Downloading pydash-7.0.7-py3-none-any.whl.metadata (45 kB),,0
+	2025-09-09T18:28:46.8087709Z,[18:24:36+0000] Collecting sqlalchemy<3.0.0&comma;>=1.4.48 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:46.8565018Z,[18:24:36+0000]   Downloading sqlalchemy-2.0.43-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.6 kB),,0
+	2025-09-09T18:28:46.9365971Z,[18:24:36+0000] Collecting strictyaml<2.0.0&comma;>=1.5.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:47.0301897Z,[18:24:36+0000]   Downloading strictyaml-1.7.3-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:28:47.0581491Z,[18:24:36+0000] Collecting tabulate<1.0.0&comma;>=0.9.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:47.0905859Z,[18:24:36+0000]   Downloading tabulate-0.9.0-py3-none-any.whl.metadata (34 kB),,0
+	2025-09-09T18:28:47.1206419Z,[18:24:36+0000] Collecting waitress<4.0.0&comma;>=3.0.0 (from promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:47.1582704Z,[18:24:36+0000]   Downloading waitress-3.0.2-py3-none-any.whl.metadata (5.8 kB),,0
+	2025-09-09T18:28:47.2197147Z,[18:24:36+0000] Collecting opentelemetry-sdk<2.0.0&comma;>=1.22.0 (from promptflow-tracing==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:47.2497833Z,[18:24:36+0000]   Downloading opentelemetry_sdk-1.36.0-py3-none-any.whl.metadata (1.5 kB),,0
+	2025-09-09T18:28:47.2792487Z,[18:24:36+0000] Collecting tiktoken>=0.4.0 (from promptflow-tracing==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:47.3096831Z,[18:24:36+0000]   Downloading tiktoken-0.11.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB),,0
+	2025-09-09T18:28:47.3496367Z,[18:24:36+0000] Collecting azure-mgmt-core>=1.3.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.3895317Z,[18:24:36+0000]   Downloading azure_mgmt_core-1.6.0-py3-none-any.whl.metadata (4.6 kB),,0
+	2025-09-09T18:28:47.4394349Z,[18:24:37+0000] Collecting tqdm<5.0.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.4621968Z,[18:24:37+0000]   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB),,0
+	2025-09-09T18:28:47.4800989Z,[18:24:37+0000] Collecting pyjwt<3.0.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.4927169Z,[18:24:37+0000]   Downloading PyJWT-2.10.1-py3-none-any.whl.metadata (4.0 kB),,0
+	2025-09-09T18:28:47.5124287Z,[18:24:37+0000] Collecting azure-storage-blob>=12.10.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.5310073Z,[18:24:37+0000]   Downloading azure_storage_blob-12.26.0-py3-none-any.whl.metadata (26 kB),,0
+	2025-09-09T18:28:47.5522889Z,[18:24:37+0000] Collecting azure-storage-file-share (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.5713861Z,[18:24:37+0000]   Downloading azure_storage_file_share-12.22.0-py3-none-any.whl.metadata (50 kB),,0
+	2025-09-09T18:28:47.6028802Z,[18:24:37+0000] Collecting azure-storage-file-datalake>=12.2.0 (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.6305783Z,[18:24:37+0000]   Downloading azure_storage_file_datalake-12.21.0-py3-none-any.whl.metadata (16 kB),,0
+	2025-09-09T18:28:47.6412812Z,[18:24:37+0000] Collecting azure-monitor-opentelemetry (from azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:47.7015084Z,[18:24:37+0000]   Downloading azure_monitor_opentelemetry-1.8.0-py3-none-any.whl.metadata (23 kB),,0
+	2025-09-09T18:28:47.7135343Z,[18:24:37+0000] Collecting distro<2&comma;>=1.7.0 (from openai->-r requirements.txt (line 27)),,0
+	2025-09-09T18:28:47.7416563Z,[18:24:37+0000]   Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB),,0
+	2025-09-09T18:28:47.7812471Z,[18:24:38+0000] Collecting jiter<1&comma;>=0.4.0 (from openai->-r requirements.txt (line 27)),,0
+	2025-09-09T18:28:47.8111742Z,[18:24:38+0000]   Downloading jiter-0.10.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB),,0
+	2025-09-09T18:28:47.8435826Z,[18:24:38+0000] Collecting packaging (from gunicorn->-r requirements.txt (line 29)),,0
+	2025-09-09T18:28:47.8815936Z,[18:24:38+0000]   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB),,0
+	2025-09-09T18:28:47.9118081Z,[18:24:39+0000] Collecting cffi>=1.14 (from cryptography>=2.5->azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:28:47.9518279Z,[18:24:39+0000]   Downloading cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB),,0
+	2025-09-09T18:28:47.9836417Z,[18:24:39+0000] Collecting certifi (from httpx>=0.25.1->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:48.0029619Z,[18:24:39+0000]   Downloading certifi-2025.8.3-py3-none-any.whl.metadata (2.4 kB),,0
+	2025-09-09T18:28:48.0337205Z,[18:24:39+0000] Collecting httpcore==1.* (from httpx>=0.25.1->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:48.0624796Z,[18:24:39+0000]   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB),,0
+	2025-09-09T18:28:48.1053970Z,[18:24:39+0000] Collecting attrs>=22.2.0 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:48.1434791Z,[18:24:39+0000]   Downloading attrs-25.3.0-py3-none-any.whl.metadata (10 kB),,0
+	2025-09-09T18:28:48.1845622Z,[18:24:39+0000] Collecting jsonschema-specifications>=2023.03.6 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:48.2057288Z,[18:24:39+0000]   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB),,0
+	2025-09-09T18:28:48.2331997Z,[18:24:39+0000] Collecting referencing>=0.28.4 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:48.2372269Z,[18:24:39+0000]   Downloading referencing-0.36.2-py3-none-any.whl.metadata (2.8 kB),,0
+	2025-09-09T18:28:48.2465251Z,[18:24:41+0000] Collecting rpds-py>=0.7.1 (from jsonschema<5.0.0&comma;>=4.0.0->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:48.2574551Z,[18:24:41+0000]   Downloading rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.2 kB),,0
+	2025-09-09T18:28:48.2852569Z,[18:24:42+0000] Collecting charset_normalizer<4&comma;>=2 (from requests>=2.21.0->azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:28:48.3159278Z,[18:24:42+0000]   Downloading charset_normalizer-3.4.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB),,0
+	2025-09-09T18:28:48.3559679Z,[18:24:42+0000] Collecting urllib3<3&comma;>=1.21.1 (from requests>=2.21.0->azure-core->-r requirements.txt (line 23)),,0
+	2025-09-09T18:28:48.4549124Z,[18:24:42+0000]   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB),,0
+	2025-09-09T18:28:48.5361150Z,[18:24:42+0000] Collecting azure-core-tracing-opentelemetry~=1.0.0b11 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:48.6069897Z,[18:24:42+0000]   Downloading azure_core_tracing_opentelemetry-1.0.0b12-py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:28:48.6274147Z,[18:24:42+0000] Collecting opentelemetry-instrumentation-django~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:48.6478156Z,[18:24:42+0000]   Downloading opentelemetry_instrumentation_django-0.57b0-py3-none-any.whl.metadata (2.3 kB),,0
+	2025-09-09T18:28:48.6977716Z,[18:24:42+0000] Collecting opentelemetry-instrumentation-fastapi~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:48.8475325Z,[18:24:42+0000]   Downloading opentelemetry_instrumentation_fastapi-0.57b0-py3-none-any.whl.metadata (2.2 kB),,0
+	2025-09-09T18:28:48.8869745Z,[18:24:42+0000] Collecting opentelemetry-instrumentation-flask~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:48.9284546Z,[18:24:42+0000]   Downloading opentelemetry_instrumentation_flask-0.57b0-py3-none-any.whl.metadata (2.2 kB),,0
+	2025-09-09T18:28:48.9697869Z,[18:24:42+0000] Collecting opentelemetry-instrumentation-psycopg2~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:49.1194154Z,[18:24:42+0000]   Downloading opentelemetry_instrumentation_psycopg2-0.57b0-py3-none-any.whl.metadata (2.1 kB),,0
+	2025-09-09T18:28:49.1993817Z,[18:24:42+0000] Collecting opentelemetry-instrumentation-requests~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:49.2702896Z,[18:24:42+0000]   Downloading opentelemetry_instrumentation_requests-0.57b0-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:28:49.3298343Z,[18:24:42+0000] Collecting opentelemetry-instrumentation-urllib~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:49.3995670Z,[18:24:43+0000]   Downloading opentelemetry_instrumentation_urllib-0.57b0-py3-none-any.whl.metadata (3.4 kB),,0
+	2025-09-09T18:28:49.4504339Z,[18:24:43+0000] Collecting opentelemetry-instrumentation-urllib3~=0.57b0 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:49.5119584Z,[18:24:43+0000]   Downloading opentelemetry_instrumentation_urllib3-0.57b0-py3-none-any.whl.metadata (4.2 kB),,0
+	2025-09-09T18:28:49.5711551Z,[18:24:43+0000] Collecting opentelemetry-resource-detector-azure~=0.1.5 (from azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:49.6534010Z,[18:24:43+0000]   Downloading opentelemetry_resource_detector_azure-0.1.5-py3-none-any.whl.metadata (5.3 kB),,0
+	2025-09-09T18:28:49.6934343Z,[18:24:43+0000] Collecting opentelemetry-api>=1.12.0 (from azure-core-tracing-opentelemetry~=1.0.0b11->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:49.7326406Z,[18:24:43+0000]   Downloading opentelemetry_api-1.36.0-py3-none-any.whl.metadata (1.5 kB),,0
+	2025-09-09T18:28:49.7724899Z,[18:24:43+0000] Collecting fixedint==0.1.6 (from azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:49.8016427Z,[18:24:43+0000]   Downloading fixedint-0.1.6-py3-none-any.whl.metadata (4.8 kB),,0
+	2025-09-09T18:28:49.8528386Z,[18:24:43+0000] Collecting msrest>=0.6.10 (from azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:49.8747813Z,[18:24:43+0000]   Downloading msrest-0.7.1-py3-none-any.whl.metadata (21 kB),,0
+	2025-09-09T18:28:49.9535437Z,[18:24:43+0000] Collecting pycparser (from cffi>=1.14->cryptography>=2.5->azure-identity->-r requirements.txt (line 24)),,0
+	2025-09-09T18:28:49.9749058Z,[18:24:43+0000]   Downloading pycparser-2.23-py3-none-any.whl.metadata (993 bytes),,0
+	2025-09-09T18:28:50.0046023Z,[18:24:43+0000] Collecting blinker>=1.9.0 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.0444949Z,[18:24:43+0000]   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB),,0
+	2025-09-09T18:28:50.0832939Z,[18:24:43+0000] Collecting itsdangerous>=2.2.0 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.1026245Z,[18:24:43+0000]   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB),,0
+	2025-09-09T18:28:50.1356066Z,[18:24:44+0000] Collecting jinja2>=3.1.2 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.1843659Z,[18:24:44+0000]   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB),,0
+	2025-09-09T18:28:50.2334299Z,[18:24:44+0000] Collecting markupsafe>=2.1.1 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.2536185Z,[18:24:44+0000]   Downloading MarkupSafe-3.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB),,0
+	2025-09-09T18:28:50.2665859Z,[18:24:44+0000] Collecting werkzeug>=3.1.0 (from flask<4.0.0&comma;>=2.2.3->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.3045614Z,[18:24:44+0000]   Downloading werkzeug-3.1.3-py3-none-any.whl.metadata (3.7 kB),,0
+	2025-09-09T18:28:50.3442135Z,[18:24:44+0000] Collecting aniso8601>=0.82 (from flask-restx<2.0.0&comma;>=1.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.4171550Z,[18:24:44+0000]   Downloading aniso8601-10.0.1-py2.py3-none-any.whl.metadata (23 kB),,0
+	2025-09-09T18:28:50.4858332Z,[18:24:44+0000] Collecting pytz (from flask-restx<2.0.0&comma;>=1.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.5279716Z,[18:24:44+0000]   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB),,0
+	2025-09-09T18:28:50.5853071Z,[18:24:44+0000] Collecting importlib-resources (from flask-restx<2.0.0&comma;>=1.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.6269098Z,[18:24:44+0000]   Downloading importlib_resources-6.5.2-py3-none-any.whl.metadata (3.9 kB),,0
+	2025-09-09T18:28:50.6785703Z,[18:24:44+0000] Collecting gitdb<5&comma;>=4.0.1 (from gitpython<4.0.0&comma;>=3.1.24->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.7169951Z,[18:24:44+0000]   Downloading gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB),,0
+	2025-09-09T18:28:50.7382468Z,[18:24:45+0000] Collecting jaraco.classes (from keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.7681655Z,[18:24:45+0000]   Downloading jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:28:50.8270685Z,[18:24:45+0000] Collecting SecretStorage>=3.2 (from keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.8574483Z,[18:24:45+0000]   Downloading secretstorage-3.4.0-py3-none-any.whl.metadata (3.9 kB),,0
+	2025-09-09T18:28:50.8867082Z,[18:24:45+0000] Collecting jeepney>=0.4.2 (from keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:50.9298966Z,[18:24:45+0000]   Downloading jeepney-0.9.0-py3-none-any.whl.metadata (1.2 kB),,0
+	2025-09-09T18:28:50.9803811Z,[18:24:45+0000] Collecting googleapis-common-protos~=1.52 (from opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:51.0002214Z,[18:24:45+0000]   Downloading googleapis_common_protos-1.70.0-py3-none-any.whl.metadata (9.3 kB),,0
+	2025-09-09T18:28:51.0599885Z,[18:24:45+0000] Collecting opentelemetry-exporter-otlp-proto-common==1.36.0 (from opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:51.0898213Z,[18:24:45+0000]   Downloading opentelemetry_exporter_otlp_proto_common-1.36.0-py3-none-any.whl.metadata (1.8 kB),,0
+	2025-09-09T18:28:51.1012331Z,[18:24:45+0000] Collecting opentelemetry-proto==1.36.0 (from opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:51.1510751Z,[18:24:45+0000]   Downloading opentelemetry_proto-1.36.0-py3-none-any.whl.metadata (2.3 kB),,0
+	2025-09-09T18:28:51.1795678Z,[18:24:46+0000] Collecting protobuf<7.0&comma;>=5.0 (from opentelemetry-proto==1.36.0->opentelemetry-exporter-otlp-proto-http<2.0.0&comma;>=1.22.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:51.2096403Z,[18:24:46+0000]   Downloading protobuf-6.32.0-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes),,0
+	2025-09-09T18:28:51.2291249Z,[18:24:46+0000] Collecting opentelemetry-instrumentation-wsgi==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.3201001Z,[18:24:46+0000]   Downloading opentelemetry_instrumentation_wsgi-0.57b0-py3-none-any.whl.metadata (2.1 kB),,0
+	2025-09-09T18:28:51.3617148Z,[18:24:46+0000] Collecting opentelemetry-instrumentation==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.4014751Z,[18:24:46+0000]   Downloading opentelemetry_instrumentation-0.57b0-py3-none-any.whl.metadata (6.7 kB),,0
+	2025-09-09T18:28:51.4412317Z,[18:24:46+0000] Collecting opentelemetry-semantic-conventions==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.4607788Z,[18:24:46+0000]   Downloading opentelemetry_semantic_conventions-0.57b0-py3-none-any.whl.metadata (2.4 kB),,0
+	2025-09-09T18:28:51.4919644Z,[18:24:46+0000] Collecting opentelemetry-util-http==0.57b0 (from opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.5114955Z,[18:24:46+0000]   Downloading opentelemetry_util_http-0.57b0-py3-none-any.whl.metadata (2.6 kB),,0
+	2025-09-09T18:28:51.5207009Z,[18:24:47+0000] Collecting wrapt<2.0.0&comma;>=1.0.0 (from opentelemetry-instrumentation==0.57b0->opentelemetry-instrumentation-django~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.5420258Z,[18:24:47+0000]   Downloading wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB),,0
+	2025-09-09T18:28:51.6507979Z,[18:24:48+0000] Collecting importlib-metadata<8.8.0&comma;>=6.0 (from opentelemetry-api>=1.12.0->azure-core-tracing-opentelemetry~=1.0.0b11->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.6725229Z,[18:24:48+0000]   Downloading importlib_metadata-8.7.0-py3-none-any.whl.metadata (4.8 kB),,0
+	2025-09-09T18:28:51.7031212Z,[18:24:48+0000] Collecting opentelemetry-instrumentation-asgi==0.57b0 (from opentelemetry-instrumentation-fastapi~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.7340473Z,[18:24:48+0000]   Downloading opentelemetry_instrumentation_asgi-0.57b0-py3-none-any.whl.metadata (2.0 kB),,0
+	2025-09-09T18:28:51.7722446Z,[18:24:48+0000] Collecting asgiref~=3.0 (from opentelemetry-instrumentation-asgi==0.57b0->opentelemetry-instrumentation-fastapi~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.7938285Z,[18:24:48+0000]   Downloading asgiref-3.9.1-py3-none-any.whl.metadata (9.3 kB),,0
+	2025-09-09T18:28:51.8415812Z,[18:24:48+0000] Collecting opentelemetry-instrumentation-dbapi==0.57b0 (from opentelemetry-instrumentation-psycopg2~=0.57b0->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:51.8838580Z,[18:24:48+0000]   Downloading opentelemetry_instrumentation_dbapi-0.57b0-py3-none-any.whl.metadata (2.0 kB),,0
+	2025-09-09T18:28:51.9324093Z,[18:24:49+0000] Collecting numpy>=1.26.0 (from pandas<3.0.0&comma;>=1.5.3->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:51.9740686Z,[18:24:49+0000]   Downloading numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB),,0
+	2025-09-09T18:28:52.0530495Z,[18:24:50+0000] Collecting tzdata>=2022.7 (from pandas<3.0.0&comma;>=1.5.3->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.0945947Z,[18:24:50+0000]   Downloading tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB),,0
+	2025-09-09T18:28:52.1141191Z,[18:24:50+0000] Collecting ruamel.yaml.clib>=0.2.7 (from ruamel.yaml<1.0.0&comma;>=0.17.10->promptflow-core==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.1340109Z,[18:24:50+0000]   Downloading ruamel.yaml.clib-0.2.12-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.7 kB),,0
+	2025-09-09T18:28:52.1934357Z,[18:24:51+0000] Collecting greenlet>=1 (from sqlalchemy<3.0.0&comma;>=1.4.48->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.2334616Z,[18:24:51+0000]   Downloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB),,0
+	2025-09-09T18:28:52.2952497Z,[18:24:52+0000] Collecting regex>=2022.1.18 (from tiktoken>=0.4.0->promptflow-tracing==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.3268170Z,[18:24:52+0000]   Downloading regex-2025.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB),,0
+	2025-09-09T18:28:52.3660507Z,[18:24:52+0000] Collecting smmap<6&comma;>=3.0.1 (from gitdb<5&comma;>=4.0.1->gitpython<4.0.0&comma;>=3.1.24->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.3963034Z,[18:24:52+0000]   Downloading smmap-5.0.2-py3-none-any.whl.metadata (4.3 kB),,0
+	2025-09-09T18:28:52.4164589Z,[18:24:53+0000] Collecting requests-oauthlib>=0.5.0 (from msrest>=0.6.10->azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.4368637Z,[18:24:53+0000]   Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB),,0
+	2025-09-09T18:28:52.4563283Z,[18:24:54+0000] Collecting more-itertools (from jaraco.classes->keyring<25.0.0&comma;>=24.2.0->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.4772790Z,[18:24:55+0000]   Downloading more_itertools-10.8.0-py3-none-any.whl.metadata (39 kB),,0
+	2025-09-09T18:28:52.5149639Z,[18:24:55+0000] Collecting zipp>=3.20 (from importlib-metadata<8.8.0&comma;>=6.0->opentelemetry-api>=1.12.0->azure-core-tracing-opentelemetry~=1.0.0b11->azure-monitor-opentelemetry->azure-ai-ml->-r requirements.txt (line 26)),,0
+	2025-09-09T18:28:52.5370202Z,[18:24:55+0000]   Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB),,0
+	2025-09-09T18:28:52.5756122Z,[18:24:55+0000] Collecting oauthlib>=3.0.0 (from requests-oauthlib>=0.5.0->msrest>=0.6.10->azure-monitor-opentelemetry-exporter<2.0.0&comma;>=1.0.0b21->promptflow-devkit==1.18.1->promptflow->-r requirements.txt (line 25)),,0
+	2025-09-09T18:28:52.6786138Z,[18:24:55+0000]   Downloading oauthlib-3.3.1-py3-none-any.whl.metadata (7.9 kB),,0
+	2025-09-09T18:28:52.7467021Z,[18:24:56+0000] Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB),,0
+	2025-09-09T18:28:52.7973455Z,[18:24:56+0000] Downloading anyio-4.10.0-py3-none-any.whl (107 kB),,0
+	2025-09-09T18:28:52.8468354Z,[18:24:56+0000] Downloading click-8.2.1-py3-none-any.whl (102 kB),,0
+	2025-09-09T18:28:52.8780752Z,[18:24:56+0000] Downloading exceptiongroup-1.3.0-py3-none-any.whl (16 kB),,0
+	2025-09-09T18:28:52.9470238Z,[18:24:56+0000] Downloading fastapi-0.116.1-py3-none-any.whl (95 kB),,0
+	2025-09-09T18:28:52.9900965Z,[18:24:56+0000] Downloading h11-0.16.0-py3-none-any.whl (37 kB),,0
+	2025-09-09T18:28:53.0476167Z,[18:24:56+0000] Downloading httptools-0.6.4-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (510 kB),,0
+	2025-09-09T18:28:53.1188156Z,[18:24:56+0000] Downloading idna-3.10-py3-none-any.whl (70 kB),,0
+	2025-09-09T18:28:53.1699745Z,[18:24:56+0000] Downloading pydantic-2.11.7-py3-none-any.whl (444 kB),,0
+	2025-09-09T18:28:53.2007044Z,[18:24:56+0000] Downloading pydantic_core-2.33.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.0 MB),,0
+	2025-09-09T18:28:53.2896971Z,[18:24:56+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 44.4 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:53.3697723Z,[18:24:56+0000] Downloading python_dotenv-1.1.1-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:28:53.4018262Z,[18:24:56+0000] Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (767 kB),,0
+	2025-09-09T18:28:53.5300505Z,[18:24:56+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 767.5/767.5 kB 25.5 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:53.5818294Z,[18:24:56+0000] Downloading sniffio-1.3.1-py3-none-any.whl (10 kB),,0
+	2025-09-09T18:28:53.6330045Z,[18:24:56+0000] Downloading starlette-0.47.3-py3-none-any.whl (72 kB),,0
+	2025-09-09T18:28:53.7028538Z,[18:24:56+0000] Downloading typing_inspection-0.4.1-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:28:53.7434167Z,[18:24:56+0000] Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB),,0
+	2025-09-09T18:28:53.8031901Z,[18:24:56+0000] Downloading uvicorn-0.35.0-py3-none-any.whl (66 kB),,0
+	2025-09-09T18:28:53.8617828Z,[18:24:56+0000] Downloading uvloop-0.21.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.7 MB),,0
+	2025-09-09T18:28:53.9136790Z,[18:24:56+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 36.6 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:53.9742575Z,[18:24:56+0000] Downloading watchfiles-1.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (452 kB),,0
+	2025-09-09T18:28:54.0230350Z,[18:24:56+0000] Downloading websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (182 kB),,0
+	2025-09-09T18:28:54.0530003Z,[18:24:57+0000] Downloading azure_search_documents-11.5.3-py3-none-any.whl (298 kB),,0
+	2025-09-09T18:28:54.1249103Z,[18:24:57+0000] Downloading azure_core-1.35.0-py3-none-any.whl (210 kB),,0
+	2025-09-09T18:28:54.1946656Z,[18:24:57+0000] Downloading azure_identity-1.24.0-py3-none-any.whl (187 kB),,0
+	2025-09-09T18:28:54.2463755Z,[18:24:57+0000] Downloading promptflow-1.18.1-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:28:54.2953490Z,[18:24:57+0000] Downloading promptflow_core-1.18.1-py3-none-any.whl (988 kB),,0
+	2025-09-09T18:28:54.3501903Z,[18:24:57+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 988.4/988.4 kB 36.5 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:54.3943620Z,[18:24:57+0000] Downloading promptflow_devkit-1.18.1-py3-none-any.whl (7.0 MB),,0
+	2025-09-09T18:28:54.4657610Z,[18:24:57+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 50.9 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:54.4978107Z,[18:24:57+0000] Downloading promptflow_tracing-1.18.1-py3-none-any.whl (26 kB),,0
+	2025-09-09T18:28:54.5798587Z,[18:24:57+0000] Downloading azure_ai_ml-1.29.0-py3-none-any.whl (13.2 MB),,0
+	2025-09-09T18:28:54.5903613Z,[18:24:57+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 31.9 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:54.6165611Z,[18:24:58+0000] Downloading openai-1.107.0-py3-none-any.whl (950 kB),,0
+	2025-09-09T18:28:54.6287330Z,[18:24:58+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 951.0/951.0 kB 24.6 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:54.7074381Z,[18:24:58+0000] Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB),,0
+	2025-09-09T18:28:54.7470539Z,[18:24:58+0000] Downloading azure_common-1.1.28-py2.py3-none-any.whl (14 kB),,0
+	2025-09-09T18:28:54.8178012Z,[18:24:58+0000] Downloading azure_mgmt_core-1.6.0-py3-none-any.whl (29 kB),,0
+	2025-09-09T18:28:54.8876370Z,[18:24:58+0000] Downloading azure_storage_blob-12.26.0-py3-none-any.whl (412 kB),,0
+	2025-09-09T18:28:54.9187482Z,[18:24:58+0000] Downloading azure_storage_file_datalake-12.21.0-py3-none-any.whl (264 kB),,0
+	2025-09-09T18:28:54.9601477Z,[18:24:58+0000] Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB),,0
+	2025-09-09T18:28:55.0078509Z,[18:24:58+0000] Downloading cryptography-45.0.7-cp311-abi3-manylinux_2_28_x86_64.whl (4.5 MB),,0
+	2025-09-09T18:28:55.0404486Z,[18:24:58+0000]    ━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 18.2 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:55.1090331Z,[18:24:58+0000] Downloading distro-1.9.0-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:28:55.1686433Z,[18:24:58+0000] Downloading httpx-0.28.1-py3-none-any.whl (73 kB),,0
+	2025-09-09T18:28:55.2007195Z,[18:24:58+0000] Downloading httpcore-1.0.9-py3-none-any.whl (78 kB),,0
+	2025-09-09T18:28:55.2388198Z,[18:24:58+0000] Downloading isodate-0.7.2-py3-none-any.whl (22 kB),,0
+	2025-09-09T18:28:55.2804504Z,[18:24:58+0000] Downloading jiter-0.10.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (352 kB),,0
+	2025-09-09T18:28:55.3306058Z,[18:24:59+0000] Downloading jsonschema-4.25.1-py3-none-any.whl (90 kB),,0
+	2025-09-09T18:28:55.3488542Z,[18:24:59+0000] Downloading marshmallow-3.26.1-py3-none-any.whl (50 kB),,0
+	2025-09-09T18:28:55.4101185Z,[18:24:59+0000] Downloading msal-1.33.0-py3-none-any.whl (116 kB),,0
+	2025-09-09T18:28:55.4221574Z,[18:24:59+0000] Downloading msal_extensions-1.3.1-py3-none-any.whl (20 kB),,0
+	2025-09-09T18:28:55.4422667Z,[18:24:59+0000] Downloading packaging-25.0-py3-none-any.whl (66 kB),,0
+	2025-09-09T18:28:55.4910703Z,[18:24:59+0000] Downloading pydash-7.0.7-py3-none-any.whl (110 kB),,0
+	2025-09-09T18:28:55.5213855Z,[18:24:59+0000] Downloading PyJWT-2.10.1-py3-none-any.whl (22 kB),,0
+	2025-09-09T18:28:55.5514457Z,[18:24:59+0000] Downloading requests-2.32.5-py3-none-any.whl (64 kB),,0
+	2025-09-09T18:28:55.5817473Z,[18:24:59+0000] Downloading six-1.17.0-py2.py3-none-any.whl (11 kB),,0
+	2025-09-09T18:28:55.6215175Z,[18:24:59+0000] Downloading strictyaml-1.7.3-py3-none-any.whl (123 kB),,0
+	2025-09-09T18:28:55.6513905Z,[18:24:59+0000] Downloading tqdm-4.67.1-py3-none-any.whl (78 kB),,0
+	2025-09-09T18:28:55.6915823Z,[18:24:59+0000] Downloading azure_monitor_opentelemetry-1.8.0-py3-none-any.whl (27 kB),,0
+	2025-09-09T18:28:55.7306485Z,[18:24:59+0000] Downloading azure_storage_file_share-12.22.0-py3-none-any.whl (291 kB),,0
+	2025-09-09T18:28:55.7541898Z,[18:24:59+0000] Downloading argcomplete-3.6.2-py3-none-any.whl (43 kB),,0
+	2025-09-09T18:28:55.7719301Z,[18:24:59+0000] Downloading attrs-25.3.0-py3-none-any.whl (63 kB),,0
+	2025-09-09T18:28:55.7827242Z,[18:24:59+0000] Downloading azure_core_tracing_opentelemetry-1.0.0b12-py3-none-any.whl (11 kB),,0
+	2025-09-09T18:28:55.8429319Z,[18:24:59+0000] Downloading azure_monitor_opentelemetry_exporter-1.0.0b41-py2.py3-none-any.whl (162 kB),,0
+	2025-09-09T18:28:55.8736148Z,[18:24:59+0000] Downloading fixedint-0.1.6-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:28:55.9136935Z,[18:24:59+0000] Downloading certifi-2025.8.3-py3-none-any.whl (161 kB),,0
+	2025-09-09T18:28:55.9339261Z,[18:24:59+0000] Downloading cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB),,0
+	2025-09-09T18:28:55.9843831Z,[18:24:59+0000] Downloading charset_normalizer-3.4.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (151 kB),,0
+	2025-09-09T18:28:56.0625703Z,[18:25:00+0000] Downloading filelock-3.19.1-py3-none-any.whl (15 kB),,0
+	2025-09-09T18:28:56.1249061Z,[18:25:00+0000] Downloading filetype-1.2.0-py2.py3-none-any.whl (19 kB),,0
+	2025-09-09T18:28:56.1652724Z,[18:25:00+0000] Downloading flask-3.1.2-py3-none-any.whl (103 kB),,0
+	2025-09-09T18:28:56.1977940Z,[18:25:00+0000] Downloading flask_cors-6.0.1-py3-none-any.whl (13 kB),,0
+	2025-09-09T18:28:56.2240146Z,[18:25:00+0000] Downloading flask_restx-1.3.0-py2.py3-none-any.whl (2.8 MB),,0
+	2025-09-09T18:28:56.2445966Z,[18:25:00+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.8/2.8 MB 28.4 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:56.2650385Z,[18:25:00+0000] Downloading gitpython-3.1.45-py3-none-any.whl (208 kB),,0
+	2025-09-09T18:28:56.2942425Z,[18:25:00+0000] Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB),,0
+	2025-09-09T18:28:56.3353113Z,[18:25:00+0000] Downloading keyring-24.3.1-py3-none-any.whl (38 kB),,0
+	2025-09-09T18:28:56.3640326Z,[18:25:00+0000] Downloading opentelemetry_exporter_otlp_proto_http-1.36.0-py3-none-any.whl (18 kB),,0
+	2025-09-09T18:28:56.3850882Z,[18:25:00+0000] Downloading opentelemetry_exporter_otlp_proto_common-1.36.0-py3-none-any.whl (18 kB),,0
+	2025-09-09T18:28:56.4065363Z,[18:25:00+0000] Downloading opentelemetry_proto-1.36.0-py3-none-any.whl (72 kB),,0
+	2025-09-09T18:28:56.4348909Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_django-0.57b0-py3-none-any.whl (19 kB),,0
+	2025-09-09T18:28:56.4652054Z,[18:25:00+0000] Downloading opentelemetry_instrumentation-0.57b0-py3-none-any.whl (32 kB),,0
+	2025-09-09T18:28:56.5065080Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_wsgi-0.57b0-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:28:56.5851254Z,[18:25:00+0000] Downloading opentelemetry_semantic_conventions-0.57b0-py3-none-any.whl (201 kB),,0
+	2025-09-09T18:28:56.6468190Z,[18:25:00+0000] Downloading opentelemetry_api-1.36.0-py3-none-any.whl (65 kB),,0
+	2025-09-09T18:28:56.7757407Z,[18:25:00+0000] Downloading opentelemetry_util_http-0.57b0-py3-none-any.whl (7.6 kB),,0
+	2025-09-09T18:28:56.8281538Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_fastapi-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:28:56.8668773Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_asgi-0.57b0-py3-none-any.whl (16 kB),,0
+	2025-09-09T18:28:56.9370787Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_flask-0.57b0-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:28:56.9769034Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_psycopg2-0.57b0-py3-none-any.whl (10 kB),,0
+	2025-09-09T18:28:57.0085058Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_dbapi-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:28:57.0799243Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_requests-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:28:57.1491208Z,[18:25:00+0000] Downloading opentelemetry_instrumentation_urllib-0.57b0-py3-none-any.whl (12 kB),,0
+	2025-09-09T18:28:57.2177073Z,[18:25:01+0000] Downloading opentelemetry_instrumentation_urllib3-0.57b0-py3-none-any.whl (13 kB),,0
+	2025-09-09T18:28:57.3190690Z,[18:25:01+0000] Downloading opentelemetry_resource_detector_azure-0.1.5-py3-none-any.whl (14 kB),,0
+	2025-09-09T18:28:57.3703373Z,[18:25:01+0000] Downloading opentelemetry_sdk-1.36.0-py3-none-any.whl (119 kB),,0
+	2025-09-09T18:28:57.4391206Z,[18:25:01+0000] Downloading pandas-2.3.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.0 MB),,0
+	2025-09-09T18:28:57.5411380Z,[18:25:01+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 32.3 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:57.5998010Z,[18:25:01+0000] Downloading pillow-11.0.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.4 MB),,0
+	2025-09-09T18:28:57.6908330Z,[18:25:01+0000]    ━━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 11.4 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:57.7104446Z,[18:25:02+0000] Downloading psutil-7.0.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (277 kB),,0
+	2025-09-09T18:28:57.7605986Z,[18:25:02+0000] Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB),,0
+	2025-09-09T18:28:57.8029882Z,[18:25:02+0000] Downloading referencing-0.36.2-py3-none-any.whl (26 kB),,0
+	2025-09-09T18:28:57.8333448Z,[18:25:02+0000] Downloading rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (386 kB),,0
+	2025-09-09T18:28:57.8706969Z,[18:25:02+0000] Downloading ruamel.yaml-0.18.15-py3-none-any.whl (119 kB),,0
+	2025-09-09T18:28:57.9021407Z,[18:25:02+0000] Downloading sqlalchemy-2.0.43-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB),,0
+	2025-09-09T18:28:57.9541440Z,[18:25:02+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 18.9 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:57.9822765Z,[18:25:02+0000] Downloading tabulate-0.9.0-py3-none-any.whl (35 kB),,0
+	2025-09-09T18:28:58.0127445Z,[18:25:02+0000] Downloading tiktoken-0.11.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.2 MB),,0
+	2025-09-09T18:28:58.0330403Z,[18:25:03+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 6.1 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:58.0729361Z,[18:25:03+0000] Downloading urllib3-2.5.0-py3-none-any.whl (129 kB),,0
+	2025-09-09T18:28:58.1340253Z,[18:25:03+0000] Downloading waitress-3.0.2-py3-none-any.whl (56 kB),,0
+	2025-09-09T18:28:58.1938427Z,[18:25:03+0000] Downloading docstring_parser-0.17.0-py3-none-any.whl (36 kB),,0
+	2025-09-09T18:28:58.2253310Z,[18:25:03+0000] Downloading aniso8601-10.0.1-py2.py3-none-any.whl (52 kB),,0
+	2025-09-09T18:28:58.2529359Z,[18:25:03+0000] Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB),,0
+	2025-09-09T18:28:58.2835980Z,[18:25:03+0000] Downloading gitdb-4.0.12-py3-none-any.whl (62 kB),,0
+	2025-09-09T18:28:58.3252674Z,[18:25:03+0000] Downloading googleapis_common_protos-1.70.0-py3-none-any.whl (294 kB),,0
+	2025-09-09T18:28:58.3761591Z,[18:25:03+0000] Downloading greenlet-3.2.4-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (607 kB),,0
+	2025-09-09T18:28:58.4133058Z,[18:25:03+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 607.6/607.6 kB 3.5 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:58.4336662Z,[18:25:03+0000] Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB),,0
+	2025-09-09T18:28:58.4454153Z,[18:25:03+0000] Downloading jeepney-0.9.0-py3-none-any.whl (49 kB),,0
+	2025-09-09T18:28:58.4651657Z,[18:25:03+0000] Downloading jinja2-3.1.6-py3-none-any.whl (134 kB),,0
+	2025-09-09T18:28:58.4848279Z,[18:25:03+0000] Downloading MarkupSafe-3.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (23 kB),,0
+	2025-09-09T18:28:58.5140211Z,[18:25:03+0000] Downloading msrest-0.7.1-py3-none-any.whl (85 kB),,0
+	2025-09-09T18:28:58.5754738Z,[18:25:03+0000] Downloading numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB),,0
+	2025-09-09T18:28:58.6073389Z,[18:25:04+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.6/16.6 MB 19.6 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:58.6445808Z,[18:25:04+0000] Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB),,0
+	2025-09-09T18:28:58.6476773Z,[18:25:04+0000] Downloading regex-2025.9.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (801 kB),,0
+	2025-09-09T18:28:58.6647369Z,[18:25:05+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 802.0/802.0 kB 17.0 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:58.6687024Z,[18:25:05+0000] Downloading ruamel.yaml.clib-0.2.12-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (754 kB),,0
+	2025-09-09T18:28:58.6848319Z,[18:25:05+0000]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 754.1/754.1 kB 22.7 MB/s eta 0:00:00,,0
+	2025-09-09T18:28:58.7158130Z,[18:25:05+0000] Downloading secretstorage-3.4.0-py3-none-any.whl (15 kB),,0
+	2025-09-09T18:28:58.7369826Z,[18:25:05+0000] Downloading tzdata-2025.2-py2.py3-none-any.whl (347 kB),,0
+	2025-09-09T18:28:58.8155783Z,[18:25:05+0000] Downloading werkzeug-3.1.3-py3-none-any.whl (224 kB),,0
+	2025-09-09T18:28:58.8958734Z,[18:25:05+0000] Downloading wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (88 kB),,0
+	2025-09-09T18:28:58.9383289Z,[18:25:05+0000] Downloading importlib_resources-6.5.2-py3-none-any.whl (37 kB),,0
+	2025-09-09T18:28:58.9767800Z,[18:25:05+0000] Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB),,0
+	2025-09-09T18:28:59.0165234Z,[18:25:05+0000] Downloading pycparser-2.23-py3-none-any.whl (118 kB),,0
+	2025-09-09T18:28:59.0576744Z,[18:25:05+0000] Downloading asgiref-3.9.1-py3-none-any.whl (23 kB),,0
+	2025-09-09T18:28:59.0692061Z,[18:25:05+0000] Downloading importlib_metadata-8.7.0-py3-none-any.whl (27 kB),,0
+	2025-09-09T18:28:59.1274208Z,[18:25:05+0000] Downloading protobuf-6.32.0-cp39-abi3-manylinux2014_x86_64.whl (322 kB),,0
+	2025-09-09T18:28:59.1495404Z,[18:25:05+0000] Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB),,0
+	2025-09-09T18:28:59.1980930Z,[18:25:05+0000] Downloading smmap-5.0.2-py3-none-any.whl (24 kB),,0
+	2025-09-09T18:28:59.2598074Z,[18:25:05+0000] Downloading more_itertools-10.8.0-py3-none-any.whl (69 kB),,0
+	2025-09-09T18:28:59.3796464Z,[18:25:05+0000] Downloading oauthlib-3.3.1-py3-none-any.whl (160 kB),,0
+	2025-09-09T18:28:59.4077594Z,[18:25:05+0000] Downloading zipp-3.23.0-py3-none-any.whl (10 kB),,0
+	2025-09-09T18:28:59.5098242Z,[18:25:10+0000] Installing collected packages: pytz&comma; fixedint&comma; filetype&comma; azure-common&comma; aniso8601&comma; zipp&comma; wrapt&comma; websockets&comma; waitress&comma; uvloop&comma; urllib3&comma; tzdata&comma; typing_extensions&comma; tqdm&comma; tabulate&comma; sniffio&comma; smmap&comma; six&comma; ruamel.yaml.clib&comma; rpds-py&comma; regex&comma; PyYAML&comma; python-dotenv&comma; pyjwt&comma; pycparser&comma; psutil&comma; protobuf&comma; pillow&comma; packaging&comma; opentelemetry-util-http&comma; oauthlib&comma; numpy&comma; more-itertools&comma; markupsafe&comma; jiter&comma; jeepney&comma; itsdangerous&comma; isodate&comma; importlib-resources&comma; idna&comma; httptools&comma; h11&comma; greenlet&comma; filelock&comma; docstring_parser&comma; distro&comma; colorama&comma; click&comma; charset_normalizer&comma; certifi&comma; blinker&comma; attrs&comma; asgiref&comma; argcomplete&comma; annotated-types&comma; werkzeug&comma; uvicorn&comma; typing-inspection&comma; sqlalchemy&comma; ruamel.yaml&comma; requests&comma; referencing&comma; python-dateutil&comma; pydash&comma; pydantic_core&comma; opentelemetry-proto&comma; marshmallow&comma; jinja2&comma; jaraco.classes&comma; importlib-metadata&comma; httpcore&comma; gunicorn&comma; googleapis-common-protos&comma; gitdb&comma; exceptiongroup&comma; cffi&comma; anyio&comma; watchfiles&comma; tiktoken&comma; strictyaml&comma; starlette&comma; requests-oauthlib&comma; pydantic&comma; pandas&comma; opentelemetry-exporter-otlp-proto-common&comma; opentelemetry-api&comma; jsonschema-specifications&comma; httpx&comma; gitpython&comma; flask&comma; cryptography&comma; azure-core&comma; SecretStorage&comma; opentelemetry-semantic-conventions&comma; openai&comma; msrest&comma; jsonschema&comma; flask-cors&comma; fastapi&comma; azure-storage-file-share&comma; azure-storage-blob&comma; azure-search-documents&comma; azure-mgmt-core&comma; azure-core-tracing-opentelemetry&comma; opentelemetry-sdk&comma; opentelemetry-instrumentation&comma; msal&comma; keyring&comma; flask-restx&comma; azure-storage-file-datalake&comma; promptflow-tracing&comma; opentelemetry-resource-detector-azure&comma; opentelemetry-instrumentation-wsgi&comma; opentelemetry-instrumentation-urllib3&comma; opentelemetry-instrumentation-urllib&comma; opentelemetry-instrumentation-requests&comma; opentelemetry-instrumentation-dbapi&comma; opentelemetry-instrumentation-asgi&comma; opentelemetry-exporter-otlp-proto-http&comma; msal-extensions&comma; promptflow-core&comma; opentelemetry-instrumentation-psycopg2&comma; opentelemetry-instrumentation-flask&comma; opentelemetry-instrumentation-fastapi&comma; opentelemetry-instrumentation-django&comma; azure-identity&comma; azure-monitor-opentelemetry-exporter&comma; promptflow-devkit&comma; azure-monitor-opentelemetry&comma; promptflow&comma; azure-ai-ml,,0
+	2025-09-09T18:28:59.5613054Z,[18:28:35+0000] Successfully installed PyYAML-6.0.2 SecretStorage-3.4.0 aniso8601-10.0.1 annotated-types-0.7.0 anyio-4.10.0 argcomplete-3.6.2 asgiref-3.9.1 attrs-25.3.0 azure-ai-ml-1.29.0 azure-common-1.1.28 azure-core-1.35.0 azure-core-tracing-opentelemetry-1.0.0b12 azure-identity-1.24.0 azure-mgmt-core-1.6.0 azure-monitor-opentelemetry-1.8.0 azure-monitor-opentelemetry-exporter-1.0.0b41 azure-search-documents-11.5.3 azure-storage-blob-12.26.0 azure-storage-file-datalake-12.21.0 azure-storage-file-share-12.22.0 blinker-1.9.0 certifi-2025.8.3 cffi-2.0.0 charset_normalizer-3.4.3 click-8.2.1 colorama-0.4.6 cryptography-45.0.7 distro-1.9.0 docstring_parser-0.17.0 exceptiongroup-1.3.0 fastapi-0.116.1 filelock-3.19.1 filetype-1.2.0 fixedint-0.1.6 flask-3.1.2 flask-cors-6.0.1 flask-restx-1.3.0 gitdb-4.0.12 gitpython-3.1.45 googleapis-common-protos-1.70.0 greenlet-3.2.4 gunicorn-23.0.0 h11-0.16.0 httpcore-1.0.9 httptools-0.6.4 httpx-0.28.1 idna-3.10 importlib-metadata-8.7.0 importlib-resources-6.5.2 isodate-0.7.2 itsdangerous-2.2.0 jaraco.classes-3.4.0 jeepney-0.9.0 jinja2-3.1.6 jiter-0.10.0 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 keyring-24.3.1 markupsafe-3.0.2 marshmallow-3.26.1 more-itertools-10.8.0 msal-1.33.0 msal-extensions-1.3.1 msrest-0.7.1 numpy-2.3.3 oauthlib-3.3.1 openai-1.107.0 opentelemetry-api-1.36.0 opentelemetry-exporter-otlp-proto-common-1.36.0 opentelemetry-exporter-otlp-proto-http-1.36.0 opentelemetry-instrumentation-0.57b0 opentelemetry-instrumentation-asgi-0.57b0 opentelemetry-instrumentation-dbapi-0.57b0 opentelemetry-instrumentation-django-0.57b0 opentelemetry-instrumentation-fastapi-0.57b0 opentelemetry-instrumentation-flask-0.57b0 opentelemetry-instrumentation-psycopg2-0.57b0 opentelemetry-instrumentation-requests-0.57b0 opentelemetry-instrumentation-urllib-0.57b0 opentelemetry-instrumentation-urllib3-0.57b0 opentelemetry-instrumentation-wsgi-0.57b0 opentelemetry-proto-1.36.0 opentelemetry-resource-detector-azure-0.1.5 opentelemetry-sdk-1.36.0 opentelemetry-semantic-conventions-0.57b0 opentelemetry-util-http-0.57b0 packaging-25.0 pandas-2.3.2 pillow-11.0.0 promptflow-1.18.1 promptflow-core-1.18.1 promptflow-devkit-1.18.1 promptflow-tracing-1.18.1 protobuf-6.32.0 psutil-7.0.0 pycparser-2.23 pydantic-2.11.7 pydantic_core-2.33.2 pydash-7.0.7 pyjwt-2.10.1 python-dateutil-2.9.0.post0 python-dotenv-1.1.1 pytz-2025.2 referencing-0.36.2 regex-2025.9.1 requests-2.32.5 requests-oauthlib-2.0.0 rpds-py-0.27.1 ruamel.yaml-0.18.15 ruamel.yaml.clib-0.2.12 six-1.17.0 smmap-5.0.2 sniffio-1.3.1 sqlalchemy-2.0.43 starlette-0.47.3 strictyaml-1.7.3 tabulate-0.9.0 tiktoken-0.11.0 tqdm-4.67.1 typing-inspection-0.4.1 typing_extensions-4.15.0 tzdata-2025.2 urllib3-2.5.0 uvicorn-0.35.0 uvloop-0.21.0 waitress-3.0.2 watchfiles-1.1.0 websockets-15.0.1 werkzeug-3.1.3 wrapt-1.17.3 zipp-3.23.0,,0
+	2025-09-09T18:28:59.6106575Z,,,0
+	2025-09-09T18:28:59.6217849Z,[notice] A new release of pip is available: 25.0.1 -> 25.2,,0
+	2025-09-09T18:28:59.6496547Z,[notice] To update&comma; run: pip install --upgrade pip,,0
+	2025-09-09T18:28:59.6793898Z,Not a vso image&comma; so not writing build commands,,0
+	2025-09-09T18:28:59.7193965Z,Preparing output...,,0
+	2025-09-09T18:28:59.7899792Z,,,0
+	2025-09-09T18:28:59.8127747Z,Copying files to destination directory '/tmp/_preCompressedDestinationDir'...,,0
+	2025-09-09T18:30:10.1814196Z,Done in 88 sec(s).,,0
+	2025-09-09T18:30:10.2818170Z,Compressing content of directory '/tmp/_preCompressedDestinationDir'...,,0
+	2025-09-09T18:33:57.7433568Z,Copied the compressed output to '/home/site/wwwroot',,0
+	2025-09-09T18:33:57.8227527Z,,,0
+	2025-09-09T18:33:57.8426206Z,Removing existing manifest file,,0
+	2025-09-09T18:33:57.8475950Z,Creating a manifest file...,,0
+	2025-09-09T18:33:57.8633482Z,Manifest file created.,,0
+	2025-09-09T18:33:57.8935318Z,Copying .ostype to manifest output directory.,,0
+	2025-09-09T18:33:57.9129855Z,,,0
+	2025-09-09T18:33:57.9631465Z,Done in 653 sec(s).,,0
+2025-09-09T18:33:58.8117959Z,Running post deployment command(s)...,a43b0956-abf4-4841-baf1-d3dfda56bc84,0
+2025-09-09T18:33:58.9803789Z,,1bd44976-deed-4667-a725-9a833a2d0722,0
+2025-09-09T18:33:59.0817958Z,Generating summary of Oryx build,2df56451-0d5a-4571-8c51-f0a8d424e531,0
+2025-09-09T18:33:59.3451729Z,Parsing the build logs,6f2bd98a-48c1-4560-b215-fe03ba231a46,0
+2025-09-09T18:33:59.5256688Z,Found 0 issue(s),676f89b6-df0c-4807-b28b-35cab716ea97,0
+2025-09-09T18:33:59.6749256Z,,055952a0-7475-49cd-b20f-36df98cd26d6,0
+2025-09-09T18:33:59.7888690Z,Build Summary :,84f2269e-ad11-4c69-89f7-68fda58677bd,0
+2025-09-09T18:33:59.9098803Z,===============,529a66d0-34bd-4bce-a9f9-a984d0c6d132,0
+2025-09-09T18:34:00.0244383Z,Errors (0),3fd5737b-7db3-4b23-b414-41fcc198bfd2,0
+2025-09-09T18:34:00.1313437Z,Warnings (0),b440ad8c-4869-4c04-830d-13b3b8029c1e,0
+2025-09-09T18:34:00.2457174Z,,8022124d-1f36-4d1d-aa37-edd719714a69,0
+2025-09-09T18:34:00.3985824Z,Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path,5d865920-4c8c-41fb-87e0-eb1d03d25e4f,0
+2025-09-09T18:34:00.6676980Z,Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy,895618a9-ad0f-4c69-a3f9-f57aa3bfe2f0,0
