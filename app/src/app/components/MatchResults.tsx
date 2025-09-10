@@ -9,31 +9,16 @@ interface MatchResultsProps {
 }
 
 export default function MatchResults({ results, loading }: MatchResultsProps) {
-  const [visibleCount, setVisibleCount] = useState(2);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-
-  // Reset visible count when results change
-  useEffect(() => {
-    setVisibleCount(2);
-  }, [results]);
-
-  const loadMore = () => {
-    setIsLoadingMore(true);
-    setTimeout(() => {
-      setVisibleCount((prev) => prev + 2);
-      setIsLoadingMore(false);
-    }, 300);
-  };
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-lg h-full flex flex-col">
-        <div className="p-6 pb-3 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800">🔍 Match Results</h2>
+      <div className="bg-white rounded-lg shadow-sm h-full flex flex-col">
+        <div className="p-3 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-gray-800">🔍 Match Results</h2>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <span className="text-base text-gray-600">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-3"></div>
+            <span className="text-sm text-gray-600">
               AI is analyzing match compatibility...
             </span>
           </div>
@@ -44,17 +29,17 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
 
   if (!results) {
     return (
-      <div className="bg-white rounded-xl shadow-lg h-full flex flex-col">
-        <div className="p-6 pb-3 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800">🔍 Match Results</h2>
+      <div className="bg-white rounded-lg shadow-sm h-full flex flex-col">
+        <div className="p-3 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-gray-800">🔍 Match Results</h2>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center text-gray-500">
-            <div className="text-5xl mb-4">🎯</div>
-            <p className="text-base mb-2">
+            <div className="text-4xl mb-3">🎯</div>
+            <p className="text-sm mb-1">
               Click match button to start intelligent analysis
             </p>
-            <p className="text-sm">
+            <p className="text-xs">
               We will recommend the most suitable programs based on your
               background
             </p>
@@ -80,15 +65,15 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
     rejectedResults.length === 0
   ) {
     return (
-      <div className="bg-white rounded-xl shadow-lg h-full flex flex-col">
-        <div className="p-6 pb-3 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-800">🔍 Match Results</h2>
+      <div className="bg-white rounded-lg shadow-sm h-full flex flex-col">
+        <div className="p-3 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-gray-800">🔍 Match Results</h2>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center text-gray-500">
-            <div className="text-5xl mb-4">😔</div>
-            <p className="text-base mb-2">No matching programs found</p>
-            <p className="text-sm">
+            <div className="text-4xl mb-3">😔</div>
+            <p className="text-sm mb-1">No matching programs found</p>
+            <p className="text-xs">
               Please try adjusting your criteria or budget
             </p>
           </div>
@@ -98,8 +83,8 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg flex flex-col h-full">
-      <div className="p-4 pb-2 border-b border-gray-100">
+    <div className="bg-white rounded-lg shadow-sm flex flex-col h-full">
+      <div className="p-3 border-b border-gray-200 flex-shrink-0">
         <h2 className="text-lg font-bold text-gray-800">
           🔍 Match Results{" "}
           <span className="text-xs font-normal text-gray-500">
@@ -110,270 +95,246 @@ export default function MatchResults({ results, loading }: MatchResultsProps) {
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 pt-2">
-        <div className="space-y-4">
+      <div className="flex-1 overflow-y-auto p-3">
+        <div className="space-y-3">
           {/* Selected Programs */}
           {eligibleResults.length > 0 && (
             <div>
-              <h3 className="text-base font-semibold text-green-700 mb-3 flex items-center">
+              <h3 className="text-sm font-semibold text-green-700 mb-2 flex items-center">
                 ✅ Recommended Programs ({eligibleResults.length})
               </h3>
               <div className="space-y-2">
-                {eligibleResults
-                  .slice(0, visibleCount)
-                  .map((result: MatchResult, index: number) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow duration-200"
-                    >
-                      {/* Program header info */}
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <h3 className="text-base font-bold text-gray-800 mb-1">
-                            {result.program || result.program_name}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-1">
-                            {result.university}
-                          </p>
+                {eligibleResults.map((result: MatchResult, index: number) => (
+                  <div
+                    key={index}
+                    className="border border-gray-200 rounded-md p-2 hover:shadow-sm transition-shadow duration-200 bg-gray-50"
+                  >
+                    {/* Program header info */}
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-sm font-bold text-gray-800 mb-1">
+                          {result.program || result.program_name}
+                        </h3>
+                        <p className="text-xs text-gray-600 mb-1">
+                          {result.university}
+                        </p>
 
-                          {/* Official link */}
-                          {(result.url || result.program_url) && (
-                            <a
-                              href={result.url || result.program_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200 mb-2"
+                        {/* Official link */}
+                        {(result.url || result.program_url) && (
+                          <a
+                            href={result.url || result.program_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200 mb-2"
+                          >
+                            <span className="mr-1">🔗</span>
+                            View Official Page
+                            <svg
+                              className="w-3 h-3 ml-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
                             >
-                              <span className="mr-1">🔗</span>
-                              View Official Page
-                              <svg
-                                className="w-3 h-3 ml-1"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                />
-                              </svg>
-                            </a>
-                          )}
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                          </a>
+                        )}
 
-                          {/* Match score */}
-                          <div className="flex items-center space-x-4">
-                            <div className="flex items-center">
-                              <span className="text-2xl font-bold text-blue-600">
-                                {result.score || result.overall_score}
-                              </span>
-                              <span className="text-gray-500 ml-1">/100</span>
-                            </div>
+                        {/* Match score */}
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center">
+                            <span className="text-2xl font-bold text-blue-600">
+                              {result.score || result.overall_score}
+                            </span>
+                            <span className="text-gray-500 ml-1">/100</span>
+                          </div>
 
-                            {/* Score bar */}
-                            <div className="flex-1 bg-gray-200 rounded-full h-3">
-                              <div
-                                className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
-                                style={{
-                                  width: `${
-                                    result.score || result.overall_score || 0
-                                  }%`,
-                                }}
-                              ></div>
-                            </div>
+                          {/* Score bar */}
+                          <div className="flex-1 bg-gray-200 rounded-full h-3">
+                            <div
+                              className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500"
+                              style={{
+                                width: `${
+                                  result.score || result.overall_score || 0
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
 
-                            {/* Match level */}
-                            <span
-                              className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                (result.score || result.overall_score || 0) >=
-                                90
-                                  ? "bg-green-100 text-green-800"
-                                  : (result.score ||
-                                      result.overall_score ||
-                                      0) >= 80
-                                  ? "bg-blue-100 text-blue-800"
-                                  : (result.score ||
-                                      result.overall_score ||
-                                      0) >= 70
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {(result.score || result.overall_score || 0) >= 90
-                                ? "🌟 Perfect Match"
+                          {/* Match level */}
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              (result.score || result.overall_score || 0) >= 90
+                                ? "bg-green-100 text-green-800"
                                 : (result.score || result.overall_score || 0) >=
                                   80
-                                ? "✨ Excellent Match"
+                                ? "bg-blue-100 text-blue-800"
                                 : (result.score || result.overall_score || 0) >=
                                   70
-                                ? "👍 Good Match"
-                                : "🤔 Fair Match"}
-                            </span>
-                          </div>
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {(result.score || result.overall_score || 0) >= 90
+                              ? "🌟 Perfect Match"
+                              : (result.score || result.overall_score || 0) >=
+                                80
+                              ? "✨ Excellent Match"
+                              : (result.score || result.overall_score || 0) >=
+                                70
+                              ? "👍 Good Match"
+                              : "🤔 Fair Match"}
+                          </span>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Detailed scores (if available) */}
-                      {result.detailed_scores && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-gray-700 mb-2">
-                            📊 Detailed Scores
-                          </h4>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                            {Object.entries(result.detailed_scores).map(
-                              ([key, value]) => (
-                                <div
-                                  key={key}
-                                  className="bg-gray-50 p-3 rounded-md"
-                                >
-                                  <div className="text-xs text-gray-600 mb-1">
-                                    {key === "academic_fit"
-                                      ? "🎓 Academic Fit"
-                                      : key === "english_proficiency"
-                                      ? "🗣️ English Proficiency"
-                                      : key === "field_alignment"
-                                      ? "💡 Interest Match"
-                                      : key === "location_preference"
-                                      ? "📍 Location Preference"
-                                      : key === "budget_compatibility"
-                                      ? "💰 Budget Compatibility"
-                                      : key}
-                                  </div>
-                                  <div className="font-semibold text-gray-800">
-                                    {String(value)}
-                                    <span className="text-xs text-gray-500 ml-1">
-                                      /
-                                      {key === "academic_fit"
-                                        ? "35"
-                                        : key === "english_proficiency"
-                                        ? "25"
-                                        : key === "field_alignment"
-                                        ? "20"
-                                        : key === "location_preference"
-                                        ? "10"
-                                        : key === "budget_compatibility"
-                                        ? "10"
-                                        : "100"}
-                                    </span>
-                                  </div>
+                    {/* Detailed scores (if available) */}
+                    {result.detailed_scores && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-gray-700 mb-2">
+                          📊 Detailed Scores
+                        </h4>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                          {Object.entries(result.detailed_scores).map(
+                            ([key, value]) => (
+                              <div
+                                key={key}
+                                className="bg-gray-50 p-3 rounded-md"
+                              >
+                                <div className="text-xs text-gray-600 mb-1">
+                                  {key === "academic_fit"
+                                    ? "🎓 Academic Fit"
+                                    : key === "english_proficiency"
+                                    ? "🗣️ English Proficiency"
+                                    : key === "field_alignment"
+                                    ? "💡 Interest Match"
+                                    : key === "location_preference"
+                                    ? "📍 Location Preference"
+                                    : key === "budget_compatibility"
+                                    ? "💰 Budget Compatibility"
+                                    : key}
                                 </div>
+                                <div className="font-semibold text-gray-800">
+                                  {String(value)}
+                                  <span className="text-xs text-gray-500 ml-1">
+                                    /
+                                    {key === "academic_fit"
+                                      ? "35"
+                                      : key === "english_proficiency"
+                                      ? "25"
+                                      : key === "field_alignment"
+                                      ? "20"
+                                      : key === "location_preference"
+                                      ? "10"
+                                      : key === "budget_compatibility"
+                                      ? "10"
+                                      : "100"}
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Strengths and Concerns */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      {result.strengths && result.strengths.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-green-700 mb-2">
+                            ✅ Strengths
+                          </h4>
+                          <ul className="space-y-1">
+                            {result.strengths.map(
+                              (strength: string, i: number) => (
+                                <li
+                                  key={i}
+                                  className="text-sm text-green-600 flex items-start"
+                                >
+                                  <span className="mr-2">•</span>
+                                  <span>{strength}</span>
+                                </li>
                               )
                             )}
-                          </div>
+                          </ul>
                         </div>
                       )}
 
-                      {/* Strengths and Concerns */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        {result.strengths && result.strengths.length > 0 && (
-                          <div>
-                            <h4 className="font-semibold text-green-700 mb-2">
-                              ✅ Strengths
-                            </h4>
-                            <ul className="space-y-1">
-                              {result.strengths.map(
-                                (strength: string, i: number) => (
-                                  <li
-                                    key={i}
-                                    className="text-sm text-green-600 flex items-start"
-                                  >
-                                    <span className="mr-2">•</span>
-                                    <span>{strength}</span>
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-                        )}
-
-                        {result.red_flags && result.red_flags.length > 0 && (
-                          <div>
-                            <h4 className="font-semibold text-orange-700 mb-2">
-                              ⚠️ Concerns
-                            </h4>
-                            <ul className="space-y-1">
-                              {result.red_flags.map(
-                                (flag: string, i: number) => (
-                                  <li
-                                    key={i}
-                                    className="text-sm text-orange-600 flex items-start"
-                                  >
-                                    <span className="mr-2">•</span>
-                                    <span>{flag}</span>
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* AI Evaluation reasoning */}
-                      {result.reasoning && (
-                        <div className="bg-blue-50 p-4 rounded-lg">
-                          <h4 className="font-semibold text-blue-800 mb-2">
-                            🤖 AI Analysis
+                      {result.red_flags && result.red_flags.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-orange-700 mb-2">
+                            ⚠️ Concerns
                           </h4>
-
-                          {typeof result.reasoning === "string" ? (
-                            <p className="text-sm text-blue-700">
-                              {result.reasoning}
-                            </p>
-                          ) : result.reasoning.overall_assessment ? (
-                            <p className="text-sm text-blue-700">
-                              {result.reasoning.overall_assessment}
-                            </p>
-                          ) : (
-                            <div className="space-y-2">
-                              {result.reasoning.academic_fit && (
-                                <p className="text-sm text-blue-700">
-                                  <span className="font-medium">
-                                    🎓 Academic Fit：
-                                  </span>
-                                  {result.reasoning.academic_fit}
-                                </p>
-                              )}
-                              {result.reasoning.field_alignment && (
-                                <p className="text-sm text-blue-700">
-                                  <span className="font-medium">
-                                    💡 Interest Match：
-                                  </span>
-                                  {result.reasoning.field_alignment}
-                                </p>
-                              )}
-                              {result.reasoning.budget_compatibility && (
-                                <p className="text-sm text-blue-700">
-                                  <span className="font-medium">
-                                    💰 Budget Analysis:
-                                  </span>
-                                  {result.reasoning.budget_compatibility}
-                                </p>
-                              )}
-                            </div>
-                          )}
+                          <ul className="space-y-1">
+                            {result.red_flags.map((flag: string, i: number) => (
+                              <li
+                                key={i}
+                                className="text-sm text-orange-600 flex items-start"
+                              >
+                                <span className="mr-2">•</span>
+                                <span>{flag}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       )}
                     </div>
-                  ))}
-              </div>
 
-              {/* Load More Button */}
-              {eligibleResults.length > visibleCount && (
-                <div className="mt-3 text-center">
-                  <button
-                    onClick={loadMore}
-                    disabled={isLoadingMore}
-                    className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200"
-                  >
-                    {isLoadingMore
-                      ? "Loading..."
-                      : `Load More (${
-                          eligibleResults.length - visibleCount
-                        } remaining)`}
-                  </button>
-                </div>
-              )}
+                    {/* AI Evaluation reasoning */}
+                    {result.reasoning && (
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h4 className="font-semibold text-blue-800 mb-2">
+                          🤖 AI Analysis
+                        </h4>
+
+                        {typeof result.reasoning === "string" ? (
+                          <p className="text-sm text-blue-700">
+                            {result.reasoning}
+                          </p>
+                        ) : result.reasoning.overall_assessment ? (
+                          <p className="text-sm text-blue-700">
+                            {result.reasoning.overall_assessment}
+                          </p>
+                        ) : (
+                          <div className="space-y-2">
+                            {result.reasoning.academic_fit && (
+                              <p className="text-sm text-blue-700">
+                                <span className="font-medium">
+                                  🎓 Academic Fit：
+                                </span>
+                                {result.reasoning.academic_fit}
+                              </p>
+                            )}
+                            {result.reasoning.field_alignment && (
+                              <p className="text-sm text-blue-700">
+                                <span className="font-medium">
+                                  💡 Interest Match：
+                                </span>
+                                {result.reasoning.field_alignment}
+                              </p>
+                            )}
+                            {result.reasoning.budget_compatibility && (
+                              <p className="text-sm text-blue-700">
+                                <span className="font-medium">
+                                  💰 Budget Analysis:
+                                </span>
+                                {result.reasoning.budget_compatibility}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

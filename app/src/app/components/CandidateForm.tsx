@@ -74,14 +74,14 @@ export default function CandidateForm({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg h-full flex flex-col">
-      <div className="p-4 pb-2 border-b border-gray-100">
+    <div className="bg-white rounded-lg shadow-sm h-full flex flex-col">
+      <div className="p-3 border-b border-gray-200 flex-shrink-0">
         <h2 className="text-lg font-bold text-gray-800">
           📋 Candidate Information
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 pt-2">
+      <div className="flex-1 overflow-y-auto p-3">
         <form className="space-y-3">
           {/* Academic background */}
           <div className="bg-gray-50 p-3 rounded-lg">
