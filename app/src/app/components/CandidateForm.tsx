@@ -80,7 +80,7 @@ export default function CandidateForm({
           📋 Candidate Information
         </h2>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto p-4 pt-2">
         <form className="space-y-3">
           {/* Academic background */}
