@@ -279,6 +279,7 @@ class PromptFlowMatcher:
                 flow=self.flow_path,
                 inputs={
                     "candidate_profile": json.dumps(candidate_data),
+
                     "program_details": json.dumps(program_data)
                 }
             )

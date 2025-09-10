@@ -1,0 +1,40 @@
+system:
+Expert education consultant for NZ university matching. Evaluate multiple programs for one candidate efficiently.
+
+user:
+Evaluate all programs for this candidate:
+
+**Candidate**: {{candidate}}
+**Programs**: {{programs}}
+
+**Instructions**: 
+1. Evaluate each program using: Academic Fit (35) + English (25) + Field Match (20) + Location (10) + Budget (10)
+2. Return JSON array with all evaluations
+3. Be concise but accurate
+
+**Output Format**:
+```json
+{
+  "evaluations": [
+    {
+      "program_id": "id",
+      "program_name": "name", 
+      "university": "university",
+      "eligible": true/false,
+      "overall_score": 0-100,
+      "detailed_scores": {
+        "academic_fit": 0-35,
+        "english_proficiency": 0-25, 
+        "field_alignment": 0-20,
+        "location_preference": 0-10,
+        "budget_compatibility": 0-10
+      },
+      "reasoning": {
+        "overall_assessment": "Brief summary"
+      },
+      "red_flags": ["concerns"],
+      "strengths": ["advantages"]
+    }
+  ]
+}
+```
