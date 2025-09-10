@@ -415,8 +415,8 @@ class PromptFlowMatcher:
         # Limit to top_k + buffer for better performance (RAG will give us top 5)
         programs = programs[:min(len(programs), top_k + 2)]
         
-        # Use batch evaluation for better performance
-        evaluations = await self.evaluate_batch_match(candidate, programs)
+        # Use individual evaluation (more reliable)
+        evaluations = await self._fallback_individual_evaluation(candidate, programs)
         
         # Separate eligible and rejected matches
         eligible_matches = []
