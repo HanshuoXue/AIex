@@ -26,7 +26,7 @@ def healthz():
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}  # Docker health check endpoint
+    return {"status": "healthy", "version": "1.1"}  # Docker health check endpoint
 
 @app.get("/debug")
 def debug_info():
