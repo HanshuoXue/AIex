@@ -95,7 +95,7 @@ def debug_matcher():
 @app.post("/match")
 async def match(c: Candidate):
     """
-    Use Prompt Flow for intelligent matching
+    Quick Match - Return top 3 programs (default view)
     """
     # Build search query
     q = " OR ".join((c.interests or ["Master"])) or "Master"
@@ -104,8 +104,8 @@ async def match(c: Candidate):
     results = await flow_matcher.match_programs(
         candidate=c,
         query=q,
-        top_k=2,  # can return more results
-        level=None  # can specify level as needed
+        top_k=3,  # Show top 3 by default
+        level=None
     )
     
     # Format output
@@ -119,15 +119,15 @@ async def match(c: Candidate):
             "reasoning": result.get("reasoning", {}).get("overall_assessment", ""),
             "strengths": result.get("strengths", []),
             "red_flags": result.get("red_flags", []),
-            "url": result.get("program_url")  # Return program's official URL
+            "url": result.get("program_url")
         })
     
-    return formatted_results[:2]  # Return top 2 results
+    return formatted_results[:3]
 
 @app.post("/match/detailed")
 async def match_detailed(c: Candidate):
     """
-    Return detailed match analysis including all scoring details
+    Detailed Analysis - Return top 5 programs with detailed scores
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
     
@@ -140,10 +140,47 @@ async def match_detailed(c: Candidate):
     
     return results  # Return complete evaluation results
 
+@app.post("/match/more")
+async def match_more(c: Candidate, skip: int = 3):
+    """
+    More Programs - Return next batch of programs after initial results
+    """
+    q = " OR ".join((c.interests or ["Master"])) or "Master"
+    
+    # Get more results
+    results = await flow_matcher.match_programs(
+        candidate=c,
+        query=q,
+        top_k=skip + 3,  # Get skip + 3 more
+        level=None
+    )
+    
+    # Return only the "more" results (skip the first ones)
+    more_results = results[skip:skip + 3] if len(results) > skip else []
+    
+    # Format output
+    formatted_results = []
+    for result in more_results:
+        formatted_results.append({
+            "program": result.get("program_name"),
+            "university": result.get("university"),
+            "score": result.get("overall_score"),
+            "detailed_scores": result.get("detailed_scores"),
+            "reasoning": result.get("reasoning", {}).get("overall_assessment", ""),
+            "strengths": result.get("strengths", []),
+            "red_flags": result.get("red_flags", []),
+            "url": result.get("program_url")
+        })
+    
+    return {
+        "programs": formatted_results,
+        "has_more": len(results) > skip + 3
+    }
+
 @app.post("/match/all")
 async def match_all(c: Candidate):
     """
-    Return match analysis for all programs, including rejected programs and exclusion reasons
+    Complete Analysis - All programs with eligible/rejected status (debug use)
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
     

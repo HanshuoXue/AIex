@@ -331,19 +331,98 @@ class PromptFlowMatcher:
         evaluations.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
         return evaluations[:top_k]
     
+    async def evaluate_batch_match(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Batch evaluate multiple programs with a single LLM call for better performance
+        """
+        try:
+            # Prepare candidate data
+            candidate_data = {
+                "bachelor_major": candidate.bachelor_major,
+                "gpa_scale": candidate.gpa_scale,
+                "gpa_value": candidate.gpa_value,
+                "ielts_overall": candidate.ielts_overall,
+                "ielts_subscores": candidate.ielts_subscores,
+                "work_years": candidate.work_years,
+                "interests": candidate.interests,
+                "city_pref": candidate.city_pref,
+                "budget_nzd_per_year": candidate.budget_nzd_per_year
+            }
+            
+            # Prepare programs data with essential info only
+            programs_data = []
+            for program in programs:
+                programs_data.append({
+                    "id": program.get("id"),
+                    "university": program.get("university"),
+                    "program": program.get("program"),
+                    "fields": program.get("fields", []),
+                    "campus": program.get("campus"),
+                    "tuition_nzd_per_year": program.get("tuition_nzd_per_year"),
+                    "english_ielts": program.get("english_ielts"),
+                    "duration_years": program.get("duration_years"),
+                    "level": program.get("level"),
+                    "url": program.get("url")
+                })
+            
+            # Ensure connection
+            try:
+                self._ensure_connection()
+            except Exception as conn_error:
+                logger.warning(f"Connection setup failed, but continuing: {conn_error}")
+            
+            # Use batch prompt for efficiency
+            result = self.pf_client.test(
+                flow=self.flow_path,
+                inputs={
+                    "candidate_profile": json.dumps(candidate_data),
+                    "programs_batch": json.dumps(programs_data),
+                    "use_batch": "true"  # Flag to use batch processing
+                }
+            )
+            
+            # Parse batch result
+            if isinstance(result, dict) and 'batch_evaluations' in result:
+                return result['batch_evaluations']
+            elif isinstance(result, list):
+                return result
+            else:
+                # Fallback to individual evaluation if batch fails
+                logger.warning("Batch evaluation failed, falling back to individual processing")
+                return await self._fallback_individual_evaluation(candidate, programs)
+                
+        except Exception as e:
+            logger.error(f"Batch evaluation error: {e}")
+            # Fallback to individual evaluation
+            return await self._fallback_individual_evaluation(candidate, programs)
+    
+    async def _fallback_individual_evaluation(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Fallback to individual evaluation if batch processing fails"""
+        evaluations = []
+        for program in programs:
+            evaluation = await self.evaluate_match(candidate, program)
+            evaluations.append(evaluation)
+        return evaluations
+
     async def match_programs_with_rejected(self, candidate: Candidate, query: str = "*", top_k: int = 5, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
         """
         Find and evaluate all programs, returning both eligible and rejected matches
+        Optimized for batch processing to reduce API calls
         """
         # Get candidate programs from search
         programs = self.fetch_programs(query=query, top=100, level=level)
         
-        # Evaluate each program using Prompt Flow
+        # Limit to top_k + buffer for better performance (RAG will give us top 5)
+        programs = programs[:min(len(programs), top_k + 2)]
+        
+        # Use batch evaluation for better performance
+        evaluations = await self.evaluate_batch_match(candidate, programs)
+        
+        # Separate eligible and rejected matches
         eligible_matches = []
         rejected_matches = []
         
-        for program in programs:
-            evaluation = await self.evaluate_match(candidate, program)
+        for evaluation in evaluations:
             if evaluation.get("eligible", False):
                 eligible_matches.append(evaluation)
             else:

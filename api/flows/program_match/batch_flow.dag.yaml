@@ -1,0 +1,41 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+inputs:
+  candidate_profile:
+    type: string
+    description: "Candidate information in JSON format"
+  programs_batch:
+    type: string
+    description: "Multiple programs information in JSON format"
+  use_batch:
+    type: string
+    description: "Flag to enable batch processing"
+    default: "false"
+outputs:
+  batch_evaluations:
+    type: object
+    reference: ${batch_evaluator.output}
+nodes:
+  - name: batch_match_prompt
+    type: llm
+    source:
+      type: code
+      path: batch_match_prompt.jinja2
+    inputs:
+      candidate: ${inputs.candidate_profile}
+      programs: ${inputs.programs_batch}
+      deployment_name: gpt-4o-mini
+      max_tokens: 4000
+      temperature: 0.2
+    connection: azure_openai_connection
+    api: chat
+  - name: batch_evaluator
+    type: python
+    source:
+      type: code
+      path: batch_evaluator.py
+    inputs:
+      llm_response: ${batch_match_prompt.output}
+      candidate_data: ${inputs.candidate_profile}
+      programs_data: ${inputs.programs_batch}
+environment:
+  python_requirements_txt: requirements.txt
