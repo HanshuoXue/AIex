@@ -1,8 +1,9 @@
 import json
 import re
 from typing import Dict, Any, List
+from promptflow import tool
 
-
+@tool
 def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) -> List[Dict[str, Any]]:
     """
     Parse LLM response for batch evaluation of multiple programs

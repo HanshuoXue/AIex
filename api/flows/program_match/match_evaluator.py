@@ -2,12 +2,7 @@ import json
 import re
 from typing import Dict, Any
 
-try:
-    from promptflow.core import tool
-except ImportError:
-    # Fallback decorator if promptflow is not available
-    def tool(func):
-        return func
+from promptflow import tool
 
 @tool
 def match_evaluator(llm_response: str, candidate_data: str, program_data: str) -> Dict[str, Any]:
