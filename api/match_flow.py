@@ -315,21 +315,57 @@ class PromptFlowMatcher:
     
     async def match_programs(self, candidate: Candidate, query: str = "*", top_k: int = 2, level: str = None) -> List[Dict[str, Any]]:
         """
-        Find and evaluate top matching programs for a candidate
+        Find and evaluate top matching programs for a candidate (ELIGIBLE ONLY)
+        Serial evaluation until finding enough eligible matches
         """
         # Get candidate programs from search
         programs = self.fetch_programs(query=query, top=100, level=level)
         
-        # Evaluate each program using Prompt Flow
+        # Evaluate each program using Prompt Flow until we find enough eligible ones
         evaluations = []
         for program in programs:
             evaluation = await self.evaluate_match(candidate, program)
             if evaluation.get("eligible", False):  # Only include eligible matches
                 evaluations.append(evaluation)
+                # Stop when we have enough eligible matches
+                if len(evaluations) >= top_k:
+                    break
         
         # Sort by overall score and return top K
         evaluations.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
         return evaluations[:top_k]
+    
+    async def match_programs_fixed_serial(self, candidate: Candidate, query: str = "*", top_k: int = 3, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Evaluate fixed number of programs serially, return both eligible and rejected
+        For Detailed Analysis - evaluate exactly top_k programs
+        """
+        # Get candidate programs from search
+        programs = self.fetch_programs(query=query, top=100, level=level)
+        
+        # Take only the first top_k programs
+        programs = programs[:top_k]
+        
+        # Evaluate each program serially
+        eligible_matches = []
+        rejected_matches = []
+        
+        for program in programs:
+            evaluation = await self.evaluate_match(candidate, program)
+            if evaluation.get("eligible", False):
+                eligible_matches.append(evaluation)
+            else:
+                evaluation["rejection_reason"] = evaluation.get("reasoning", {}).get("overall_assessment", "Failed AI evaluation screening")
+                rejected_matches.append(evaluation)
+        
+        # Sort both lists by overall score
+        eligible_matches.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
+        rejected_matches.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
+        
+        return {
+            "eligible": eligible_matches,
+            "rejected": rejected_matches
+        }
     
     async def evaluate_batch_match(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
@@ -406,17 +442,22 @@ class PromptFlowMatcher:
 
     async def match_programs_with_rejected(self, candidate: Candidate, query: str = "*", top_k: int = 5, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
         """
-        Find and evaluate all programs, returning both eligible and rejected matches
-        Optimized for batch processing to reduce API calls
+        Complete Analysis - Parallel batch evaluation of top programs
+        Uses batch processing for maximum speed
         """
         # Get candidate programs from search
         programs = self.fetch_programs(query=query, top=100, level=level)
         
-        # Limit to top_k + buffer for better performance (RAG will give us top 5)
-        programs = programs[:min(len(programs), top_k + 2)]
+        # Take exactly top_k programs for batch processing
+        programs = programs[:top_k]
         
-        # Use individual evaluation (more reliable)
-        evaluations = await self._fallback_individual_evaluation(candidate, programs)
+        # Use batch evaluation for parallel processing (faster)
+        try:
+            evaluations = await self.evaluate_batch_match(candidate, programs)
+        except Exception as e:
+            logger.warning(f"Batch evaluation failed, falling back to serial: {e}")
+            # Fallback to individual evaluation if batch fails
+            evaluations = await self._fallback_individual_evaluation(candidate, programs)
         
         # Separate eligible and rejected matches
         eligible_matches = []

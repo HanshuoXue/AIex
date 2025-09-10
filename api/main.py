@@ -127,18 +127,22 @@ async def match(c: Candidate):
 @app.post("/match/detailed")
 async def match_detailed(c: Candidate):
     """
-    Detailed Analysis - Return top 5 programs with detailed scores
+    Detailed Analysis - Serial evaluation of top 3 programs, show eligible + rejected
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
     
-    results = await flow_matcher.match_programs(
+    results = await flow_matcher.match_programs_fixed_serial(
         candidate=c,
         query=q,
-        top_k=5,
+        top_k=3,
         level=None
     )
     
-    return results  # Return complete evaluation results
+    return {
+        "eligible_matches": results["eligible"],
+        "rejected_matches": results["rejected"],
+        "total_evaluated": len(results["eligible"]) + len(results["rejected"])
+    }
 
 @app.post("/match/more")
 async def match_more(c: Candidate, skip: int = 3):
@@ -180,7 +184,7 @@ async def match_more(c: Candidate, skip: int = 3):
 @app.post("/match/all")
 async def match_all(c: Candidate):
     """
-    Complete Analysis - All programs with eligible/rejected status (debug use)
+    Complete Analysis - Parallel batch evaluation of top 5 programs, show eligible + rejected
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
     
