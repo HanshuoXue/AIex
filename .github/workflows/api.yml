@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "api/**"
+      - ".github/workflows/api.yml"
 
 jobs:
   build_and_deploy:
@@ -15,7 +16,7 @@ jobs:
       packages: write # 允许推送到 GHCR
 
     env:
-      IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/alex-api:${{ github.sha }}
+      IMAGE_NAME: ghcr.io/hanshuoxue/alex-api:${{ github.sha }}
       WEBAPP_NAME: api-alex-12345 # ← 改成你的 App Service 名称
 
     steps:
