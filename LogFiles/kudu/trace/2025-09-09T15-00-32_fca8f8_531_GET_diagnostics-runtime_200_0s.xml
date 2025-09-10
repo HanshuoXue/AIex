@@ -1,7 +1,0 @@
-<step title="Incoming Request" date="2025-09-09T15:00:32.924" instance="fca8f8" url="/diagnostics/runtime" method="GET" type="request" pid="771,1,27" Host="api-alex-12345.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployWebAppToAzure_93b2a8734c166ac70374b214e038f5641fc9b695d39cc946faded8ce607cf795" Authorization="Bas..." Content-Type="application/json; charset=utf-8" Content-Length="0" X-ARR-LOG-ID="ea098976-1da5-4bf5-9ea0-ef1bebf1ef04" CLIENT-IP="172.184.220.197:39936" X-SITE-DEPLOYMENT-ID="api-alex-12345" WAS-DEFAULT-HOSTNAME="api-alex-12345.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/diagnostics/runtime" X-Client-IP="172.184.220.197" X-Client-Port="39936" >
-  <step title="Cleanup Xml Logs" date="2025-09-09T15:00:32.926" >
-    <step title="Cleanup Infos" date="2025-09-09T15:00:32.946" totalFiles="548" totalCleanup="388" /><!-- duration: 12ms -->
-  </step><!-- duration: 39ms -->
-  <step title="RuntimeController.GetRuntimeVersions" date="2025-09-09T15:00:33.136" /><!-- duration: 68ms -->
-  <step title="Outgoing response" date="2025-09-09T15:00:33.286" type="response" statusCode="200" statusText="OK" /><!-- duration: 1ms -->
-</step><!-- duration: 370ms -->
