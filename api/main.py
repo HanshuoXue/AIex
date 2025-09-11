@@ -142,7 +142,7 @@ async def match(c: Candidate):
     results = await flow_matcher.match_programs(
         candidate=c,
         query=q,
-        top_k=3,  # Show top 3 by default
+        top_k=1,  # Show top 3 by default
         level=None
     )
 
