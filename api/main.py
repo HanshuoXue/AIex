@@ -28,9 +28,24 @@ def healthz():
 def health():
     return {"status": "healthy", "version": "1.2"}  # Docker health check endpoint
 
+
 @app.get("/debug")
 def debug_info():
-    """Debug endpoint to check paths and environment"""
+    """
+    Debug endpoint to check paths and environment
+    Returns:
+    {
+      "current_dir": "/app/api",
+      "project_root": "/app",
+      "flow_path": "/app/api/flows/program_match",
+      "flow_path_exists": false,
+      "working_directory": "/app",
+      "current_dir_contents": ["main.py", "flows"],
+      "flows_exists": true,
+      "flows_contents": ["program_match"],
+      "root_contents": ["api", "requirements.txt"]
+    }
+    """
     import os
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)

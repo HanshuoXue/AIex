@@ -23,5 +23,8 @@ az webapp config container set \
   --container-registry-password $(az acr credential show --name alexregistry --query passwords[0].value -o tsv) \
   --docker-custom-image-name alexregistry.azurecr.io/alex-api-test:latest
 
+# az webapp config appsettings set --name $TEST_APP_NAME --resource-group $RESOURCE_GROUP --settings WEBSITES_PORT=8000
+# az webapp restart --name $TEST_APP_NAME --resource-group $RESOURCE_GROUP
+
 echo "✅ Test environment deployment completed!"
 echo "🌐 Test URL: https://$TEST_APP_NAME.azurewebsites.net"
