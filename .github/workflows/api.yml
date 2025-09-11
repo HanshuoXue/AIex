@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
-      packages: write # 允许推送到 GHCR
+      contents: read # read-only access to the repository
+      packages: write # allow pushing to GHCR
 
     env:
-      IMAGE_NAME: ghcr.io/hanshuoxue/alex-api:${{ github.sha }}
-      WEBAPP_NAME: api-alex-12345 # ← 改成你的 App Service 名称
+      IMAGE_NAME: ghcr.io/hanshuoxue/alex-api:${{ github.sha }} # 40 char sha to tag the image
+      WEBAPP_NAME: api-alex-12345 # ← change to your App Service name
 
     steps:
       - uses: actions/checkout@v4
@@ -29,20 +29,20 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.actor }} # ghcr.io/username
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & Push image to GHCR
         uses: docker/build-push-action@v6
         with:
-          context: ./api # ← Dockerfile 所在目录
-          platforms: linux/amd64
-          push: true
+          context: ./api # ← Dockerfile directory
+          platforms: linux/amd64 # must be linux/amd64 instead of apple silicon
+          push: true # push the image to GHCR after building
           tags: ${{ env.IMAGE_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # 更新 App Service 的容器镜像为刚才推到 GHCR 的版本
+      # Update App Service container image to the version pushed to GHCR
       - name: Deploy to Azure Web App (Container)
         uses: azure/webapps-deploy@v3
         with:

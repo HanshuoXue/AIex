@@ -1,19 +1,21 @@
 $schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+environment:
+  python_requirements_txt: requirements.txt
 inputs:
   candidate_profile:
     type: string
-    description: "Candidate information in JSON format"
+    description: Candidate information in JSON format
   program_details:
     type: string
-    description: "Program information in JSON format (single program)"
+    description: Program information in JSON format (single program)
     default: ""
   programs_batch:
     type: string
-    description: "Multiple programs information in JSON format (batch processing)"
+    description: Multiple programs information in JSON format (batch processing)
     default: ""
   use_batch:
     type: string
-    description: "Flag to enable batch processing"
+    description: Flag to enable batch processing
     default: "false"
 outputs:
   match_result:
@@ -23,7 +25,6 @@ outputs:
     type: object
     reference: ${batch_evaluator.output}
 nodes:
-  # Single program evaluation
   - name: match_prompt
     type: llm
     source:
@@ -52,7 +53,6 @@ nodes:
     activate:
       when: ${inputs.use_batch}
       is: "false"
-  # Batch evaluation
   - name: batch_match_prompt
     type: llm
     source:
@@ -81,5 +81,3 @@ nodes:
     activate:
       when: ${inputs.use_batch}
       is: "true"
-environment:
-  python_requirements_txt: requirements.txt

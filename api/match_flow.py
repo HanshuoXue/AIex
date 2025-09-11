@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 load_dotenv(dotenv_path="../.env")
 
 # ---- Candidate Definition ----
+
+
 class Candidate(BaseModel):
     bachelor_major: str
     gpa_scale: str = "4.0"
@@ -29,14 +31,16 @@ class Candidate(BaseModel):
     city_pref: List[str] = []
     budget_nzd_per_year: Optional[float] = None
 
+
 class PromptFlowMatcher:
     def __init__(self):
         # Initialize Azure Search client (with fallback for missing env vars)
         search_endpoint = os.environ.get("SEARCH_ENDPOINT")
         search_key = os.environ.get("SEARCH_KEY")
-        
+
         if not search_endpoint or not search_key:
-            print("Warning: SEARCH_ENDPOINT and SEARCH_KEY environment variables are not set")
+            print(
+                "Warning: SEARCH_ENDPOINT and SEARCH_KEY environment variables are not set")
             print("Please set these variables for Azure Search functionality")
             self.search_client = None
         else:
@@ -45,14 +49,14 @@ class PromptFlowMatcher:
                 index_name="nz-programs",
                 credential=AzureKeyCredential(search_key)
             )
-        
+
         # Initialize Prompt Flow client
         self.pf_client = PFClient()
-        
+
         # Super simple path - flows is now in api directory
         current_dir = os.path.dirname(os.path.abspath(__file__))
         self.flow_path = os.path.join(current_dir, "flows", "program_match")
-        
+
         # Initialize debug info storage
         self.debug_info = {
             "init_time": str(datetime.now()),
@@ -71,17 +75,17 @@ class PromptFlowMatcher:
             "connection_attempts": [],
             "errors": []
         }
-        
+
         # Debug: print path and environment information
         logger.info("=== PROMPT FLOW MATCHER INITIALIZATION ===")
         logger.info(f"Current dir: {current_dir}")
         logger.info(f"Flow path: {self.flow_path}")
         logger.info(f"Flow path exists: {os.path.exists(self.flow_path)}")
         logger.info(f"Environment variables: {self.debug_info['env_vars']}")
-        
+
         # Auto-create Azure OpenAI connection if it doesn't exist
         self._ensure_connection()
-        
+
         # Final verification
         if not os.path.exists(self.flow_path):
             print(f"ERROR: Flow path not found at {self.flow_path}")
@@ -93,148 +97,128 @@ class PromptFlowMatcher:
                     print(f"flows/ contents: {os.listdir(flows_dir)}")
             except Exception as e:
                 print(f"Error listing directories: {e}")
-    
+
     def _ensure_connection(self):
-        """Ensure Azure OpenAI connection exists, create if not"""
-        attempt_info = {
+        """Ensure Azure OpenAI connection exists, create if not (lean version)"""
+        # lean version: assume environment variables are set
+        from promptflow.entities import AzureOpenAIConnection
+        import os
+        from pathlib import Path
+        import yaml
+        from datetime import datetime
+
+        # ensure debug_info won't report KeyError (keep minimal recording ability)
+        self.debug_info = getattr(self, "debug_info", {}) or {}
+        self.debug_info.setdefault("errors", [])
+        self.debug_info.setdefault("connection_attempts", [])
+
+        attempt = {
             "timestamp": str(datetime.now()),
             "success": False,
-            "error": None,
-            "details": {}
+            "details": {},
+            "error": None
         }
-        
+
+        logger.info("=== CONNECTION CHECK START (lean) ===")
+
+        # 1) check existing connections
+        connections = self.pf_client.connections.list()
+        names = [getattr(c, "name", None) for c in connections]
+        attempt["details"]["existing_connections"] = names
+
+        target = "azure_openai_connection"
+        if target in names:
+            logger.info("✅ Azure OpenAI connection already exists")
+            attempt["success"] = True
+            attempt["details"]["status"] = "already_exists"
+            self.debug_info["connection_attempts"].append(attempt)
+            logger.info("=== CONNECTION CHECK END (lean, already_exists) ===")
+            return
+
+        logger.info("Azure OpenAI connection NOT found, creating...")
+
+        # 2) create directly by environment variables (no more existence check)
+        api_key = os.environ["AZURE_OPENAI_KEY"]
+        api_base = os.environ["AZURE_OPENAI_ENDPOINT"].rstrip("/")
+        api_ver = os.environ.get(
+            "AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
+
+        conn = AzureOpenAIConnection(
+            name=target,
+            api_key=api_key,
+            api_base=api_base,
+            api_version=api_ver,
+        )
+
         try:
-            # Try to get the connection
-            logger.info("=== CONNECTION CHECK START ===")
-            connections = self.pf_client.connections.list()
-            connection_names = [conn.name for conn in connections]
-            logger.info(f"Existing connections: {connection_names}")
-            attempt_info["details"]["existing_connections"] = connection_names
-            
-            if 'azure_openai_connection' not in connection_names:
-                logger.info("Azure OpenAI connection NOT found, creating new one...")
-                
-                # Get environment variables
-                api_key = os.environ.get("AZURE_OPENAI_KEY")
-                api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
-                
-                # Log environment status (without exposing keys)
-                logger.info(f"Environment check:")
-                logger.info(f"  - AZURE_OPENAI_KEY: {'SET' if api_key else 'NOT SET'}")
-                logger.info(f"  - AZURE_OPENAI_ENDPOINT: {api_base if api_base else 'NOT SET'}")
-                
-                attempt_info["details"]["env_check"] = {
-                    "api_key_exists": bool(api_key),
-                    "api_base_value": api_base if api_base else "NOT SET"
-                }
-                
-                if not api_key or not api_base:
-                    error_msg = f"Missing environment variables: api_key={bool(api_key)}, api_base={bool(api_base)}"
-                    logger.error(f"❌ {error_msg}")
-                    attempt_info["error"] = error_msg
-                    self.debug_info["errors"].append(error_msg)
-                    self.debug_info["connection_attempts"].append(attempt_info)
-                    return
-                
-                # Create connection programmatically
-                connection_config = {
-                    "name": "azure_openai_connection",
-                    "type": "azure_open_ai",
-                    "api_key": api_key,
-                    "api_base": api_base,
-                    "api_version": "2024-02-15-preview"
-                }
-                
-                # Try to create connection using local approach
-                try:
-                    logger.info("Attempting pf_client.connections.create_or_update...")
-                    # Create connection object from config
-                    from promptflow.entities import AzureOpenAIConnection
-                    connection = AzureOpenAIConnection(
-                        name=connection_config["name"],
-                        api_key=connection_config["api_key"],
-                        api_base=connection_config["api_base"],
-                        api_version=connection_config["api_version"]
-                    )
-                    self.pf_client.connections.create_or_update(connection)
-                    logger.info("✅ Azure OpenAI connection created successfully!")
-                    attempt_info["success"] = True
-                    attempt_info["details"]["method"] = "create_or_update"
-                except Exception as keyring_error:
-                    logger.warning(f"Keyring error, trying alternative method: {keyring_error}")
-                    # Try alternative: create connection file directly
-                    try:
-                        import yaml
-                        from pathlib import Path
-                        
-                        # Create .promptflow directory if it doesn't exist
-                        promptflow_dir = Path.home() / ".promptflow" / "connections"
-                        promptflow_dir.mkdir(parents=True, exist_ok=True)
-                        
-                        # Create connection file
-                        connection_file = promptflow_dir / f"{connection_config['name']}.yaml"
-                        connection_data = {
-                            "name": connection_config["name"],
-                            "type": connection_config["type"],
-                            "configs": {
-                                "api_key": connection_config["api_key"],
-                                "api_base": connection_config["api_base"],
-                                "api_version": connection_config["api_version"]
-                            }
-                        }
-                        
-                        with open(connection_file, 'w') as f:
-                            yaml.dump(connection_data, f)
-                        
-                        logger.info("✅ Azure OpenAI connection created via file method!")
-                        attempt_info["success"] = True
-                        attempt_info["details"]["method"] = "file_method"
-                    except Exception as file_error:
-                        logger.error(f"File method also failed: {file_error}")
-                        attempt_info["success"] = False
-                        attempt_info["error"] = f"Both keyring and file methods failed: {file_error}"
-                except Exception as create_error:
-                    error_detail = f"create_or_update failed: {str(create_error)}"
-                    logger.warning(f"⚠️ {error_detail}")
-                    # Don't treat this as a fatal error - continue without connection
-                    attempt_info["success"] = False
-                    attempt_info["details"]["method"] = "local_fallback"
-                    attempt_info["error"] = error_detail
-            else:
-                logger.info("✅ Azure OpenAI connection already exists")
-                attempt_info["success"] = True
-                attempt_info["details"]["status"] = "already_exists"
-                
+            # 3) first: use SDK create/update
+            self.pf_client.connections.create_or_update(conn)
+            logger.info("✅ Azure OpenAI connection created via SDK")
+            attempt["success"] = True
+            attempt["details"]["method"] = "create_or_update"
+
         except Exception as e:
-            error_msg = f"Error in connection check: {str(e)}"
-            logger.error(f"❌ {error_msg}")
-            logger.exception(e)  # This logs the full traceback
-            attempt_info["error"] = error_msg
-            self.debug_info["errors"].append(error_msg)
-        
-        self.debug_info["connection_attempts"].append(attempt_info)
-        logger.info(f"=== CONNECTION CHECK END (Success: {attempt_info['success']}) ===")
-    
+            # 4) minimal fallback: file method (adapt to no keyring/CI)
+            logger.warning(
+                f"SDK create_or_update failed, fallback to file: {e}")
+            try:
+                dir_ = Path.home() / ".promptflow" / "connections"
+                dir_.mkdir(parents=True, exist_ok=True)
+                file_ = dir_ / f"{target}.yaml"
+                data = {
+                    "name": target,
+                    "type": "azure_open_ai",
+                    "configs": {
+                        "api_key": api_key,
+                        "api_base": api_base,
+                        "api_version": api_ver
+                    }
+                }
+                with open(file_, "w", encoding="utf-8") as f:
+                    yaml.safe_dump(data, f, sort_keys=False,
+                                   allow_unicode=True)
+                logger.info(
+                    f"✅ Azure OpenAI connection created via file -> {file_}")
+                attempt["success"] = True
+                attempt["details"]["method"] = "file_method"
+                attempt["details"]["file_path"] = str(file_)
+            except Exception as fe:
+                # keep minimal error recording, but no further checks
+                msg = f"create_or_update and file fallback both failed: {fe}"
+                logger.error(f"❌ {msg}")
+                attempt["error"] = msg
+
+        self.debug_info["connection_attempts"].append(attempt)
+        logger.info(
+            f"=== CONNECTION CHECK END (lean, success={attempt['success']}) ===")
+
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
-        """Get program list"""
+        """Get program list :
+        match all programs by default
+        default 50 programs
+        filter by level if provided
+        return list of programs
+        """
         if not self.search_client:
-            print("Warning: Azure Search client not initialized. Returning empty results.")
+            print(
+                "Warning: Azure Search client not initialized. Returning empty results.")
             return []
-            
+
         filt = f"level eq '{level}'" if level else None
         select = ",".join([
-            "id","university","program","fields","type","campus","intakes",
+            "id", "university", "program", "fields", "type", "campus", "intakes",
             "tuition_nzd_per_year",
-            "english_ielts","english_no_band_below",
-            "duration_years","level","academic_reqs","other_reqs",
-            "url","source_updated"
+            "english_ielts", "english_no_band_below",
+            "duration_years", "level", "academic_reqs", "other_reqs",
+            "url", "source_updated"
         ])
-        results = self.search_client.search(search_text=query, top=top, filter=filt, select=select)
+        results = self.search_client.search(
+            search_text=query, top=top, filter=filt, select=select)
         return [dict(r) for r in results]
-    
+
     async def evaluate_match(self, candidate: Candidate, program: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Use Prompt Flow to evaluate a single candidate-program match
+        Use Prompt Flow to evaluate a single candidate vs a single program match 1v1
         """
         try:
             # Prepare candidate data
@@ -249,7 +233,7 @@ class PromptFlowMatcher:
                 "city_pref": candidate.city_pref,
                 "budget_nzd_per_year": candidate.budget_nzd_per_year
             }
-            
+
             # Prepare program data
             program_data = {
                 "id": program.get("id"),
@@ -267,13 +251,14 @@ class PromptFlowMatcher:
                 "other_reqs": program.get("other_reqs", []),
                 "url": program.get("url")
             }
-            
+
             # Try to ensure connection, but don't fail if it doesn't work
             try:
                 self._ensure_connection()
             except Exception as conn_error:
-                logger.warning(f"Connection setup failed, but continuing: {conn_error}")
-            
+                logger.warning(
+                    f"Connection setup failed, but continuing: {conn_error}")
+
             # Run the flow using test method
             result = self.pf_client.test(
                 flow=self.flow_path,
@@ -283,14 +268,14 @@ class PromptFlowMatcher:
                     "program_details": json.dumps(program_data)
                 }
             )
-            
+
             # Extract the match_result from the flow output
             if isinstance(result, dict) and 'match_result' in result:
                 return result['match_result']
             else:
                 # If result format is unexpected, return the whole result
                 return result
-            
+
         except Exception as e:
             # Fallback error response
             return {
@@ -313,15 +298,16 @@ class PromptFlowMatcher:
                 "program_name": program.get("program"),
                 "university": program.get("university")
             }
-    
+
     async def match_programs(self, candidate: Candidate, query: str = "*", top_k: int = 2, level: str = None) -> List[Dict[str, Any]]:
         """
+        QUICK MATCH
         Find and evaluate top matching programs for a candidate (ELIGIBLE ONLY)
         Serial evaluation until finding enough eligible matches
         """
         # Get candidate programs from search
         programs = self.fetch_programs(query=query, top=100, level=level)
-        
+
         # Evaluate each program using Prompt Flow until we find enough eligible ones
         evaluations = []
         for program in programs:
@@ -331,45 +317,50 @@ class PromptFlowMatcher:
                 # Stop when we have enough eligible matches
                 if len(evaluations) >= top_k:
                     break
-        
+
         # Sort by overall score and return top K
         evaluations.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
         return evaluations[:top_k]
-    
+
     async def match_programs_fixed_serial(self, candidate: Candidate, query: str = "*", top_k: int = 3, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
         """
+        DETAILED MATCH
         Evaluate fixed number of programs serially, return both eligible and rejected
         For Detailed Analysis - evaluate exactly top_k programs
         """
         # Get candidate programs from search
         programs = self.fetch_programs(query=query, top=100, level=level)
-        
+
         # Take only the first top_k programs
         programs = programs[:top_k]
-        
+
         # Evaluate each program serially
         eligible_matches = []
         rejected_matches = []
-        
+
         for program in programs:
             evaluation = await self.evaluate_match(candidate, program)
             if evaluation.get("eligible", False):
                 eligible_matches.append(evaluation)
             else:
-                evaluation["rejection_reason"] = evaluation.get("reasoning", {}).get("overall_assessment", "Failed AI evaluation screening")
+                evaluation["rejection_reason"] = evaluation.get("reasoning", {}).get(
+                    "overall_assessment", "Failed AI evaluation screening")
                 rejected_matches.append(evaluation)
-        
+
         # Sort both lists by overall score
-        eligible_matches.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
-        rejected_matches.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
-        
+        eligible_matches.sort(key=lambda x: x.get(
+            "overall_score", 0), reverse=True)
+        rejected_matches.sort(key=lambda x: x.get(
+            "overall_score", 0), reverse=True)
+
         return {
             "eligible": eligible_matches,
             "rejected": rejected_matches
         }
-    
+
     async def evaluate_batch_match(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
+        BATCH MATCH
         Batch evaluate multiple programs with a single LLM call for better performance
         """
         try:
@@ -385,7 +376,7 @@ class PromptFlowMatcher:
                 "city_pref": candidate.city_pref,
                 "budget_nzd_per_year": candidate.budget_nzd_per_year
             }
-            
+
             # Prepare programs data with essential info only
             programs_data = []
             for program in programs:
@@ -401,13 +392,14 @@ class PromptFlowMatcher:
                     "level": program.get("level"),
                     "url": program.get("url")
                 })
-            
+
             # Ensure connection
             try:
                 self._ensure_connection()
             except Exception as conn_error:
-                logger.warning(f"Connection setup failed, but continuing: {conn_error}")
-            
+                logger.warning(
+                    f"Connection setup failed, but continuing: {conn_error}")
+
             # Use batch prompt for efficiency
             result = self.pf_client.test(
                 flow=self.flow_path,
@@ -417,7 +409,7 @@ class PromptFlowMatcher:
                     "use_batch": "true"  # Flag to use batch processing
                 }
             )
-            
+
             # Parse batch result
             if isinstance(result, dict) and 'batch_evaluations' in result:
                 return result['batch_evaluations']
@@ -425,14 +417,15 @@ class PromptFlowMatcher:
                 return result
             else:
                 # Fallback to individual evaluation if batch fails
-                logger.warning("Batch evaluation failed, falling back to individual processing")
+                logger.warning(
+                    "Batch evaluation failed, falling back to individual processing")
                 return await self._fallback_individual_evaluation(candidate, programs)
-                
+
         except Exception as e:
             logger.error(f"Batch evaluation error: {e}")
             # Fallback to individual evaluation
             return await self._fallback_individual_evaluation(candidate, programs)
-    
+
     async def _fallback_individual_evaluation(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Fallback to individual evaluation if batch processing fails"""
         evaluations = []
@@ -448,38 +441,43 @@ class PromptFlowMatcher:
         """
         # Get candidate programs from search
         programs = self.fetch_programs(query=query, top=100, level=level)
-        
+
         # Take exactly top_k programs for batch processing
         programs = programs[:top_k]
-        
+
         # Use batch evaluation for parallel processing (faster)
         try:
             evaluations = await self.evaluate_batch_match(candidate, programs)
         except Exception as e:
-            logger.warning(f"Batch evaluation failed, falling back to serial: {e}")
+            logger.warning(
+                f"Batch evaluation failed, falling back to serial: {e}")
             # Fallback to individual evaluation if batch fails
             evaluations = await self._fallback_individual_evaluation(candidate, programs)
-        
+
         # Separate eligible and rejected matches
         eligible_matches = []
         rejected_matches = []
-        
+
         for evaluation in evaluations:
             if evaluation.get("eligible", False):
                 eligible_matches.append(evaluation)
             else:
                 # Add rejection reason for rejected matches
-                evaluation["rejection_reason"] = evaluation.get("reasoning", {}).get("overall_assessment", "Failed AI evaluation screening")
+                evaluation["rejection_reason"] = evaluation.get("reasoning", {}).get(
+                    "overall_assessment", "Failed AI evaluation screening")
                 rejected_matches.append(evaluation)
-        
+
         # Sort both lists by overall score
-        eligible_matches.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
-        rejected_matches.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
-        
+        eligible_matches.sort(key=lambda x: x.get(
+            "overall_score", 0), reverse=True)
+        rejected_matches.sort(key=lambda x: x.get(
+            "overall_score", 0), reverse=True)
+
         return {
             "eligible": eligible_matches[:top_k],
             "rejected": rejected_matches
         }
+
 
 # Global instance
 flow_matcher = PromptFlowMatcher()

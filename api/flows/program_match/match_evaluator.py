@@ -4,6 +4,7 @@ from typing import Dict, Any
 
 from promptflow import tool
 
+
 @tool
 def match_evaluator(llm_response: str, candidate_data: str, program_data: str) -> Dict[str, Any]:
     """
@@ -13,21 +14,23 @@ def match_evaluator(llm_response: str, candidate_data: str, program_data: str) -
         # Parse input data
         candidate = json.loads(candidate_data)
         program = json.loads(program_data)
-        
+
         # Extract JSON from LLM response
-        json_match = re.search(r'```json\s*(.*?)\s*```', llm_response, re.DOTALL)
+        json_match = re.search(r'```json\s*(.*?)\s*```',
+                               llm_response, re.DOTALL)
         if json_match:
             evaluation = json.loads(json_match.group(1))
         else:
             # Fallback: try to parse the entire response as JSON
             evaluation = json.loads(llm_response)
-        
+
         # Validate and ensure required fields
-        required_fields = ['eligible', 'overall_score', 'detailed_scores', 'reasoning']
+        required_fields = ['eligible', 'overall_score',
+                           'detailed_scores', 'reasoning']
         for field in required_fields:
             if field not in evaluation:
                 raise ValueError(f"Missing required field: {field}")
-        
+
         # Add metadata
         result = {
             **evaluation,
@@ -38,13 +41,13 @@ def match_evaluator(llm_response: str, candidate_data: str, program_data: str) -
             "candidate_id": candidate.get("id", "unknown"),
             "evaluation_timestamp": None  # Could add timestamp if needed
         }
-        
+
         # Validate score ranges
         if not (0 <= result["overall_score"] <= 100):
             result["overall_score"] = max(0, min(100, result["overall_score"]))
-        
+
         return result
-        
+
     except json.JSONDecodeError as e:
         # Fallback for invalid JSON
         return {
