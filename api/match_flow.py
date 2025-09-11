@@ -99,281 +99,98 @@ class PromptFlowMatcher:
                 print(f"Error listing directories: {e}")
 
     def _ensure_connection(self):
-        """Ensure Azure OpenAI connection exists, create if not"""
-        # 兜底初始化，避免 KeyError
-        if not hasattr(self, "debug_info") or not isinstance(getattr(self, "debug_info"), dict):
-            self.debug_info = {}
+        """Ensure Azure OpenAI connection exists, create if not (lean version)"""
+        # lean version: assume environment variables are set
+        from promptflow.entities import AzureOpenAIConnection
+        import os
+        from pathlib import Path
+        import yaml
+        from datetime import datetime
+
+        # ensure debug_info won't report KeyError (keep minimal recording ability)
+        self.debug_info = getattr(self, "debug_info", {}) or {}
         self.debug_info.setdefault("errors", [])
         self.debug_info.setdefault("connection_attempts", [])
 
-        attempt_info = {
+        attempt = {
             "timestamp": str(datetime.now()),
             "success": False,
-            "error": None,
-            "details": {}
+            "details": {},
+            "error": None
         }
 
+        logger.info("=== CONNECTION CHECK START (lean) ===")
+
+        # 1) check existing connections
+        connections = self.pf_client.connections.list()
+        names = [getattr(c, "name", None) for c in connections]
+        attempt["details"]["existing_connections"] = names
+
+        target = "azure_openai_connection"
+        if target in names:
+            logger.info("✅ Azure OpenAI connection already exists")
+            attempt["success"] = True
+            attempt["details"]["status"] = "already_exists"
+            self.debug_info["connection_attempts"].append(attempt)
+            logger.info("=== CONNECTION CHECK END (lean, already_exists) ===")
+            return
+
+        logger.info("Azure OpenAI connection NOT found, creating...")
+
+        # 2) create directly by environment variables (no more existence check)
+        api_key = os.environ["AZURE_OPENAI_KEY"]
+        api_base = os.environ["AZURE_OPENAI_ENDPOINT"].rstrip("/")
+        api_ver = os.environ.get(
+            "AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
+
+        conn = AzureOpenAIConnection(
+            name=target,
+            api_key=api_key,
+            api_base=api_base,
+            api_version=api_ver,
+        )
+
         try:
-            logger.info("=== CONNECTION CHECK START ===")
-            # 1) 列出现有连接
+            # 3) first: use SDK create/update
+            self.pf_client.connections.create_or_update(conn)
+            logger.info("✅ Azure OpenAI connection created via SDK")
+            attempt["success"] = True
+            attempt["details"]["method"] = "create_or_update"
+
+        except Exception as e:
+            # 4) minimal fallback: file method (adapt to no keyring/CI)
+            logger.warning(
+                f"SDK create_or_update failed, fallback to file: {e}")
             try:
-                connections = self.pf_client.connections.list()
-            except Exception as list_err:
-                # 列表失败也要可诊断
-                raise RuntimeError(
-                    f"Failed to list connections: {list_err}") from list_err
-
-            connection_names = [getattr(conn, "name", None)
-                                for conn in connections]
-            logger.info(f"Existing connections: {connection_names}")
-            attempt_info["details"]["existing_connections"] = connection_names
-
-            target_name = "azure_openai_connection"
-            if target_name in connection_names:
-                logger.info("✅ Azure OpenAI connection already exists")
-                attempt_info["success"] = True
-                attempt_info["details"]["status"] = "already_exists"
-            else:
-                logger.info(
-                    "Azure OpenAI connection NOT found, creating new one...")
-
-                # 2) 读取环境变量（允许 api_version 覆盖）
-                api_key = os.environ.get("AZURE_OPENAI_KEY")
-                api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
-                api_ver = os.environ.get(
-                    "AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
-
-                # 末尾斜杠归一化（避免双斜杠）
-                if api_base and api_base.endswith("/"):
-                    api_base = api_base.rstrip("/")
-
-                # 只打印是否设置，避免泄露
-                logger.info("Environment check:")
-                logger.info(
-                    f"  - AZURE_OPENAI_KEY: {'SET' if api_key else 'NOT SET'}")
-                logger.info(
-                    f"  - AZURE_OPENAI_ENDPOINT: {api_base if api_base else 'NOT SET'}")
-                logger.info(f"  - AZURE_OPENAI_API_VERSION: {api_ver}")
-
-                attempt_info["details"]["env_check"] = {
-                    "api_key_exists": bool(api_key),
-                    "api_base_value": api_base if api_base else "NOT SET",
-                    "api_version": api_ver,
-                }
-
-                if not api_key or not api_base:
-                    error_msg = f"Missing environment variables: api_key={bool(api_key)}, api_base={bool(api_base)}"
-                    logger.error(f"❌ {error_msg}")
-                    attempt_info["error"] = error_msg
-                    self.debug_info["errors"].append(error_msg)
-                    self.debug_info["connection_attempts"].append(attempt_info)
-                    return
-
-                connection_config = {
-                    "name": target_name,
+                dir_ = Path.home() / ".promptflow" / "connections"
+                dir_.mkdir(parents=True, exist_ok=True)
+                file_ = dir_ / f"{target}.yaml"
+                data = {
+                    "name": target,
                     "type": "azure_open_ai",
-                    "api_key": api_key,
-                    "api_base": api_base,
-                    "api_version": api_ver,
+                    "configs": {
+                        "api_key": api_key,
+                        "api_base": api_base,
+                        "api_version": api_ver
+                    }
                 }
+                with open(file_, "w", encoding="utf-8") as f:
+                    yaml.safe_dump(data, f, sort_keys=False,
+                                   allow_unicode=True)
+                logger.info(
+                    f"✅ Azure OpenAI connection created via file -> {file_}")
+                attempt["success"] = True
+                attempt["details"]["method"] = "file_method"
+                attempt["details"]["file_path"] = str(file_)
+            except Exception as fe:
+                # keep minimal error recording, but no further checks
+                msg = f"create_or_update and file fallback both failed: {fe}"
+                logger.error(f"❌ {msg}")
+                attempt["error"] = msg
 
-                # 3) 首选：用 SDK 创建/更新
-                try:
-                    logger.info(
-                        "Attempting pf_client.connections.create_or_update...")
-                    from promptflow.entities import AzureOpenAIConnection
-                    connection = AzureOpenAIConnection(
-                        name=connection_config["name"],
-                        api_key=connection_config["api_key"],
-                        api_base=connection_config["api_base"],
-                        api_version=connection_config["api_version"],
-                    )
-                    self.pf_client.connections.create_or_update(connection)
-                    logger.info(
-                        "✅ Azure OpenAI connection created successfully!")
-                    attempt_info["success"] = True
-                    attempt_info["details"]["method"] = "create_or_update"
-
-                except Exception as create_err:
-                    # 4) 兜底：文件法（适配无 keyring / CI / 容器）
-                    logger.warning(
-                        f"create_or_update failed, fallback to file method: {create_err}")
-                    try:
-                        import yaml
-                        from pathlib import Path
-
-                        promptflow_dir = Path.home() / ".promptflow" / "connections"
-                        promptflow_dir.mkdir(parents=True, exist_ok=True)
-
-                        connection_file = promptflow_dir / \
-                            f"{connection_config['name']}.yaml"
-                        connection_data = {
-                            "name": connection_config["name"],
-                            "type": connection_config["type"],
-                            "configs": {
-                                "api_key": connection_config["api_key"],
-                                "api_base": connection_config["api_base"],
-                                "api_version": connection_config["api_version"],
-                            },
-                        }
-
-                        # 用 safe_dump 更稳妥
-                        with open(connection_file, "w", encoding="utf-8") as f:
-                            yaml.safe_dump(connection_data, f,
-                                           sort_keys=False, allow_unicode=True)
-
-                        logger.info(
-                            f"✅ Azure OpenAI connection created via file method! -> {connection_file}")
-                        attempt_info["success"] = True
-                        attempt_info["details"]["method"] = "file_method"
-                        attempt_info["details"]["file_path"] = str(
-                            connection_file)
-
-                    except Exception as file_err:
-                        msg = f"Both create_or_update and file methods failed: {file_err}"
-                        logger.error(f"❌ {msg}")
-                        attempt_info["success"] = False
-                        attempt_info["error"] = msg
-
-        except Exception as e:
-            error_msg = f"Error in connection check: {str(e)}"
-            logger.error(f"❌ {error_msg}")
-            logger.exception(e)
-            attempt_info["error"] = error_msg
-            self.debug_info["errors"].append(error_msg)
-
-        self.debug_info["connection_attempts"].append(attempt_info)
+        self.debug_info["connection_attempts"].append(attempt)
         logger.info(
-            f"=== CONNECTION CHECK END (Success: {attempt_info['success']}) ===")
-
-        """Ensure Azure OpenAI connection exists, create if not"""
-        attempt_info = {
-            "timestamp": str(datetime.now()),
-            "success": False,
-            "error": None,
-            "details": {}
-        }
-
-        try:
-            # Try to get the connection
-            logger.info("=== CONNECTION CHECK START ===")
-            connections = self.pf_client.connections.list()
-            connection_names = [conn.name for conn in connections]
-            logger.info(f"Existing connections: {connection_names}")
-            attempt_info["details"]["existing_connections"] = connection_names
-
-            if 'azure_openai_connection' not in connection_names:
-                logger.info(
-                    "Azure OpenAI connection NOT found, creating new one...")
-
-                # Get environment variables
-                api_key = os.environ.get("AZURE_OPENAI_KEY")
-                api_base = os.environ.get("AZURE_OPENAI_ENDPOINT")
-
-                # Log environment status (without exposing keys)
-                logger.info(f"Environment check:")
-                logger.info(
-                    f"  - AZURE_OPENAI_KEY: {'SET' if api_key else 'NOT SET'}")
-                logger.info(
-                    f"  - AZURE_OPENAI_ENDPOINT: {api_base if api_base else 'NOT SET'}")
-
-                attempt_info["details"]["env_check"] = {
-                    "api_key_exists": bool(api_key),
-                    "api_base_value": api_base if api_base else "NOT SET"
-                }
-
-                if not api_key or not api_base:
-                    error_msg = f"Missing environment variables: api_key={bool(api_key)}, api_base={bool(api_base)}"
-                    logger.error(f"❌ {error_msg}")
-                    attempt_info["error"] = error_msg
-                    self.debug_info["errors"].append(error_msg)
-                    self.debug_info["connection_attempts"].append(attempt_info)
-                    return
-
-                # Create connection programmatically
-                connection_config = {
-                    "name": "azure_openai_connection",
-                    "type": "azure_open_ai",
-                    "api_key": api_key,
-                    "api_base": api_base,
-                    "api_version": "2024-02-15-preview"
-                }
-
-                # Try to create connection using local approach
-                try:
-                    logger.info(
-                        "Attempting pf_client.connections.create_or_update...")
-                    # Create connection object from config
-                    from promptflow.entities import AzureOpenAIConnection
-                    connection = AzureOpenAIConnection(
-                        name=connection_config["name"],
-                        api_key=connection_config["api_key"],
-                        api_base=connection_config["api_base"],
-                        api_version=connection_config["api_version"]
-                    )
-                    self.pf_client.connections.create_or_update(connection)
-                    logger.info(
-                        "✅ Azure OpenAI connection created successfully!")
-                    attempt_info["success"] = True
-                    attempt_info["details"]["method"] = "create_or_update"
-                except Exception as keyring_error:
-                    logger.warning(
-                        f"Keyring error, trying alternative method: {keyring_error}")
-                    # Try alternative: create connection file directly
-                    try:
-                        import yaml
-                        from pathlib import Path
-
-                        # Create .promptflow directory if it doesn't exist
-                        promptflow_dir = Path.home() / ".promptflow" / "connections"
-                        promptflow_dir.mkdir(parents=True, exist_ok=True)
-
-                        # Create connection file
-                        connection_file = promptflow_dir / \
-                            f"{connection_config['name']}.yaml"
-                        connection_data = {
-                            "name": connection_config["name"],
-                            "type": connection_config["type"],
-                            "configs": {
-                                "api_key": connection_config["api_key"],
-                                "api_base": connection_config["api_base"],
-                                "api_version": connection_config["api_version"]
-                            }
-                        }
-
-                        with open(connection_file, 'w') as f:
-                            yaml.dump(connection_data, f)
-
-                        logger.info(
-                            "✅ Azure OpenAI connection created via file method!")
-                        attempt_info["success"] = True
-                        attempt_info["details"]["method"] = "file_method"
-                    except Exception as file_error:
-                        logger.error(f"File method also failed: {file_error}")
-                        attempt_info["success"] = False
-                        attempt_info["error"] = f"Both keyring and file methods failed: {file_error}"
-                except Exception as create_error:
-                    error_detail = f"create_or_update failed: {str(create_error)}"
-                    logger.warning(f"⚠️ {error_detail}")
-                    # Don't treat this as a fatal error - continue without connection
-                    attempt_info["success"] = False
-                    attempt_info["details"]["method"] = "local_fallback"
-                    attempt_info["error"] = error_detail
-            else:
-                logger.info("✅ Azure OpenAI connection already exists")
-                attempt_info["success"] = True
-                attempt_info["details"]["status"] = "already_exists"
-
-        except Exception as e:
-            error_msg = f"Error in connection check: {str(e)}"
-            logger.error(f"❌ {error_msg}")
-            logger.exception(e)  # This logs the full traceback
-            attempt_info["error"] = error_msg
-            self.debug_info["errors"].append(error_msg)
-
-        self.debug_info["connection_attempts"].append(attempt_info)
-        logger.info(
-            f"=== CONNECTION CHECK END (Success: {attempt_info['success']}) ===")
+            f"=== CONNECTION CHECK END (lean, success={attempt['success']}) ===")
 
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
         """Get program list"""
