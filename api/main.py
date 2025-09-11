@@ -20,13 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/healthz")
 def healthz():
     return {"ok": True}  # Health check endpoint
 
+
 @app.get("/health")
 def health():
-    return {"status": "healthy", "version": "1.2"}  # Docker health check endpoint
+    # Docker health check endpoint
+    return {"status": "healthy", "version": "1.2"}
 
 
 @app.get("/debug")
@@ -50,7 +53,7 @@ def debug_info():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
     flow_path = os.path.join(current_dir, "flows", "program_match")
-    
+
     debug_info = {
         "current_dir": current_dir,
         "project_root": project_root,
@@ -61,25 +64,26 @@ def debug_info():
         "flows_exists": os.path.exists(os.path.join(current_dir, "flows")),
         "flows_contents": []
     }
-    
+
     try:
         debug_info["current_dir_contents"] = os.listdir(current_dir)
     except Exception as e:
         debug_info["current_dir_error"] = str(e)
-    
+
     try:
         flows_dir = os.path.join(current_dir, "flows")
         if os.path.exists(flows_dir):
             debug_info["flows_contents"] = os.listdir(flows_dir)
     except Exception as e:
         debug_info["flows_error"] = str(e)
-    
+
     try:
         debug_info["root_contents"] = os.listdir(project_root)
     except Exception as e:
         debug_info["root_error"] = str(e)
-    
+
     return debug_info
+
 
 @app.get("/debug/search")
 def debug_search():
@@ -93,10 +97,11 @@ def debug_search():
         }
     except Exception as e:
         return {
-            "status": "error", 
+            "status": "error",
             "error": str(e),
             "error_type": type(e).__name__
         }
+
 
 @app.get("/debug/matcher")
 def debug_matcher():
@@ -124,6 +129,7 @@ def debug_matcher():
             "type": type(e).__name__
         }
 
+
 @app.post("/match")
 async def match(c: Candidate):
     """
@@ -131,7 +137,7 @@ async def match(c: Candidate):
     """
     # Build search query
     q = " OR ".join((c.interests or ["Master"])) or "Master"
-    
+
     # Use Prompt Flow for matching
     results = await flow_matcher.match_programs(
         candidate=c,
@@ -139,7 +145,7 @@ async def match(c: Candidate):
         top_k=3,  # Show top 3 by default
         level=None
     )
-    
+
     # Format output
     formatted_results = []
     for result in results:
@@ -153,8 +159,9 @@ async def match(c: Candidate):
             "red_flags": result.get("red_flags", []),
             "url": result.get("program_url")
         })
-    
+
     return formatted_results[:3]
+
 
 @app.post("/match/detailed")
 async def match_detailed(c: Candidate):
@@ -162,27 +169,25 @@ async def match_detailed(c: Candidate):
     Detailed Analysis - Serial evaluation of top 3 programs, show eligible + rejected
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
-    
+
     results = await flow_matcher.match_programs_fixed_serial(
         candidate=c,
         query=q,
         top_k=3,
         level=None
     )
-    
+
     return {
         "eligible_matches": results["eligible"],
         "rejected_matches": results["rejected"],
         "total_evaluated": len(results["eligible"]) + len(results["rejected"])
     }
 
-@app.post("/match/more")
-async def match_more(c: Candidate, skip: int = 3):
     """
     More Programs - Return next batch of programs after initial results
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
-    
+
     # Get more results
     results = await flow_matcher.match_programs(
         candidate=c,
@@ -190,10 +195,10 @@ async def match_more(c: Candidate, skip: int = 3):
         top_k=skip + 3,  # Get skip + 3 more
         level=None
     )
-    
+
     # Return only the "more" results (skip the first ones)
     more_results = results[skip:skip + 3] if len(results) > skip else []
-    
+
     # Format output
     formatted_results = []
     for result in more_results:
@@ -207,11 +212,12 @@ async def match_more(c: Candidate, skip: int = 3):
             "red_flags": result.get("red_flags", []),
             "url": result.get("program_url")
         })
-    
+
     return {
         "programs": formatted_results,
         "has_more": len(results) > skip + 3
     }
+
 
 @app.post("/match/all")
 async def match_all(c: Candidate):
@@ -219,14 +225,14 @@ async def match_all(c: Candidate):
     Complete Analysis - Parallel batch evaluation of top 5 programs, show eligible + rejected
     """
     q = " OR ".join((c.interests or ["Master"])) or "Master"
-    
+
     results = await flow_matcher.match_programs_with_rejected(
         candidate=c,
         query=q,
         top_k=5,
         level=None
     )
-    
+
     return {
         "eligible_matches": results["eligible"],
         "rejected_matches": results["rejected"],

@@ -193,7 +193,12 @@ class PromptFlowMatcher:
             f"=== CONNECTION CHECK END (lean, success={attempt['success']}) ===")
 
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
-        """Get program list"""
+        """Get program list :
+        match all programs by default
+        default 50 programs
+        filter by level if provided
+        return list of programs
+        """
         if not self.search_client:
             print(
                 "Warning: Azure Search client not initialized. Returning empty results.")
@@ -213,7 +218,7 @@ class PromptFlowMatcher:
 
     async def evaluate_match(self, candidate: Candidate, program: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Use Prompt Flow to evaluate a single candidate-program match
+        Use Prompt Flow to evaluate a single candidate vs a single program match 1v1
         """
         try:
             # Prepare candidate data
@@ -296,6 +301,7 @@ class PromptFlowMatcher:
 
     async def match_programs(self, candidate: Candidate, query: str = "*", top_k: int = 2, level: str = None) -> List[Dict[str, Any]]:
         """
+        QUICK MATCH
         Find and evaluate top matching programs for a candidate (ELIGIBLE ONLY)
         Serial evaluation until finding enough eligible matches
         """
@@ -318,6 +324,7 @@ class PromptFlowMatcher:
 
     async def match_programs_fixed_serial(self, candidate: Candidate, query: str = "*", top_k: int = 3, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
         """
+        DETAILED MATCH
         Evaluate fixed number of programs serially, return both eligible and rejected
         For Detailed Analysis - evaluate exactly top_k programs
         """
@@ -353,6 +360,7 @@ class PromptFlowMatcher:
 
     async def evaluate_batch_match(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
+        BATCH MATCH
         Batch evaluate multiple programs with a single LLM call for better performance
         """
         try:

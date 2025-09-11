@@ -21,6 +21,84 @@
         }
       },
       "function": "my_python_tool"
+    },
+    "match_prompt.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "candidate": {
+          "type": [
+            "string"
+          ]
+        },
+        "program": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "match_prompt.jinja2"
+    },
+    "match_evaluator.py": {
+      "type": "python",
+      "inputs": {
+        "llm_response": {
+          "type": [
+            "string"
+          ]
+        },
+        "candidate_data": {
+          "type": [
+            "string"
+          ]
+        },
+        "program_data": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "description": "Process LLM response and return structured match evaluation",
+      "source": "match_evaluator.py",
+      "function": "match_evaluator"
+    },
+    "batch_match_prompt.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "programs": {
+          "type": [
+            "string"
+          ]
+        },
+        "candidate": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "batch_match_prompt.jinja2"
+    },
+    "batch_evaluator.py": {
+      "type": "python",
+      "inputs": {
+        "llm_response": {
+          "type": [
+            "string"
+          ]
+        },
+        "candidate_data": {
+          "type": [
+            "string"
+          ]
+        },
+        "programs_data": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "description": "Parse LLM response for batch evaluation of multiple programs",
+      "source": "batch_evaluator.py",
+      "function": "batch_evaluator"
     }
   }
 }
