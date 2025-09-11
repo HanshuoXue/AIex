@@ -6,6 +6,22 @@ on:
     paths:
       - "api/**"
       - ".github/workflows/api.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "api/**"
+      - ".github/workflows/api.yml"
+    types: [opened, synchronize, closed]
+  workflow_dispatch:  # 手动触发
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
 
 jobs:
   build_and_deploy:
