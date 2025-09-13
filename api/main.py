@@ -29,7 +29,7 @@ def healthz():
 @app.get("/health")
 def health():
     # Docker health check endpoint
-    return {"status": "healthy", "version": "1.2"}
+    return {"status": "healthy", "version": "1.3"}
 
 
 @app.get("/debug")
