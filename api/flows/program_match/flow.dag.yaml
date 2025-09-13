@@ -33,7 +33,7 @@ nodes:
     inputs:
       candidate: ${inputs.candidate_profile}
       program: ${inputs.program_details}
-      deployment_name: gpt-4o-mini
+      deployment_name: gpt-4
       max_tokens: 800
       temperature: 0.1
     connection: azure_openai_connection
@@ -61,7 +61,7 @@ nodes:
     inputs:
       candidate: ${inputs.candidate_profile}
       programs: ${inputs.programs_batch}
-      deployment_name: gpt-4o-mini
+      deployment_name: gpt-4
       max_tokens: 4000
       temperature: 0.1
     connection: azure_openai_connection
