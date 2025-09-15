@@ -42,7 +42,7 @@ export default function CandidateForm({
   const [isDragOver, setIsDragOver] = useState(false);
   const [cvExtractedText, setCvExtractedText] = useState<string | null>(null);
   const [cvUploadStatus, setCvUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
-  const [cvAiAnalysis, setCvAiAnalysis] = useState<Candidate['cv_analysis']>(null);
+  const [cvAiAnalysis, setCvAiAnalysis] = useState<Candidate['cv_analysis'] | null>(null);
   const [qaAnswers, setQaAnswers] = useState<{[key: string]: string}>({});
   const [currentQaIndex, setCurrentQaIndex] = useState<number>(0);
   const [showQa, setShowQa] = useState<boolean>(false);

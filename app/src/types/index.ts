@@ -34,6 +34,8 @@ export interface Candidate {
       company?: string;
       position?: string;
       duration?: string;
+      start_date?: string;
+      end_date?: string;
       responsibilities?: string[];
     }>;
     projects?: Array<{
@@ -41,8 +43,18 @@ export interface Candidate {
       description?: string;
       technologies?: string[];
     }>;
-    skills?: string[];
+    skills?: {
+      programming_languages?: string[];
+      tools_and_frameworks?: string[];
+      soft_skills?: string[];
+    };
     gaps?: string[];
+    gaps_identified?: Array<{
+      start_date?: string;
+      end_date?: string;
+      duration_months?: number;
+      reason_inferred?: string;
+    }>;
     career_transitions?: string[];
   };
 }
