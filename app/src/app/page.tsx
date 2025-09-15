@@ -5,6 +5,13 @@ import CandidateForm from "./components/CandidateForm";
 import MatchResults from "./components/MatchResults";
 import type { Candidate, MatchResult, AllMatchResults } from "../types";
 
+// 根据环境动态选择 API 地址
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://api-alex-12345.azurewebsites.net'
+  : 'http://127.0.0.1:8000';
+
+  //https://api-alex-test-1757506758.azurewebsites.net
+
 export default function Home() {
   const [results, setResults] = useState<
     MatchResult[] | AllMatchResults | null
@@ -15,7 +22,8 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-alex-12345.azurewebsites.net/match",
+        `${API_BASE_URL}/match`,
+        // 
         {
           method: "POST",
           headers: {
@@ -39,7 +47,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-alex-12345.azurewebsites.net/match/detailed",
+        `${API_BASE_URL}/match/detailed`,
         {
           method: "POST",
           headers: {
@@ -63,7 +71,7 @@ export default function Home() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-alex-12345.azurewebsites.net/match/all",
+        `${API_BASE_URL}/match/all`,
         {
           method: "POST",
           headers: {

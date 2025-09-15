@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React from "react";
 import type { MatchResult, AllMatchResults } from "../../types";
 
 interface MatchResultsProps {

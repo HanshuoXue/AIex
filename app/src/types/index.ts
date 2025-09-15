@@ -15,6 +15,36 @@ export interface Candidate {
   interests: string[];
   city_pref: string[];
   budget_nzd_per_year?: number;
+  qa_answers?: {[key: string]: string};
+  cv_analysis?: {
+    personal_info?: {
+      name?: string;
+      email?: string;
+      phone?: string;
+      location?: string;
+    };
+    education?: {
+      degree?: string;
+      major?: string;
+      university?: string;
+      graduation_year?: string;
+      gpa?: string;
+    };
+    work_experience?: Array<{
+      company?: string;
+      position?: string;
+      duration?: string;
+      responsibilities?: string[];
+    }>;
+    projects?: Array<{
+      name?: string;
+      description?: string;
+      technologies?: string[];
+    }>;
+    skills?: string[];
+    gaps?: string[];
+    career_transitions?: string[];
+  };
 }
 
 export interface DetailedScores {

@@ -5,6 +5,14 @@ inputs:
   candidate_profile:
     type: string
     description: Candidate information in JSON format
+  qa_answers:
+    type: object
+    description: Q&A answers from CV analysis
+    default: {}
+  cv_analysis:
+    type: object
+    description: AI analysis results from CV
+    default: {}
   program_details:
     type: string
     description: Program information in JSON format (single program)
@@ -32,8 +40,10 @@ nodes:
       path: match_prompt.jinja2
     inputs:
       candidate: ${inputs.candidate_profile}
+      qa_answers: ${inputs.qa_answers}
+      cv_analysis: ${inputs.cv_analysis}
       program: ${inputs.program_details}
-      deployment_name: gpt-4o-mini
+      deployment_name: gpt-4
       max_tokens: 800
       temperature: 0.1
     connection: azure_openai_connection
@@ -60,8 +70,10 @@ nodes:
       path: batch_match_prompt.jinja2
     inputs:
       candidate: ${inputs.candidate_profile}
+      qa_answers: ${inputs.qa_answers}
+      cv_analysis: ${inputs.cv_analysis}
       programs: ${inputs.programs_batch}
-      deployment_name: gpt-4o-mini
+      deployment_name: gpt-4
       max_tokens: 4000
       temperature: 0.1
     connection: azure_openai_connection
