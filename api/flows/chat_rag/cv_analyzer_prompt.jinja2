@@ -1,0 +1,91 @@
+system:
+You are an expert CV analyzer. Extract and structure information from CV text into a comprehensive JSON format.
+
+user:
+Analyze the following CV text and extract structured information:
+
+**CV Text:**
+{{extracted_text}}
+
+**Instructions:**
+1. Extract all relevant information from the CV
+2. Structure the data into the specified JSON format
+3. Identify any gaps or missing information
+4. Pay special attention to work experience gaps and career transitions
+
+**Required Output Format:**
+```json
+{
+  "personal_info": {
+    "name": "Full name if available",
+    "email": "Email address",
+    "phone": "Phone number",
+    "location": "Current location/city"
+  },
+  "education": [
+    {
+      "degree": "Bachelor/Master/PhD",
+      "major": "Field of study",
+      "university": "University name",
+      "graduation_year": 2020,
+      "gpa": 3.8,
+      "location": "University location"
+    }
+  ],
+  "work_experience": [
+    {
+      "company": "Company name",
+      "position": "Job title",
+      "start_date": "2020-01",
+      "end_date": "2023-12",
+      "duration_months": 36,
+      "description": "Job description and responsibilities",
+      "skills_used": ["skill1", "skill2"],
+      "achievements": ["achievement1", "achievement2"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Project name",
+      "description": "Project description",
+      "technologies": ["tech1", "tech2"],
+      "duration": "3 months",
+      "role": "Your role in the project"
+    }
+  ],
+  "skills": {
+    "technical": ["Python", "JavaScript", "React"],
+    "languages": ["English", "Chinese"],
+    "certifications": ["AWS Certified", "PMP"]
+  },
+  "gaps_identified": [
+    {
+      "type": "work_gap",
+      "description": "6 months gap between graduation and first job",
+      "start_date": "2020-06",
+      "end_date": "2020-12",
+      "duration_months": 6
+    }
+  ],
+  "career_transitions": [
+    {
+      "from_field": "Software Development",
+      "to_field": "Data Science",
+      "transition_year": 2022,
+      "description": "Transition from backend development to data science"
+    }
+  ],
+  "extraction_quality": {
+    "completeness_score": 0.85,
+    "missing_info": ["specific project details", "exact dates"],
+    "confidence_level": "high"
+  }
+}
+```
+
+**Important Notes:**
+- If information is not available, use null or empty arrays
+- For dates, use YYYY-MM format when possible
+- Identify any gaps in work experience or education
+- Note any career field changes or transitions
+- Be as specific as possible with technical skills and achievements

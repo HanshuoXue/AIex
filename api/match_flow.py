@@ -30,6 +30,8 @@ class Candidate(BaseModel):
     interests: List[str] = []
     city_pref: List[str] = []
     budget_nzd_per_year: Optional[float] = None
+    qa_answers: Optional[Dict[str, str]] = None
+    cv_analysis: Optional[Dict] = None
 
 
 class PromptFlowMatcher:
@@ -216,7 +218,7 @@ class PromptFlowMatcher:
             search_text=query, top=top, filter=filt, select=select)
         return [dict(r) for r in results]
 
-    async def evaluate_match(self, candidate: Candidate, program: Dict[str, Any]) -> Dict[str, Any]:
+    async def evaluate_match(self, candidate: Candidate, program: Dict[str, Any], qa_answers: Dict = None, cv_analysis: Dict = None) -> Dict[str, Any]:
         """
         Use Prompt Flow to evaluate a single candidate vs a single program match 1v1
         """
@@ -264,7 +266,8 @@ class PromptFlowMatcher:
                 flow=self.flow_path,
                 inputs={
                     "candidate_profile": json.dumps(candidate_data),
-
+                    "qa_answers": qa_answers or {},
+                    "cv_analysis": cv_analysis or {},
                     "program_details": json.dumps(program_data)
                 }
             )
@@ -299,7 +302,7 @@ class PromptFlowMatcher:
                 "university": program.get("university")
             }
 
-    async def match_programs(self, candidate: Candidate, query: str = "*", top_k: int = 2, level: str = None) -> List[Dict[str, Any]]:
+    async def match_programs(self, candidate: Candidate, query: str = "*", top_k: int = 2, level: str = None, qa_answers: Dict = None, cv_analysis: Dict = None) -> List[Dict[str, Any]]:
         """
         QUICK MATCH
         Find and evaluate top matching programs for a candidate (ELIGIBLE ONLY)
@@ -311,7 +314,7 @@ class PromptFlowMatcher:
         # Evaluate each program using Prompt Flow until we find enough eligible ones
         evaluations = []
         for program in programs:
-            evaluation = await self.evaluate_match(candidate, program)
+            evaluation = await self.evaluate_match(candidate, program, qa_answers, cv_analysis)
             if evaluation.get("eligible", False):  # Only include eligible matches
                 evaluations.append(evaluation)
                 # Stop when we have enough eligible matches
@@ -322,7 +325,7 @@ class PromptFlowMatcher:
         evaluations.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
         return evaluations[:top_k]
 
-    async def match_programs_fixed_serial(self, candidate: Candidate, query: str = "*", top_k: int = 3, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
+    async def match_programs_fixed_serial(self, candidate: Candidate, query: str = "*", top_k: int = 3, level: str = None, qa_answers: Dict = None, cv_analysis: Dict = None) -> Dict[str, List[Dict[str, Any]]]:
         """
         DETAILED MATCH
         Evaluate fixed number of programs serially, return both eligible and rejected
@@ -339,7 +342,7 @@ class PromptFlowMatcher:
         rejected_matches = []
 
         for program in programs:
-            evaluation = await self.evaluate_match(candidate, program)
+            evaluation = await self.evaluate_match(candidate, program, qa_answers, cv_analysis)
             if evaluation.get("eligible", False):
                 eligible_matches.append(evaluation)
             else:
@@ -358,7 +361,7 @@ class PromptFlowMatcher:
             "rejected": rejected_matches
         }
 
-    async def evaluate_batch_match(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    async def evaluate_batch_match(self, candidate: Candidate, programs: List[Dict[str, Any]], qa_answers: Dict = None, cv_analysis: Dict = None) -> List[Dict[str, Any]]:
         """
         BATCH MATCH
         Batch evaluate multiple programs with a single LLM call for better performance
@@ -405,6 +408,8 @@ class PromptFlowMatcher:
                 flow=self.flow_path,
                 inputs={
                     "candidate_profile": json.dumps(candidate_data),
+                    "qa_answers": qa_answers or {},
+                    "cv_analysis": cv_analysis or {},
                     "programs_batch": json.dumps(programs_data),
                     "use_batch": "true"  # Flag to use batch processing
                 }
@@ -419,22 +424,22 @@ class PromptFlowMatcher:
                 # Fallback to individual evaluation if batch fails
                 logger.warning(
                     "Batch evaluation failed, falling back to individual processing")
-                return await self._fallback_individual_evaluation(candidate, programs)
+                return await self._fallback_individual_evaluation(candidate, programs, qa_answers, cv_analysis)
 
         except Exception as e:
             logger.error(f"Batch evaluation error: {e}")
             # Fallback to individual evaluation
-            return await self._fallback_individual_evaluation(candidate, programs)
+            return await self._fallback_individual_evaluation(candidate, programs, qa_answers, cv_analysis)
 
-    async def _fallback_individual_evaluation(self, candidate: Candidate, programs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    async def _fallback_individual_evaluation(self, candidate: Candidate, programs: List[Dict[str, Any]], qa_answers: Dict = None, cv_analysis: Dict = None) -> List[Dict[str, Any]]:
         """Fallback to individual evaluation if batch processing fails"""
         evaluations = []
         for program in programs:
-            evaluation = await self.evaluate_match(candidate, program)
+            evaluation = await self.evaluate_match(candidate, program, qa_answers, cv_analysis)
             evaluations.append(evaluation)
         return evaluations
 
-    async def match_programs_with_rejected(self, candidate: Candidate, query: str = "*", top_k: int = 5, level: str = None) -> Dict[str, List[Dict[str, Any]]]:
+    async def match_programs_with_rejected(self, candidate: Candidate, query: str = "*", top_k: int = 5, level: str = None, qa_answers: Dict = None, cv_analysis: Dict = None) -> Dict[str, List[Dict[str, Any]]]:
         """
         Complete Analysis - Parallel batch evaluation of top programs
         Uses batch processing for maximum speed
@@ -447,12 +452,12 @@ class PromptFlowMatcher:
 
         # Use batch evaluation for parallel processing (faster)
         try:
-            evaluations = await self.evaluate_batch_match(candidate, programs)
+            evaluations = await self.evaluate_batch_match(candidate, programs, qa_answers, cv_analysis)
         except Exception as e:
             logger.warning(
                 f"Batch evaluation failed, falling back to serial: {e}")
             # Fallback to individual evaluation if batch fails
-            evaluations = await self._fallback_individual_evaluation(candidate, programs)
+            evaluations = await self._fallback_individual_evaluation(candidate, programs, qa_answers, cv_analysis)
 
         # Separate eligible and rejected matches
         eligible_matches = []

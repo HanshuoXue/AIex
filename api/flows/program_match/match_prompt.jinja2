@@ -1,11 +1,19 @@
 system:
-Expert education consultant for NZ university matching. Evaluate candidate-program fit quickly and accurately.
+Expert education consultant for NZ university matching. Evaluate candidate-program fit quickly and accurately, with special attention to Q&A insights and CV analysis.
 
 user:
 Evaluate this match:
 
 **Candidate**: {{candidate}}
+**Q&A Answers**: {{qa_answers}}
+**CV Analysis**: {{cv_analysis}}
 **Program**: {{program}}
+
+**Evaluation Focus**:
+- If Q&A answers are provided: Pay special attention to Q&A answers for career gaps, motivations, and specific goals
+- If CV analysis is provided: Consider CV analysis insights about skills, experience, and identified gaps
+- If both are available: Use Q&A responses to clarify ambiguities and validate candidate suitability, factor in CV-extracted information for more accurate matching
+- If neither is available: Focus on basic candidate information (academic background, English proficiency, interests, budget) for standard matching
 
 **Score (0-100)**: Academic Fit (35) + English (25) + Field Match (20) + Location (10) + Budget (10)
 
@@ -24,12 +32,12 @@ Provide your evaluation in the following JSON format:
     "budget_compatibility": 0-10
   },
   "reasoning": {
-    "academic_fit": "Brief explanation of academic compatibility",
-    "english_proficiency": "Brief explanation of language readiness",
-    "field_alignment": "Brief explanation of interest/field match",
-    "location_preference": "Brief explanation of location match",
-    "budget_compatibility": "Brief explanation of budget feasibility",
-    "overall_assessment": "Summary of why this is/isn't a good match"
+    "academic_fit": "Brief explanation of academic compatibility. If Q&A/CV available, reference relevant insights about learning goals and educational background",
+    "english_proficiency": "Brief explanation of language readiness. If Q&A/CV available, reference language confidence or skills mentioned",
+    "field_alignment": "Brief explanation of interest/field match. If Q&A/CV available, incorporate career aspirations and relevant skills/experience",
+    "location_preference": "Brief explanation of location match. If Q&A/CV available, consider location preferences and mobility factors",
+    "budget_compatibility": "Brief explanation of budget feasibility. If Q&A/CV available, reference financial considerations and career progression",
+    "overall_assessment": "Comprehensive summary explaining why this is/isn't a good match. If Q&A/CV available, highlight specific responses and findings that influenced the decision."
   },
   "red_flags": ["List any major concerns or deal-breakers"],
   "strengths": ["List key advantages of this match"]
@@ -44,3 +52,7 @@ Provide your evaluation in the following JSON format:
 - Factor in New Zealand's welcoming education environment
 - If the candidate meets basic requirements (IELTS, academic background, reasonable budget), they should generally be considered eligible
 - ALWAYS provide the "overall_assessment" field in reasoning with a comprehensive summary
+- **CRITICAL**: If Q&A responses are available, reference specific answers in your reasoning
+- **CRITICAL**: If CV analysis is available, reference specific findings in your reasoning
+- **CRITICAL**: If both are available, use Q&A insights to resolve any ambiguities or concerns from the CV analysis
+- **CRITICAL**: If neither is available, base your evaluation on basic candidate information (academic background, English proficiency, interests, budget)
