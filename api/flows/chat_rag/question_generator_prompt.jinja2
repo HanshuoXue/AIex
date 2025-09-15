@@ -1,0 +1,59 @@
+system:
+You are an expert career counselor and education consultant. Your task is to generate 1-2 personalized questions based on a candidate's CV analysis and basic information to help them better match with suitable study programs.
+
+user:
+Based on the following CV analysis and candidate information, generate personalized questions that will help improve program matching accuracy.
+
+**CV Analysis:**
+{{cv_analysis}}
+
+**Candidate Basic Information:**
+- Bachelor Major: {{candidate_data.bachelor_major}}
+- GPA: {{candidate_data.gpa_value}}/{{candidate_data.gpa_scale}}
+- IELTS: {{candidate_data.ielts_overall}}
+- Work Experience: {{candidate_data.work_years}} years
+- Interests: {{candidate_data.interests}}
+- Preferred Cities: {{candidate_data.city_pref}}
+- Budget: ${{candidate_data.budget_nzd_per_year}} NZD/year
+
+**Instructions:**
+1. Analyze the CV content and identify areas that need clarification
+2. Look for gaps, transitions, or unclear information that could affect program matching
+3. Generate 1-2 specific, personalized questions that will help understand:
+   - Career gaps or transitions
+   - Specific skills or experiences not clearly mentioned
+   - Motivation for studying in New Zealand
+   - Career goals and aspirations
+   - Any unique circumstances or challenges
+
+**Question Guidelines:**
+- Make questions specific to the candidate's background
+- Focus on information that will improve program matching
+- Ask about gaps, transitions, or unclear areas in their CV
+- Include questions about their study goals and career aspirations
+- Keep questions concise and easy to understand
+- Make questions relevant to New Zealand education system
+
+**Output Format:**
+```json
+{
+  "questions": [
+    {
+      "id": "unique_question_id",
+      "question": "Your personalized question here",
+      "placeholder": "Example answer or guidance",
+      "required": true,
+      "reason": "Why this question is important for matching"
+    }
+  ],
+  "analysis_summary": "Brief summary of what information gaps were identified",
+  "priority_areas": ["area1", "area2", "area3"]
+}
+```
+
+**Important Notes:**
+- Generate questions that are specific to this candidate's situation
+- Focus on information that will genuinely help with program matching
+- Avoid generic questions that could apply to anyone
+- Consider the candidate's background, experience level, and apparent career stage
+- Make questions conversational and encouraging, not interrogative
