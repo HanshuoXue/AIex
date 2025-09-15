@@ -3,6 +3,7 @@ import re
 from typing import Dict, Any, List
 from promptflow import tool
 
+
 @tool
 def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) -> List[Dict[str, Any]]:
     """
@@ -12,10 +13,10 @@ def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) 
         # Parse candidate and programs data for context
         candidate = json.loads(candidate_data)
         programs = json.loads(programs_data)
-        
+
         # Try to extract JSON from LLM response
         llm_response = llm_response.strip()
-        
+
         # Remove markdown code blocks if present
         if llm_response.startswith("```json"):
             llm_response = llm_response[7:]
@@ -23,12 +24,12 @@ def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) 
             llm_response = llm_response[3:]
         if llm_response.endswith("```"):
             llm_response = llm_response[:-3]
-        
+
         llm_response = llm_response.strip()
-        
+
         # Parse the JSON response
         parsed_response = json.loads(llm_response)
-        
+
         # Extract evaluations array
         if "evaluations" in parsed_response:
             evaluations = parsed_response["evaluations"]
@@ -37,13 +38,13 @@ def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) 
         else:
             # Single evaluation wrapped in array
             evaluations = [parsed_response]
-        
+
         # Ensure all required fields and add program metadata
         processed_evaluations = []
         for i, evaluation in enumerate(evaluations):
             # Get corresponding program data
             program = programs[i] if i < len(programs) else {}
-            
+
             # Ensure required fields exist with defaults
             processed_eval = {
                 "program_id": evaluation.get("program_id", program.get("id", f"program_{i}")),
@@ -59,21 +60,21 @@ def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) 
                     "location_preference": max(0, min(10, evaluation.get("detailed_scores", {}).get("location_preference", 0))),
                     "budget_compatibility": max(0, min(10, evaluation.get("detailed_scores", {}).get("budget_compatibility", 0)))
                 },
-                "reasoning": {
-                    "overall_assessment": evaluation.get("reasoning", {}).get("overall_assessment", "AI evaluation completed")
-                },
+                "reasoning": evaluation.get("reasoning", {
+                    "overall_assessment": "AI evaluation completed"
+                }),
                 "red_flags": evaluation.get("red_flags", []),
                 "strengths": evaluation.get("strengths", [])
             }
-            
+
             processed_evaluations.append(processed_eval)
-        
+
         return processed_evaluations
-        
+
     except json.JSONDecodeError as e:
         print(f"JSON parsing error in batch evaluator: {e}")
         print(f"LLM Response: {llm_response}")
-        
+
         # Return fallback evaluations for all programs
         try:
             programs = json.loads(programs_data)
@@ -102,7 +103,7 @@ def batch_evaluator(llm_response: str, candidate_data: str, programs_data: str) 
             return fallback_evals
         except:
             return []
-    
+
     except Exception as e:
         print(f"Unexpected error in batch evaluator: {e}")
         return []

@@ -1,25 +1,43 @@
 $schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
 inputs:
-  text:
+  extracted_text:
     type: string
+    description: "Pre-extracted text from CV file"
+  candidate_data:
+    type: object
+    description: "Basic candidate information"
 outputs:
-  output_prompt:
-    type: string
-    reference: ${echo_my_prompt.output}
+  extracted_info:
+    type: object
+    reference: ${cv_analyzer.output}
+  generated_questions:
+    type: object
+    reference: ${question_generator.output}
 nodes:
-- name: hello_prompt
-  type: prompt
+- name: cv_analyzer
+  type: llm
   source:
     type: code
-    path: hello.jinja2
+    path: cv_analyzer_prompt.jinja2
   inputs:
-    text: ${inputs.text}
-- name: echo_my_prompt
-  type: python
+    extracted_text: ${inputs.extracted_text}
+    deployment_name: gpt-4
+    max_tokens: 4000
+    temperature: 0.1
+  connection: azure_openai_connection
+  api: chat
+- name: question_generator
+  type: llm
   source:
     type: code
-    path: hello.py
+    path: question_generator_prompt.jinja2
   inputs:
-    input1: ${hello_prompt.output}
+    cv_analysis: ${cv_analyzer.output}
+    candidate_data: ${inputs.candidate_data}
+    deployment_name: gpt-4
+    max_tokens: 1000
+    temperature: 0.3
+  connection: azure_openai_connection
+  api: chat
 environment:
   python_requirements_txt: requirements.txt

@@ -15,6 +15,8 @@ export interface Candidate {
   interests: string[];
   city_pref: string[];
   budget_nzd_per_year?: number;
+  qa_answers?: {[key: string]: string};
+  cv_analysis?: any;
 }
 
 export interface DetailedScores {
