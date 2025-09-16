@@ -43,7 +43,41 @@ export default function CandidateForm({
   const [cvExtractedText, setCvExtractedText] = useState<string | null>(null);
   const [cvUploadStatus, setCvUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
   const [cvAiAnalysis, setCvAiAnalysis] = useState<Candidate['cv_analysis'] | null>(null);
-  const [analysisMetadata, setAnalysisMetadata] = useState<any>(null);
+  const [analysisMetadata, setAnalysisMetadata] = useState<{
+    analysis_method?: string;
+    flow_used?: string;
+    chunking_method?: string;
+    text_length?: number;
+    query_info?: {
+      base_query: string;
+      work_keywords_extracted: string;
+      final_query: string;
+      query_enhancement_ratio: number;
+    };
+    chunk_info?: {
+      total_chunks: number;
+      relevant_chunks_used: number;
+      avg_chunk_tokens: number;
+      chunking_successful: boolean;
+    };
+    chunk_details?: {
+      all_chunks_summary: Array<{
+        id: string;
+        text_preview: string;
+        length: number;
+        estimated_tokens: number;
+      }>;
+      relevant_chunks: Array<{
+        id: string;
+        text_preview: string;
+        full_text: string;
+        length: number;
+        estimated_tokens: number;
+        relevance_score: number;
+        rank: number;
+      }>;
+    };
+  } | null>(null);
   const [qaAnswers, setQaAnswers] = useState<{[key: string]: string}>({});
   const [currentQaIndex, setCurrentQaIndex] = useState<number>(0);
   const [showQa, setShowQa] = useState<boolean>(false);
@@ -728,13 +762,13 @@ export default function CandidateForm({
                             <div>
                               <span className="font-medium text-sm">Original Query:</span>
                               <div className="text-xs text-gray-600 bg-gray-50 p-1 rounded mt-1">
-                                "{analysisMetadata.query_info.base_query}"
+                                &ldquo;{analysisMetadata.query_info.base_query}&rdquo;
                               </div>
                             </div>
                             <div>
                               <span className="font-medium text-sm">Enhanced Query:</span>
                               <div className="text-xs text-gray-600 bg-blue-50 p-1 rounded mt-1">
-                                "{analysisMetadata.query_info.final_query}"
+                                &ldquo;{analysisMetadata.query_info.final_query}&rdquo;
                               </div>
                             </div>
                             <div>
@@ -746,7 +780,7 @@ export default function CandidateForm({
                           </div>
                           
                           {/* Simplified RAG Information */}
-                          {analysisMetadata.chunk_info.avg_chunk_tokens && (
+                          {analysisMetadata.chunk_info?.avg_chunk_tokens && (
                             <div className="mt-2">
                               <div className="text-xs text-gray-600">
                                 <span className="font-medium">Average Chunk Size:</span>
@@ -792,7 +826,7 @@ export default function CandidateForm({
                             📝 Following are the actual chunks sent to GPT-4{analysisMetadata.chunk_details.relevant_chunks?.length || 0} complete content of the most relevant chunks
                           </div>
                           <div className="space-y-3 max-h-96 overflow-y-auto">
-                            {analysisMetadata.chunk_details.relevant_chunks?.map((chunk: any) => (
+                            {analysisMetadata.chunk_details.relevant_chunks?.map((chunk) => (
                               <div key={chunk.id} className="bg-white border border-purple-300 rounded-lg">
                                 {/* Chunk Header Information */}
                                 <div className="bg-purple-100 px-3 py-2 rounded-t-lg border-b border-purple-200">
@@ -835,7 +869,7 @@ export default function CandidateForm({
                           🎯 Chunk Ranking Overview (Top {analysisMetadata.chunk_details.relevant_chunks?.length || 0})
                         </h5>
                         <div className="space-y-2">
-                          {analysisMetadata.chunk_details.relevant_chunks?.map((chunk: any) => (
+                          {analysisMetadata.chunk_details.relevant_chunks?.map((chunk) => (
                             <div key={chunk.id} className="bg-green-50 border border-green-200 p-3 rounded">
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center space-x-2">
@@ -865,7 +899,7 @@ export default function CandidateForm({
                           📋 All Chunks Overview (first 10)
                         </h5>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {analysisMetadata.chunk_details.all_chunks_summary?.map((chunk: any, index: number) => (
+                          {analysisMetadata.chunk_details.all_chunks_summary?.map((chunk) => (
                             <div key={chunk.id} className="bg-gray-100 border p-2 rounded text-xs">
                               <div className="flex items-center justify-between mb-1">
                                 <span className="font-mono text-blue-600">{chunk.id}</span>
@@ -910,17 +944,17 @@ export default function CandidateForm({
                     </div>
                     <div className="bg-blue-50 p-3 rounded text-xs text-gray-700">
                       <div className="mb-2">
-                        <strong>✅ Analysis Type:</strong> {cvAiAnalysis.analysis_type || 'Simple RAG'}
+                        <strong>✅ Analysis Type:</strong> Simple RAG
                       </div>
                       
                       <div className="mb-2">
-                        <strong>📊 Analysis Chunks:</strong> {cvAiAnalysis.chunks_analyzed || 0}
+                        <strong>📊 Analysis Chunks:</strong> {analysisMetadata?.chunk_info?.relevant_chunks_used || 0}
                       </div>
                       
                       <div className="mb-2">
                         <strong>🔍 Text Processing Status:</strong> 
-                        <span className={cvAiAnalysis.text_processed ? 'text-green-600 ml-1' : 'text-red-600 ml-1'}>
-                          {cvAiAnalysis.text_processed ? '✓ Processed' : '✗ Processing failed'}
+                        <span className={analysisMetadata?.chunk_info?.chunking_successful ? 'text-green-600 ml-1' : 'text-red-600 ml-1'}>
+                          {analysisMetadata?.chunk_info?.chunking_successful ? '✓ Processed' : '✗ Processing failed'}
                         </span>
                       </div>
                       
