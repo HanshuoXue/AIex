@@ -43,6 +43,7 @@ export default function CandidateForm({
   const [cvExtractedText, setCvExtractedText] = useState<string | null>(null);
   const [cvUploadStatus, setCvUploadStatus] = useState<'idle' | 'uploading' | 'analyzing' | 'success' | 'error'>('idle');
   const [cvAiAnalysis, setCvAiAnalysis] = useState<Candidate['cv_analysis'] | null>(null);
+  const [analysisMetadata, setAnalysisMetadata] = useState<any>(null);
   const [qaAnswers, setQaAnswers] = useState<{[key: string]: string}>({});
   const [currentQaIndex, setCurrentQaIndex] = useState<number>(0);
   const [showQa, setShowQa] = useState<boolean>(false);
@@ -64,6 +65,7 @@ export default function CandidateForm({
     analysis_summary: string;
     priority_areas: string[];
   } | null>(null);
+  const [showChunkDetails, setShowChunkDetails] = useState<boolean>(false);
 
   const handleChange = (
     field: keyof Candidate,
@@ -147,11 +149,13 @@ export default function CandidateForm({
     setCvFile(null);
     setCvExtractedText(null);
     setCvAiAnalysis(null);
+    setAnalysisMetadata(null);
     setQaAnswers({});
     setQaQuestions([]);
     setQaAnalysis(null);
     setCurrentQaIndex(0);
     setShowQa(false);
+    setShowChunkDetails(false);
     setCvUploadStatus('idle');
   };
 
@@ -233,6 +237,12 @@ export default function CandidateForm({
           
           if (analyzeResult.success) {
             setCvUploadStatus('success');
+            
+            // 设置分析元数据
+            if (analyzeResult.analysis_metadata) {
+              setAnalysisMetadata(analyzeResult.analysis_metadata);
+              console.log('分析元数据:', analyzeResult.analysis_metadata);
+            }
             
             // 设置AI分析结果
             if (analyzeResult.ai_analysis) {
@@ -639,6 +649,145 @@ export default function CandidateForm({
                   </div>
                 )}
                 
+                {/* 分析方法信息 */}
+                {analysisMetadata && (
+                  <div className="mt-3">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">
+                      ⚙️ 分析方法信息:
+                    </h4>
+                    <div className="bg-indigo-50 p-3 rounded text-xs">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <span className="font-medium">分析方法:</span>
+                          <span className={`ml-1 px-2 py-1 rounded text-xs ${
+                            analysisMetadata.analysis_method === 'RAG-based' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {analysisMetadata.analysis_method}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium">流程文件:</span>
+                          <span className="ml-1 text-gray-600">{analysisMetadata.flow_used}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium">文本长度:</span>
+                          <span className="ml-1 text-gray-600">{analysisMetadata.text_length} 字符</span>
+                        </div>
+                        {analysisMetadata.chunking_method && (
+                          <div>
+                            <span className="font-medium">分块方法:</span>
+                            <span className="ml-1 text-gray-600">{analysisMetadata.chunking_method}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* 分块信息 */}
+                      {analysisMetadata.chunk_info && (
+                        <div className="mt-2 pt-2 border-t border-indigo-200">
+                          <div className="font-medium mb-1">📊 分块统计:</div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <span className="font-medium">总分块数:</span>
+                              <span className="ml-1 text-green-700">{analysisMetadata.chunk_info.total_chunks}</span>
+                            </div>
+                            <div>
+                              <span className="font-medium">相关分块:</span>
+                              <span className="ml-1 text-green-700">{analysisMetadata.chunk_info.relevant_chunks_used}</span>
+                            </div>
+                          </div>
+                          
+                          {/* 简化RAG信息 */}
+                          {analysisMetadata.chunk_info.avg_chunk_tokens && (
+                            <div className="mt-2">
+                              <div className="text-xs text-gray-600">
+                                <span className="font-medium">平均分块大小:</span>
+                                <span className="ml-1">{analysisMetadata.chunk_info.avg_chunk_tokens} tokens</span>
+                                <span className="ml-2 text-green-600">✓ 固定Token分块</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* 分块详情按钮 */}
+                      {analysisMetadata.chunk_details && (
+                        <div className="mt-3">
+                          <button
+                            type="button"
+                            onClick={() => setShowChunkDetails(!showChunkDetails)}
+                            className="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors"
+                          >
+                            {showChunkDetails ? '🔼 隐藏分块详情' : '🔽 查看分块详情'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* 分块详情展示 */}
+                {showChunkDetails && analysisMetadata?.chunk_details && (
+                  <div className="mt-3">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">
+                        📊 分块分析详情
+                      </h4>
+                      
+                      {/* 相关分块排名 */}
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-green-700 mb-2">
+                          🎯 相关分块排名 (Top {analysisMetadata.chunk_details.relevant_chunks?.length || 0})
+                        </h5>
+                        <div className="space-y-2">
+                          {analysisMetadata.chunk_details.relevant_chunks?.map((chunk: any) => (
+                            <div key={chunk.id} className="bg-green-50 border border-green-200 p-3 rounded">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center space-x-2">
+                                  <span className="inline-block bg-green-600 text-white text-xs px-2 py-1 rounded font-bold">
+                                    #{chunk.rank}
+                                  </span>
+                                  <span className="text-xs text-gray-600">{chunk.id}</span>
+                                  <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
+                                    分数: {chunk.relevance_score}
+                                  </span>
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {chunk.estimated_tokens} tokens, {chunk.length} 字符
+                                </div>
+                              </div>
+                              <div className="text-xs text-gray-700 bg-white p-2 rounded border">
+                                {chunk.text_preview}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* 所有分块概览 */}
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-2">
+                          📋 所有分块概览 (前10个)
+                        </h5>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {analysisMetadata.chunk_details.all_chunks_summary?.map((chunk: any, index: number) => (
+                            <div key={chunk.id} className="bg-gray-100 border p-2 rounded text-xs">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-mono text-blue-600">{chunk.id}</span>
+                                <span className="text-gray-500">{chunk.estimated_tokens}t</span>
+                              </div>
+                              <div className="text-gray-700 truncate">
+                                {chunk.text_preview}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* AI 分析结果 */}
                 {cvAiAnalysis && (
                   <div className="mt-3">
@@ -646,68 +795,44 @@ export default function CandidateForm({
                       <h4 className="text-sm font-medium text-gray-700">
                         🤖 AI 分析结果:
                       </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          console.log('完整AI分析结果:', cvAiAnalysis);
-                          console.log('AI分析结果JSON:', JSON.stringify(cvAiAnalysis, null, 2));
-                        }}
-                        className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
-                      >
-                        打印到控制台
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            console.log('分析元数据:', analysisMetadata);
+                            console.log('完整AI分析结果:', cvAiAnalysis);
+                            console.log('AI分析结果JSON:', JSON.stringify(cvAiAnalysis, null, 2));
+                          }}
+                          className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+                        >
+                          打印完整信息
+                        </button>
+                        {analysisMetadata?.analysis_method === 'RAG-based' && (
+                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                            RAG增强分析
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div className="bg-blue-50 p-3 rounded text-xs text-gray-700 max-h-80 overflow-y-auto">
-                      {cvAiAnalysis.personal_info && (
-                        <div className="mb-2">
-                          <strong>个人信息:</strong>
-                          <div className="ml-2 text-xs">
-                            {cvAiAnalysis.personal_info.name && <div>姓名: {cvAiAnalysis.personal_info.name}</div>}
-                            {cvAiAnalysis.personal_info.email && <div>邮箱: {cvAiAnalysis.personal_info.email}</div>}
-                            {cvAiAnalysis.personal_info.phone && <div>电话: {cvAiAnalysis.personal_info.phone}</div>}
-                          </div>
-                        </div>
-                      )}
+                    <div className="bg-blue-50 p-3 rounded text-xs text-gray-700">
+                      <div className="mb-2">
+                        <strong>✅ 分析类型:</strong> {cvAiAnalysis.analysis_type || 'Simple RAG'}
+                      </div>
                       
-                      {cvAiAnalysis.work_experience && cvAiAnalysis.work_experience.length > 0 && (
-                        <div className="mb-2">
-                          <strong>工作经历:</strong>
-                          <div className="ml-2 text-xs">
-                            {cvAiAnalysis.work_experience.map((exp, index: number) => (
-                              <div key={index} className="mt-1">
-                                {exp.company} - {exp.position} ({exp.start_date} - {exp.end_date})
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      <div className="mb-2">
+                        <strong>📊 分析分块数:</strong> {cvAiAnalysis.chunks_analyzed || 0}
+                      </div>
                       
-                      {cvAiAnalysis.skills && (
-                        <div className="mb-2">
-                          <strong>技能:</strong>
-                          <div className="ml-2 text-xs">
-                            {cvAiAnalysis.skills.programming_languages && (
-                              <div>编程语言: {cvAiAnalysis.skills.programming_languages.join(', ')}</div>
-                            )}
-                            {cvAiAnalysis.skills.tools_and_frameworks && (
-                              <div>工具框架: {cvAiAnalysis.skills.tools_and_frameworks.join(', ')}</div>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                      <div className="mb-2">
+                        <strong>🔍 文本处理状态:</strong> 
+                        <span className={cvAiAnalysis.text_processed ? 'text-green-600 ml-1' : 'text-red-600 ml-1'}>
+                          {cvAiAnalysis.text_processed ? '✓ 已处理' : '✗ 处理失败'}
+                        </span>
+                      </div>
                       
-                      {cvAiAnalysis.gaps_identified && cvAiAnalysis.gaps_identified.length > 0 && (
-                        <div className="mb-2">
-                          <strong>⚠️ 发现的空白期:</strong>
-                          <div className="ml-2 text-xs">
-                            {cvAiAnalysis.gaps_identified.map((gap, index: number) => (
-                              <div key={index} className="text-orange-600">
-                                {gap.start_date} - {gap.end_date} ({gap.duration_months}个月): {gap.reason_inferred}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      <div className="text-xs text-gray-500 mt-2">
+                        💡 简化分析完成 - CV内容已转化为个性化问题
+                      </div>
                     </div>
                   </div>
                 )}

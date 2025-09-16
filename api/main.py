@@ -64,6 +64,7 @@ app.add_middleware(
         "https://red-sand-0d1794703.2.azurestaticapps.net",  # Production URL
         "http://localhost:3000",  # Local development
         "http://127.0.0.1:3000",  # Alternative localhost
+        "http://172.23.102.158:3000",  # Network IP
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -467,40 +468,100 @@ async def analyze_cv(
         # 重新提取文本（可以缓存优化）
         extracted_text = extract_cv_text(file_path)
 
-        # 使用 Prompt Flow 进行 AI 分析
+        # 使用简化的RAG分析
         try:
-            # 检查环境变量
-            print(
-                f"AZURE_OPENAI_KEY exists: {bool(os.getenv('AZURE_OPENAI_KEY'))}")
-            print(
-                f"AZURE_OPENAI_ENDPOINT: {os.getenv('AZURE_OPENAI_ENDPOINT')}")
+            print(f"开始简化RAG分析...")
+            print(f"CV文本长度: {len(extracted_text)} 字符")
 
-            from promptflow.client import PFClient
-            pf_client = PFClient()
+            # 导入简化组件
+            import sys
+            import os
+            current_dir = os.path.dirname(__file__)
+            chat_rag_path = os.path.join(current_dir, "flows", "chat_rag")
+            sys.path.insert(0, chat_rag_path)
 
-            # 运行 CV 分析流程
-            cv_flow_path = os.path.join(
-                os.path.dirname(__file__), "flows", "chat_rag")
-            result = pf_client.test(
-                flow=cv_flow_path,
-                inputs={
-                    "extracted_text": extracted_text,
-                    "candidate_data": candidate
+            from simple_chunker import simple_chunk_by_tokens, get_relevant_chunks_simple, format_chunks_for_llm
+            from simple_question_generator import generate_questions_from_chunks
+
+            # 1. 简单token切块
+            print("步骤1: 文本切块...")
+            chunks = simple_chunk_by_tokens(
+                extracted_text, max_tokens=400, overlap_tokens=50)
+            print(f"生成了 {len(chunks)} 个分块")
+
+            # 2. 获取相关分块
+            print("步骤2: 检索相关分块...")
+            query = f"{candidate.get('bachelor_major', '')} {' '.join(candidate.get('interests', []))}"
+            relevant_chunks = get_relevant_chunks_simple(
+                chunks, query, top_k=5)
+            print(f"选择了 {len(relevant_chunks)} 个相关分块")
+
+            # 3. 格式化分块
+            formatted_chunks = format_chunks_for_llm(relevant_chunks)
+
+            # 4. 生成问题
+            print("步骤3: 生成个性化问题...")
+            question_result = generate_questions_from_chunks(
+                formatted_chunks, candidate)
+
+            # 构建返回结果
+            if question_result.get("status") == "success":
+                generated_questions = question_result["data"]
+            else:
+                generated_questions = question_result.get(
+                    "fallback_questions", {})
+
+            # 构建分析元数据
+            analysis_metadata = {
+                "analysis_method": "Simple RAG",
+                "flow_used": "simple_rag_analysis",
+                "chunking_method": "fixed_tokens",
+                "text_length": len(extracted_text),
+                "chunk_info": {
+                    "total_chunks": len(chunks),
+                    "relevant_chunks_used": len(relevant_chunks),
+                    "avg_chunk_tokens": sum(chunk['estimated_tokens'] for chunk in chunks) // len(chunks) if chunks else 0,
+                    "chunking_successful": True
+                },
+                "chunk_details": {
+                    "all_chunks_summary": [
+                        {
+                            "id": chunk["id"],
+                            "text_preview": chunk["text"][:100] + "..." if len(chunk["text"]) > 100 else chunk["text"],
+                            "length": chunk["length"],
+                            "estimated_tokens": chunk["estimated_tokens"]
+                        } for chunk in chunks[:10]  # 只显示前10个分块
+                    ],
+                    "relevant_chunks": [
+                        {
+                            "id": chunk["id"],
+                            "text_preview": chunk["text"][:150] + "..." if len(chunk["text"]) > 150 else chunk["text"],
+                            "length": chunk["length"],
+                            "estimated_tokens": chunk["estimated_tokens"],
+                            "relevance_score": chunk.get("relevance_score", 0),
+                            "rank": i + 1
+                        } for i, chunk in enumerate(relevant_chunks)
+                    ]
                 }
-            )
+            }
 
-            # 解析 AI 分析结果和生成的问题
-            ai_analysis = result.get("extracted_info", {})
-            generated_questions = result.get("generated_questions", {})
+            # 不再提取复杂的AI分析，直接返回基本信息
+            ai_analysis = {
+                "analysis_type": "simple_rag",
+                "chunks_analyzed": len(relevant_chunks),
+                "text_processed": True
+            }
 
-            print(f"Prompt Flow 结果: {result}")
-            print(f"AI 分析结果: {ai_analysis}")
-            print(f"生成的问题: {generated_questions}")
+            print(f"分析完成!")
+            print(f"- 总分块数: {len(chunks)}")
+            print(f"- 相关分块数: {len(relevant_chunks)}")
+            print(f"- 生成问题数: {len(generated_questions.get('questions', []))}")
 
             return {
                 "success": True,
                 "ai_analysis": ai_analysis,
                 "generated_questions": generated_questions,
+                "analysis_metadata": analysis_metadata,
                 "file_id": file_id
             }
 
