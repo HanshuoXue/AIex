@@ -3,9 +3,10 @@ import json
 from typing import Dict, Any, List
 from openai import OpenAI
 
-# Azure OpenAI 配置
+# Azure OpenAI Configuration
 model_name = os.getenv("AZURE_OPENAI_MODEL", "gpt-4")
-endpoint = os.getenv('AZURE_OPENAI_ENDPOINT').rstrip('/')  # 移除末尾斜杠
+endpoint = os.getenv('AZURE_OPENAI_ENDPOINT').rstrip(
+    '/')  # Remove trailing slash
 api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
 
 client = OpenAI(
@@ -17,49 +18,49 @@ client = OpenAI(
 
 def generate_questions_from_chunks(relevant_chunks: str, candidate_info: Dict[str, Any]) -> Dict[str, Any]:
     """
-    基于相关CV分块生成个性化问题
+    Generate personalized questions based on relevant CV chunks
 
     Args:
-        relevant_chunks: 格式化的相关CV分块
-        candidate_info: 候选人基本信息
+        relevant_chunks: Formatted relevant CV chunks
+        candidate_info: Candidate basic information
 
     Returns:
-        生成的问题和分析
+        Generated questions and analysis
     """
 
-    prompt = f"""你是一个专业的教育顾问。基于以下CV片段和候选人信息，生成2-3个具体的问题来帮助匹配合适的新西兰学习项目。
+    prompt = f"""You are a professional education consultant. Based on the following CV segments and candidate information, generate 1-2 specific questions to help match suitable New Zealand study programs.
 
-CV相关片段:
+CV related segments:
 {relevant_chunks}
 
-候选人基本信息:
-- 专业背景: {candidate_info.get('bachelor_major', 'Unknown')}
+Candidate basic information:
+- Professional background: {candidate_info.get('bachelor_major', 'Unknown')}
 - GPA: {candidate_info.get('gpa_value', 'Unknown')}/{candidate_info.get('gpa_scale', '4.0')}
-- 雅思: {candidate_info.get('ielts_overall', 'Unknown')}
-- 工作经验: {candidate_info.get('work_years', 0)} 年
-- 兴趣领域: {', '.join(candidate_info.get('interests', []))}
-- 偏好城市: {', '.join(candidate_info.get('city_pref', []))}
-- 预算: ${candidate_info.get('budget_nzd_per_year', 'Unknown')} NZD/年
+- IELTS: {candidate_info.get('ielts_overall', 'Unknown')}
+- Work experience: {candidate_info.get('work_years', 0)} years
+- Interest areas: {', '.join(candidate_info.get('interests', []))}
+- Preferred cities: {', '.join(candidate_info.get('city_pref', []))}
+- Budget: ${candidate_info.get('budget_nzd_per_year', 'Unknown')} NZD/year
 
-生成要求:
-1. 问题要具体且有针对性
-2. 关注CV中的空白期、技能转换、职业目标
-3. 问题答案将直接用于课程匹配
-4. 每个问题包含提问原因
+Generation requirements:
+1. Questions should be specific and targeted
+2. Focus on gaps in CV, skill transitions, career goals
+3. Question answers will be directly used for course matching
+4. Each question includes the reason for asking
 
-请返回JSON格式:
+Please return JSON format:
 {{
   "questions": [
     {{
       "id": "q1",
-      "question": "具体问题内容",
-      "placeholder": "回答示例",
+      "question": "Specific question content",
+      "placeholder": "Answer example",
       "required": true,
-      "reason": "提问原因"
+      "reason": "Reason for asking"
     }}
   ],
-  "analysis_summary": "基于CV分析的简要总结",
-  "key_areas": ["关键领域1", "关键领域2"]
+  "analysis_summary": "Brief summary based on CV analysis",
+  "key_areas": ["Key areas1", "Key areas2"]
 }}"""
 
     try:
@@ -74,7 +75,7 @@ CV相关片段:
 
         result_text = response.choices[0].message.content.strip()
 
-        # 清理可能的markdown标记
+        # Clean possible markdown markers
         if result_text.startswith('```json'):
             result_text = result_text[7:]
         if result_text.endswith('```'):
@@ -87,14 +88,14 @@ CV相关片段:
         }
 
     except json.JSONDecodeError as e:
-        print(f"JSON解析错误: {e}")
+        print(f"JSON parsing error: {e}")
         return {
             "status": "error",
             "error": "JSON parsing failed",
             "fallback_questions": get_fallback_questions()
         }
     except Exception as e:
-        print(f"问题生成失败: {e}")
+        print(f"Question generation failed: {e}")
         return {
             "status": "error",
             "error": str(e),
@@ -104,36 +105,36 @@ CV相关片段:
 
 def get_fallback_questions() -> Dict[str, Any]:
     """
-    当AI生成失败时的备用问题
+    Fallback questions when AI generation fails
     """
     return {
         "questions": [
             {
                 "id": "fallback_1",
-                "question": "请描述您的职业发展目标和为什么选择在新西兰学习？",
-                "placeholder": "例如：我希望在数据科学领域发展，新西兰的教育质量和工作机会吸引我...",
+                "question": "Please describe your career development goals and why you chose to study in New Zealand？",
+                "placeholder": "For example: I hope to develop in the field of data science, New Zealand's education quality and job opportunities attract me...",
                 "required": True,
-                "reason": "了解学习动机和职业规划"
+                "reason": "Understand learning motivation and career planning"
             },
             {
                 "id": "fallback_2",
-                "question": "您觉得自己在哪些技能或知识领域需要进一步提升？",
-                "placeholder": "例如：我需要提升机器学习算法和大数据处理技能...",
+                "question": "What skills or knowledge areas do you think you need to further improve?",
+                "placeholder": "For example: I need to improve machine learning algorithms and big data processing skills...",
                 "required": True,
-                "reason": "识别技能空白以匹配合适课程"
+                "reason": "Identify skill gaps to match suitable courses"
             }
         ],
-        "analysis_summary": "使用通用问题进行信息收集",
-        "key_areas": ["职业规划", "技能提升"]
+        "analysis_summary": "Using general questions for information collection",
+        "key_areas": ["Career planning", "Skill improvement"]
     }
 
 
 if __name__ == "__main__":
-    # 测试
+    # Test
     test_chunks = """
---- CV片段 1 ---
-长度: 200 字符
-内容:
+--- CV segment 1 ---
+Length: 200 characters
+Content:
 WORK EXPERIENCE
 Software Engineer
 Tech Company

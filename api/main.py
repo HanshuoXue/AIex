@@ -9,12 +9,12 @@ try:
 except ImportError:
     from match_flow import flow_matcher, Candidate
 
-# CV 文本提取函数
+# CV text extraction functions
 
 
 def extract_cv_text(file_path: str) -> str:
     """
-    从 PDF 或 Word 文档中提取文本内容
+    Extract text content from PDF or Word documents
     """
     file_extension = os.path.splitext(file_path)[1].lower()
     extracted_text = ""
@@ -33,8 +33,8 @@ def extract_cv_text(file_path: str) -> str:
                 extracted_text += para.text + "\n"
 
         elif file_extension == ".doc":
-            # 对于 .doc 文件，需要更复杂的处理
-            # 暂时返回错误信息
+            # For .doc files, more complex processing is needed
+            # Temporarily return error message
             raise Exception(
                 "Unsupported .doc format. Please convert to .docx or .pdf")
 
@@ -42,7 +42,7 @@ def extract_cv_text(file_path: str) -> str:
             raise Exception(
                 "Unsupported file type. Only PDF and Word documents are supported.")
 
-        # 清理文本
+        # Clean text
         cleaned_text = os.linesep.join(
             [s for s in extracted_text.splitlines() if s.strip()])
 
@@ -54,6 +54,64 @@ def extract_cv_text(file_path: str) -> str:
     except Exception as e:
         raise Exception(
             f"Error extracting text from {file_extension} file: {str(e)}")
+
+
+def extract_work_experience_keywords(cv_text: str) -> str:
+    """
+    Extract work experience related keywords from CV text
+
+    Args:
+        cv_text: CV text content
+
+    Returns:
+        Extracted work experience keywords string
+    """
+    import re
+
+    # Work experience related keyword patterns
+    work_patterns = [
+        # English keywords
+        r'\b(?:work|working|worked|employment|employed|job|position|role|career)\b',
+        r'\b(?:experience|experiences|professional|occupation|industry)\b',
+        r'\b(?:company|corporation|firm|organization|startup|enterprise)\b',
+        r'\b(?:manager|developer|engineer|analyst|consultant|specialist|director)\b',
+        r'\b(?:intern|internship|volunteer|project|team|lead|senior|junior)\b',
+
+        # Chinese keywords
+        r'(?:工作|就业|职业|岗位|职位|角色|经历)',
+        r'(?:公司|企业|机构|组织|团队|部门)',
+        r'(?:经理|开发|工程师|分析师|顾问|专家|主管)',
+        r'(?:实习|项目|负责|参与|管理|领导)',
+    ]
+
+    extracted_keywords = set()
+    cv_text_lower = cv_text.lower()
+
+    # Extract matching keywords
+    for pattern in work_patterns:
+        matches = re.findall(pattern, cv_text_lower, re.IGNORECASE)
+        extracted_keywords.update(matches)
+
+    # Extract additional work-related proper nouns (company names, tech stack, etc.)
+    # Find possible company names (words starting with capital letters)
+    company_pattern = r'\b[A-Z][a-zA-Z]{2,}\s*(?:Inc|Corp|Ltd|LLC|Technology|Tech|Software|Systems|Solutions|Group|Company)?\b'
+    company_matches = re.findall(company_pattern, cv_text)
+
+    # Technology-related keywords
+    tech_patterns = [
+        r'\b(?:Python|Java|JavaScript|C\+\+|React|Node\.js|SQL|AWS|Azure|Docker)\b',
+        r'\b(?:machine learning|artificial intelligence|data science|backend|frontend)\b',
+        r'\b(?:agile|scrum|git|github|database|API|microservices|cloud)\b'
+    ]
+
+    for pattern in tech_patterns:
+        tech_matches = re.findall(pattern, cv_text, re.IGNORECASE)
+        extracted_keywords.update([match.lower() for match in tech_matches])
+
+    # Limit keyword count to avoid overly long queries
+    keywords_list = list(extracted_keywords)[:10]  # Maximum 10 keywords
+
+    return ' '.join(keywords_list)
 
 
 app = FastAPI()
@@ -355,42 +413,42 @@ async def upload_cv(
     Upload CV file and store it for processing
     """
     try:
-        # 验证文件类型
+        # Validate file type
         allowed_types = ['application/pdf', 'application/msword',
                          'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
         if cv.content_type not in allowed_types:
             return {
                 "success": False,
-                "error": "不支持的文件类型。请上传 PDF 或 Word 文档。"
+                "error": "Unsupported file type. Please upload PDF or Word documents."
             }
 
-        # 验证文件大小 (5MB 限制)
+        # Validate file size (5MB limit)
         if cv.size > 5 * 1024 * 1024:
             return {
                 "success": False,
-                "error": "文件大小不能超过 5MB"
+                "error": "File size cannot exceed 5MB"
             }
 
-        # 创建上传目录
+        # Create upload directory
         upload_dir = "uploads/cv"
         os.makedirs(upload_dir, exist_ok=True)
 
-        # 生成唯一文件名
+        # Generate unique filename
         file_id = str(uuid.uuid4())
         file_extension = os.path.splitext(cv.filename)[1]
         filename = f"{file_id}{file_extension}"
         file_path = os.path.join(upload_dir, filename)
 
-        # 保存文件
+        # Save file
         with open(file_path, "wb") as buffer:
             content = await cv.read()
             buffer.write(content)
 
-        # 解析候选人数据
+        # Parse candidate data
         import json
         candidate = json.loads(candidate_data)
 
-        # 只进行文本提取，不做AI分析
+        # Only perform text extraction, no AI analysis
         try:
             extracted_text = extract_cv_text(file_path)
 
@@ -409,7 +467,7 @@ async def upload_cv(
                 "file_path": file_path
             }
 
-        # 记录上传信息
+        # Record upload information
         upload_info = {
             "file_id": file_id,
             "original_filename": cv.filename,
@@ -427,7 +485,7 @@ async def upload_cv(
 
         return {
             "success": True,
-            "message": "CV 上传成功",
+            "message": "CV upload successful",
             "file_id": file_id,
             "upload_info": upload_info
         }
@@ -435,7 +493,7 @@ async def upload_cv(
     except Exception as e:
         return {
             "success": False,
-            "error": f"上传失败: {str(e)}"
+            "error": f"Upload failed: {str(e)}"
         }
 
 
@@ -445,35 +503,35 @@ async def analyze_cv(
     candidate_data: str = Form(...)
 ):
     """
-    对已上传的CV进行AI分析
+    Perform AI analysis on uploaded CV
     """
     try:
-        # 解析候选人数据
+        # Parse candidate data
         import json
         candidate = json.loads(candidate_data)
 
-        # 构建文件路径
+        # Build file path
         upload_dir = "uploads/cv"
-        # 这里需要根据file_id找到文件，简化处理，假设文件路径可以重构
+        # Need to find file based on file_id, simplified processing, assume file path can be reconstructed
         import glob
         files = glob.glob(f"{upload_dir}/{file_id}.*")
         if not files:
             return {
                 "success": False,
-                "error": "找不到上传的文件"
+                "error": "Uploaded file not found"
             }
 
         file_path = files[0]
 
-        # 重新提取文本（可以缓存优化）
+        # Re-extract text (can be optimized with caching)
         extracted_text = extract_cv_text(file_path)
 
-        # 使用简化的RAG分析
+        # Use simplified RAG analysis
         try:
-            print(f"开始简化RAG分析...")
-            print(f"CV文本长度: {len(extracted_text)} 字符")
+            print(f"Start simplified RAG analysis...")
+            print(f"CV text length: {len(extracted_text)} characters")
 
-            # 导入简化组件
+            # Import simplified components
             import sys
             import os
             current_dir = os.path.dirname(__file__)
@@ -483,40 +541,55 @@ async def analyze_cv(
             from simple_chunker import simple_chunk_by_tokens, get_relevant_chunks_simple, format_chunks_for_llm
             from simple_question_generator import generate_questions_from_chunks
 
-            # 1. 简单token切块
-            print("步骤1: 文本切块...")
+            # 1. Simple token chunking
+            print("Step 1: Text chunking...")
             chunks = simple_chunk_by_tokens(
-                extracted_text, max_tokens=400, overlap_tokens=50)
-            print(f"生成了 {len(chunks)} 个分块")
+                extracted_text, max_tokens=300, overlap_tokens=50)
+            print(f"Generated {len(chunks)} chunks")
 
-            # 2. 获取相关分块
-            print("步骤2: 检索相关分块...")
-            query = f"{candidate.get('bachelor_major', '')} {' '.join(candidate.get('interests', []))}"
+            # 2. Extract work experience keywords from CV
+            print("Step 2: Extract work experience keywords...")
+            work_keywords = extract_work_experience_keywords(extracted_text)
+            print(f"Extracted work keywords: {work_keywords}")
+
+            # 3. Build enhanced query
+            print("Step 3: Build enhanced query...")
+            base_query = f"{candidate.get('bachelor_major', '')} {' '.join(candidate.get('interests', []))}"
+            query = f"{base_query} {work_keywords}".strip()
+            print(f"Final query: {query}")
+
+            # 4. Get relevant chunks
             relevant_chunks = get_relevant_chunks_simple(
-                chunks, query, top_k=5)
-            print(f"选择了 {len(relevant_chunks)} 个相关分块")
+                chunks, query, top_k=2)
+            print(f"Selected {len(relevant_chunks)} relevant chunks")
 
-            # 3. 格式化分块
+            # 5. Format chunks
             formatted_chunks = format_chunks_for_llm(relevant_chunks)
 
-            # 4. 生成问题
-            print("步骤3: 生成个性化问题...")
+            # 6. Generate questions
+            print("Step 5: Generate personalized questions...")
             question_result = generate_questions_from_chunks(
                 formatted_chunks, candidate)
 
-            # 构建返回结果
+            # Build return result
             if question_result.get("status") == "success":
                 generated_questions = question_result["data"]
             else:
                 generated_questions = question_result.get(
                     "fallback_questions", {})
 
-            # 构建分析元数据
+            # Build analysis metadata
             analysis_metadata = {
                 "analysis_method": "Simple RAG",
                 "flow_used": "simple_rag_analysis",
                 "chunking_method": "fixed_tokens",
                 "text_length": len(extracted_text),
+                "query_info": {
+                    "base_query": base_query,
+                    "work_keywords_extracted": work_keywords,
+                    "final_query": query,
+                    "query_enhancement_ratio": len(query.split()) / len(base_query.split()) if base_query.strip() else 1
+                },
                 "chunk_info": {
                     "total_chunks": len(chunks),
                     "relevant_chunks_used": len(relevant_chunks),
@@ -530,12 +603,13 @@ async def analyze_cv(
                             "text_preview": chunk["text"][:100] + "..." if len(chunk["text"]) > 100 else chunk["text"],
                             "length": chunk["length"],
                             "estimated_tokens": chunk["estimated_tokens"]
-                        } for chunk in chunks[:10]  # 只显示前10个分块
+                        } for chunk in chunks[:10]  # Only show first 10 chunks
                     ],
                     "relevant_chunks": [
                         {
                             "id": chunk["id"],
                             "text_preview": chunk["text"][:150] + "..." if len(chunk["text"]) > 150 else chunk["text"],
+                            "full_text": chunk["text"],  # Add full text
                             "length": chunk["length"],
                             "estimated_tokens": chunk["estimated_tokens"],
                             "relevance_score": chunk.get("relevance_score", 0),
@@ -545,17 +619,18 @@ async def analyze_cv(
                 }
             }
 
-            # 不再提取复杂的AI分析，直接返回基本信息
+            # No longer extract complex AI analysis, directly return basic information
             ai_analysis = {
                 "analysis_type": "simple_rag",
                 "chunks_analyzed": len(relevant_chunks),
                 "text_processed": True
             }
 
-            print(f"分析完成!")
-            print(f"- 总分块数: {len(chunks)}")
-            print(f"- 相关分块数: {len(relevant_chunks)}")
-            print(f"- 生成问题数: {len(generated_questions.get('questions', []))}")
+            print(f"Analysis completed!")
+            print(f"- Total chunks: {len(chunks)}")
+            print(f"- Relevant chunks: {len(relevant_chunks)}")
+            print(
+                f"- Generated questions: {len(generated_questions.get('questions', []))}")
 
             return {
                 "success": True,
@@ -572,7 +647,7 @@ async def analyze_cv(
             import traceback
             print(f"Full traceback: {traceback.format_exc()}")
 
-            # 返回默认问题
+            # Return default questions
             return {
                 "success": True,
                 "ai_analysis_error": f"AI analysis failed: {str(ai_error)}",
@@ -580,21 +655,21 @@ async def analyze_cv(
                     "questions": [
                         {
                             "id": "fallback_question_1",
-                            "question": "请简单介绍一下您的职业背景和学习目标？",
-                            "placeholder": "请描述您的工作经验、技能和学习目标",
+                            "question": "Please briefly introduce your professional background and learning goals?",
+                            "placeholder": "Please describe your work experience, skills and learning goals",
                             "required": True,
-                            "reason": "帮助了解您的基本情况"
+                            "reason": "Help understand your basic situation"
                         },
                         {
                             "id": "fallback_question_2",
-                            "question": "您希望在新西兰学习什么专业？为什么选择这个方向？",
-                            "placeholder": "请说明您感兴趣的专业领域和原因",
+                            "question": "What major do you want to study in New Zealand? Why did you choose this direction?",
+                            "placeholder": "Please explain your areas of interest and reasons",
                             "required": True,
-                            "reason": "帮助匹配合适的课程"
+                            "reason": "Help match suitable courses"
                         }
                     ],
-                    "analysis_summary": "由于 AI 分析暂时不可用，我们提供了一些通用问题来帮助匹配",
-                    "priority_areas": ["职业背景", "学习目标"]
+                    "analysis_summary": "Since AI analysis is temporarily unavailable, we provide some general questions to help with matching",
+                    "priority_areas": ["Professional background", "Learning goals"]
                 },
                 "file_id": file_id
             }
@@ -602,5 +677,5 @@ async def analyze_cv(
     except Exception as e:
         return {
             "success": False,
-            "error": f"分析失败: {str(e)}"
+            "error": f"Analysis failed: {str(e)}"
         }

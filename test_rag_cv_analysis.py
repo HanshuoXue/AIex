@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-测试RAG-based CV分析功能
+TestRAG-based CV分析功能
 """
 import os
 import sys
@@ -15,7 +15,7 @@ sys.path.insert(0, str(api_path / "flows" / "chat_rag"))
 
 
 def test_cv_chunking():
-    """测试CV分块功能"""
+    """TestCVChunk功能"""
     print("🔍 Testing CV chunking...")
 
     try:
@@ -97,7 +97,7 @@ def test_cv_chunking():
         Mandarin: Basic
         """
 
-        # 测试不同的分块方法
+        # Test不同的Chunk方法
         methods = ['sections', 'semantic', 'hybrid']
 
         for method in methods:
@@ -126,7 +126,7 @@ def test_cv_chunking():
 
 
 def test_cv_embedding():
-    """测试CV向量化功能"""
+    """TestCV向量化功能"""
     print("\n🔍 Testing CV embedding...")
 
     try:
@@ -148,7 +148,7 @@ def test_cv_embedding():
         Developed web applications using React
         """
 
-        # 测试RAG处理
+        # TestRAG处理
         result = process_cv_with_rag(test_cv, chunking_method='hybrid')
 
         print(f"Processing status: {result['status']}")
@@ -158,7 +158,7 @@ def test_cv_embedding():
             f"Has embeddings: {result['processing_summary']['has_embeddings']}")
 
         if result['status'] == 'success' and result['chunks']:
-            # 测试相关性检索
+            # TestRelevance检索
             relevant_chunks = get_relevant_chunks(
                 result['chunks'],
                 "software engineering experience",
@@ -181,7 +181,7 @@ def test_cv_embedding():
 
 
 def test_promptflow_functions():
-    """测试PromptFlow函数"""
+    """TestPromptFlow函数"""
     print("\n🔍 Testing PromptFlow functions...")
 
     try:
@@ -201,13 +201,13 @@ def test_promptflow_functions():
         2022-Present
         """
 
-        # 测试分块函数
+        # TestChunk函数
         chunking_result = chunk_cv_for_analysis(test_cv, method="hybrid")
         print(f"Chunking status: {chunking_result['status']}")
         print(f"Number of chunks: {chunking_result['stats']['total_chunks']}")
 
         if chunking_result['status'] == 'success':
-            # 测试准备函数
+            # Test准备函数
             prep_result = prepare_chunks_for_analysis(
                 chunking_result['chunks'], top_k=5)
             print(f"Preparation status: {prep_result['status']}")
@@ -226,12 +226,12 @@ def test_promptflow_functions():
 
 
 def main():
-    """运行所有测试"""
+    """运行所有Test"""
     print("🚀 Starting RAG CV Analysis Tests\n")
 
     results = []
 
-    # 运行测试
+    # 运行Test
     results.append(test_cv_chunking())
     results.append(test_cv_embedding())
     results.append(test_promptflow_functions())

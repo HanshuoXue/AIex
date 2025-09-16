@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Candidate } from "../../types";
 
-// 统一的 API 配置
+// Unified API configuration
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://api-alex-12345.azurewebsites.net'
   : 'http://127.0.0.1:8000';
@@ -99,22 +99,22 @@ export default function CandidateForm({
   };
 
   const handleFileChange = async (file: File) => {
-    // 验证文件类型
+    // Validate file type
     const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!allowedTypes.includes(file.type)) {
-      alert('请上传 PDF 或 Word 文档格式的简历');
+      alert('Please upload a resume in PDF or Word document format');
       return;
     }
     
-    // 验证文件大小 (5MB 限制)
+    // Validate file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      alert('文件大小不能超过 5MB');
+      alert('File size cannot exceed 5MB');
       return;
     }
     
     setCvFile(file);
     
-    // 立即上传并处理 CV
+    // Immediately upload and process CV
     await uploadAndProcessCV(file);
   };
 
@@ -188,7 +188,7 @@ export default function CandidateForm({
   const uploadAndProcessCV = async (file: File) => {
     setCvUploadStatus('uploading');
     try {
-      // 第一步：上传并提取文本
+      // Step 1: Upload and extract text
       const formDataWithFile = new FormData();
       formDataWithFile.append('cv', file);
       formDataWithFile.append('candidate_data', JSON.stringify(formData));
@@ -199,22 +199,22 @@ export default function CandidateForm({
       });
       
       if (!uploadResponse.ok) {
-        throw new Error('CV 上传失败');
+        throw new Error('CV upload failed');
       }
       
       const uploadResult = await uploadResponse.json();
-      console.log('CV 上传成功:', uploadResult);
+      console.log('CV uploaded successfully:', uploadResult);
       
       if (uploadResult.success && uploadResult.upload_info?.extracted_cv_info) {
-        // 立即显示提取的文本
+        // Immediately display extracted text
         const extractedInfo = uploadResult.upload_info.extracted_cv_info;
         if (extractedInfo.extracted_text) {
           setCvExtractedText(extractedInfo.extracted_text);
           setCvUploadStatus('success');
-          console.log('文本提取成功，长度:', extractedInfo.extracted_text.length);
+          console.log('Text extraction successful, length:', extractedInfo.extracted_text.length);
         }
         
-        // 第二步：进行AI分析
+        // Step 2: Perform AI analysis
         setCvUploadStatus('analyzing');
         try {
           const analyzeFormData = new FormData();
@@ -227,92 +227,92 @@ export default function CandidateForm({
           });
           
           if (!analyzeResponse.ok) {
-            throw new Error('AI 分析失败');
+            throw new Error('AI analysis failed');
           }
           
           const analyzeResult = await analyzeResponse.json();
-          console.log('AI 分析成功:', analyzeResult);
-          console.log('generated_questions 原始数据:', analyzeResult.generated_questions);
-          console.log('generated_questions 类型:', typeof analyzeResult.generated_questions);
+          console.log('AI analysis successful:', analyzeResult);
+            console.log('generated_questions raw data:', analyzeResult.generated_questions);
+            console.log('generated_questions type:', typeof analyzeResult.generated_questions);
           
           if (analyzeResult.success) {
             setCvUploadStatus('success');
             
-            // 设置分析元数据
+            // Set analysis metadata
             if (analyzeResult.analysis_metadata) {
               setAnalysisMetadata(analyzeResult.analysis_metadata);
-              console.log('分析元数据:', analyzeResult.analysis_metadata);
+              console.log('Analysis metadata:', analyzeResult.analysis_metadata);
             }
             
-            // 设置AI分析结果
+            // Set AI analysis results
             if (analyzeResult.ai_analysis) {
               let aiAnalysis = analyzeResult.ai_analysis;
               
-              // 如果是字符串，需要解析为对象
+              // If it's a string, need to parse as object
               if (typeof aiAnalysis === 'string') {
                 try {
-                  // 清理 markdown 代码块标记
+                  // Clean markdown code block markers
                   let cleanedData = aiAnalysis;
-                  // 移除 ```json 和 ``` 标记
+                  // Remove ```json and ``` markers
                   cleanedData = cleanedData.replace(/```json\s*/g, '').replace(/```\s*/g, '');
-                  // 移除其他可能的标记
+                  // Remove other possible markers
                   cleanedData = cleanedData.trim();
                   
-                  console.log('清理后的CV分析数据:', cleanedData);
+                  console.log('Cleaned CV analysis data:', cleanedData);
                   aiAnalysis = JSON.parse(cleanedData);
-                  console.log('解析后的CV分析数据:', aiAnalysis);
+                  console.log('Parsed CV analysis data:', aiAnalysis);
                 } catch (e) {
-                  console.error('解析CV分析数据失败:', e);
-                  console.error('原始CV分析数据:', analyzeResult.ai_analysis);
-                  // 如果解析失败，使用原始数据
+                  console.error('Failed to parse CV analysis data:', e);
+                  console.error('Original CV analysis data:', analyzeResult.ai_analysis);
+                  // If parsing fails, use original data
                   aiAnalysis = analyzeResult.ai_analysis;
                 }
               }
               
               setCvAiAnalysis(aiAnalysis);
-              console.log('AI 分析结果:', aiAnalysis);
+              console.log('AI Analysis Results:', aiAnalysis);
             }
             
-            // 处理生成的问题
+            // Process generated questions
             if (analyzeResult.generated_questions) {
               let questionsData = analyzeResult.generated_questions;
               
-              // 如果是字符串，需要解析为对象
+              // If it's a string, need to parse as object
               if (typeof questionsData === 'string') {
                 try {
-                  // 清理 markdown 代码块标记
+                  // Clean markdown code block markers
                   let cleanedData = questionsData;
-                  // 移除 ```json 和 ``` 标记
+                  // Remove ```json and ``` markers
                   cleanedData = cleanedData.replace(/```json\s*/g, '').replace(/```\s*/g, '');
-                  // 移除其他可能的标记
+                  // Remove other possible markers
                   cleanedData = cleanedData.trim();
                   
-                  console.log('清理后的数据:', cleanedData);
+                  console.log('Cleaned data:', cleanedData);
                   questionsData = JSON.parse(cleanedData);
-                  console.log('解析后的问题数据:', questionsData);
+                  console.log('Parsed question data:', questionsData);
                 } catch (e) {
-                  console.error('解析问题数据失败:', e);
-                  console.error('原始数据:', analyzeResult.generated_questions);
+                  console.error('Failed to parse question data:', e);
+                  console.error('Original data:', analyzeResult.generated_questions);
                   return;
                 }
               }
               
-              console.log('生成的问题数据:', questionsData);
-              console.log('问题数组:', questionsData.questions);
-              console.log('问题数组类型:', typeof questionsData.questions);
-              console.log('问题数组长度:', questionsData.questions?.length);
+              console.log('Generated question data:', questionsData);
+              console.log('Question array:', questionsData.questions);
+              console.log('Question array type:', typeof questionsData.questions);
+              console.log('Question array length:', questionsData.questions?.length);
               
               setQaQuestions(questionsData.questions || []);
               setQaAnalysis(questionsData);
               
-              console.log('设置后的 qaQuestions 长度应该是:', questionsData.questions?.length);
+              console.log('After setting, qaQuestions length should be:', questionsData.questions?.length);
               
-              // 如果有问题，自动开始 Q&A
+              // If there are questions, automatically start Q&A
               if (questionsData.questions && questionsData.questions.length > 0) {
-                console.log('发现问题，准备开始 Q&A');
-                console.log('问题详情:', questionsData.questions);
+                console.log('Found questions, preparing to start Q&A');
+                console.log('Question details:', questionsData.questions);
                 setTimeout(() => {
-                  console.log('设置 showQa 为 true');
+                  console.log('Set showQa to true');
                   setShowQa(true);
                   setCurrentQaIndex(0);
                 }, 500);
@@ -320,16 +320,16 @@ export default function CandidateForm({
             }
           }
         } catch (analyzeError) {
-          console.error('AI 分析错误:', analyzeError);
-          setCvUploadStatus('success'); // 文本提取成功了，只是AI分析失败
+          console.error('AI analysis error:', analyzeError);
+          setCvUploadStatus('success'); // Text extraction succeeded, only AI analysis failed
         }
       } else {
         setCvUploadStatus('error');
-        console.error('CV 处理失败:', uploadResult.error);
+        console.error('CV processing failed:', uploadResult.error);
       }
       
     } catch (error) {
-      console.error('CV 上传错误:', error);
+      console.error('CV upload error:', error);
       setCvUploadStatus('error');
     }
   };
@@ -337,7 +337,7 @@ export default function CandidateForm({
   const handleSubmit = async (e: React.FormEvent, isDetailed = false) => {
     e.preventDefault();
     
-    // 将 Q&A 答案添加到表单数据中，确保不为 undefined
+    // Add Q&A answers to form data, ensure not undefined
     const enhancedFormData: Candidate = {
       ...formData
     };
@@ -352,11 +352,11 @@ export default function CandidateForm({
       enhancedFormData.cv_analysis = cvAiAnalysis;
     }
     
-    console.log('发送的数据:', enhancedFormData);
+    console.log('Data being sent:', enhancedFormData);
     console.log('qa_answers:', enhancedFormData.qa_answers);
     console.log('cv_analysis:', enhancedFormData.cv_analysis);
     
-    // CV 已经在文件选择时处理了，直接进行匹配
+    // CV has been processed during file selection, proceed directly to matching
     if (isDetailed) {
       onDetailedMatch(enhancedFormData);
     } else {
@@ -561,10 +561,10 @@ export default function CandidateForm({
                 <div className="space-y-2">
                   <div className="text-4xl">📄</div>
                   <p className="text-sm text-gray-600">
-                    拖拽 CV 文件到这里，或点击选择文件
+                    Drag CV file here, or click to select file
                   </p>
                   <p className="text-xs text-gray-500">
-                    支持 PDF, DOC, DOCX 格式，最大 5MB
+                    Supports PDF, DOC, DOCX formats, maximum 5MB
                   </p>
                   <input
                     type="file"
@@ -577,7 +577,7 @@ export default function CandidateForm({
                     htmlFor="cv-upload"
                     className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 cursor-pointer transition-colors"
                   >
-                    选择文件
+                    Select File
                   </label>
                 </div>
               </div>
@@ -600,65 +600,65 @@ export default function CandidateForm({
                     onClick={removeFile}
                     className="text-red-600 hover:text-red-800 text-sm"
                   >
-                    移除
+                    Remove
                   </button>
                 </div>
                 
-                {/* 上传状态 */}
+                {/* Upload Status */}
                 {cvUploadStatus === 'uploading' && (
                   <div className="flex items-center space-x-2 text-blue-600 text-sm">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                    <span>正在上传 CV...</span>
+                    <span>Uploading CV...</span>
                   </div>
                 )}
                 
                 {cvUploadStatus === 'analyzing' && (
                   <div className="flex items-center space-x-2 text-orange-600 text-sm">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-600"></div>
-                    <span>正在AI分析中...</span>
+                    <span>AI analyzing...</span>
                   </div>
                 )}
                 
                 {cvUploadStatus === 'success' && (
                   <div className="flex items-center space-x-2 text-green-600 text-sm mb-3">
                     <span>✅</span>
-                    <span>CV 处理成功</span>
+                    <span>CV processing successful</span>
                   </div>
                 )}
                 
                 {cvUploadStatus === 'error' && (
                   <div className="flex items-center space-x-2 text-red-600 text-sm mb-3">
                     <span>❌</span>
-                    <span>CV 处理失败</span>
+                    <span>CV processing failed</span>
                   </div>
                 )}
                 
-                {/* 提取的文本预览 */}
+                {/* Extracted Text Preview */}
                 {cvExtractedText && (
                   <div className="mt-3">
                     <h4 className="text-sm font-medium text-gray-700 mb-2">
-                      📝 提取的文本内容 (前200字符):
+                      📝 Extracted text content (first 200 characters):
                     </h4>
                     <div className="bg-gray-50 p-3 rounded text-xs text-gray-600 max-h-32 overflow-y-auto">
                       {cvExtractedText.substring(0, 200)}
                       {cvExtractedText.length > 200 && '...'}
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      总长度: {cvExtractedText.length} 字符
+                      Total length: {cvExtractedText.length} characters
                     </p>
                   </div>
                 )}
                 
-                {/* 分析方法信息 */}
+                {/* Analysis Method Information */}
                 {analysisMetadata && (
                   <div className="mt-3">
                     <h4 className="text-sm font-medium text-gray-700 mb-2">
-                      ⚙️ 分析方法信息:
+                      ⚙️ Analysis Method Information:
                     </h4>
                     <div className="bg-indigo-50 p-3 rounded text-xs">
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <span className="font-medium">分析方法:</span>
+                          <span className="font-medium">Analysis Method:</span>
                           <span className={`ml-1 px-2 py-1 rounded text-xs ${
                             analysisMetadata.analysis_method === 'RAG-based' 
                               ? 'bg-green-100 text-green-800' 
@@ -668,50 +668,97 @@ export default function CandidateForm({
                           </span>
                         </div>
                         <div>
-                          <span className="font-medium">流程文件:</span>
+                          <span className="font-medium">Flow File:</span>
                           <span className="ml-1 text-gray-600">{analysisMetadata.flow_used}</span>
                         </div>
                         <div>
-                          <span className="font-medium">文本长度:</span>
-                          <span className="ml-1 text-gray-600">{analysisMetadata.text_length} 字符</span>
+                          <span className="font-medium">Text Length:</span>
+                          <span className="ml-1 text-gray-600">{analysisMetadata.text_length} characters</span>
                         </div>
                         {analysisMetadata.chunking_method && (
                           <div>
-                            <span className="font-medium">分块方法:</span>
+                            <span className="font-medium">Chunking Method:</span>
                             <span className="ml-1 text-gray-600">{analysisMetadata.chunking_method}</span>
                           </div>
                         )}
                       </div>
                       
-                      {/* 分块信息 */}
+                      {/* Chunk Information */}
                       {analysisMetadata.chunk_info && (
                         <div className="mt-2 pt-2 border-t border-indigo-200">
-                          <div className="font-medium mb-1">📊 分块统计:</div>
+                          <div className="font-medium mb-1">📊 Chunk Statistics:</div>
                           <div className="grid grid-cols-2 gap-2">
                             <div>
-                              <span className="font-medium">总分块数:</span>
+                              <span className="font-medium">Total Chunks:</span>
                               <span className="ml-1 text-green-700">{analysisMetadata.chunk_info.total_chunks}</span>
                             </div>
                             <div>
-                              <span className="font-medium">相关分块:</span>
+                              <span className="font-medium">Relevant Chunks:</span>
                               <span className="ml-1 text-green-700">{analysisMetadata.chunk_info.relevant_chunks_used}</span>
                             </div>
                           </div>
+                        </div>
+                      )}
+
+                      {/* Query Enhancement Information */}
+                      {analysisMetadata.query_info && (
+                        <div className="mt-2 pt-2 border-t border-orange-200">
+                          <div className="font-medium mb-1">🔍 Query Enhancement Information:</div>
                           
-                          {/* 简化RAG信息 */}
+                          {/* Work Keywords */}
+                          <div className="mb-2">
+                            <div className="font-medium text-sm text-orange-700 mb-1">Work Keywords Extracted from CV:</div>
+                            <div className="bg-orange-50 p-2 rounded border">
+                              {analysisMetadata.query_info.work_keywords_extracted ? (
+                                <div className="flex flex-wrap gap-1">
+                                  {analysisMetadata.query_info.work_keywords_extracted.split(' ').map((keyword: string, index: number) => (
+                                    <span key={index} className="inline-block bg-orange-200 text-orange-800 text-xs px-2 py-1 rounded">
+                                      {keyword}
+                                    </span>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-gray-500 text-sm">No work keywords extracted</span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Query Comparison */}
+                          <div className="grid grid-cols-1 gap-2">
+                            <div>
+                              <span className="font-medium text-sm">Original Query:</span>
+                              <div className="text-xs text-gray-600 bg-gray-50 p-1 rounded mt-1">
+                                "{analysisMetadata.query_info.base_query}"
+                              </div>
+                            </div>
+                            <div>
+                              <span className="font-medium text-sm">Enhanced Query:</span>
+                              <div className="text-xs text-gray-600 bg-blue-50 p-1 rounded mt-1">
+                                "{analysisMetadata.query_info.final_query}"
+                              </div>
+                            </div>
+                            <div>
+                              <span className="font-medium text-sm">Enhancement Ratio:</span>
+                              <span className="ml-1 text-blue-700 font-bold">
+                                {analysisMetadata.query_info.query_enhancement_ratio?.toFixed(1)}x
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {/* Simplified RAG Information */}
                           {analysisMetadata.chunk_info.avg_chunk_tokens && (
                             <div className="mt-2">
                               <div className="text-xs text-gray-600">
-                                <span className="font-medium">平均分块大小:</span>
+                                <span className="font-medium">Average Chunk Size:</span>
                                 <span className="ml-1">{analysisMetadata.chunk_info.avg_chunk_tokens} tokens</span>
-                                <span className="ml-2 text-green-600">✓ 固定Token分块</span>
+                                <span className="ml-2 text-green-600">✓ Fixed Token Chunking</span>
                               </div>
                             </div>
                           )}
                         </div>
                       )}
                       
-                      {/* 分块详情按钮 */}
+                      {/* Chunk Details Button */}
                       {analysisMetadata.chunk_details && (
                         <div className="mt-3">
                           <button
@@ -719,7 +766,7 @@ export default function CandidateForm({
                             onClick={() => setShowChunkDetails(!showChunkDetails)}
                             className="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors"
                           >
-                            {showChunkDetails ? '🔼 隐藏分块详情' : '🔽 查看分块详情'}
+                            {showChunkDetails ? '🔼 Hide Chunk Details' : '🔽 View Chunk Details'}
                           </button>
                         </div>
                       )}
@@ -727,18 +774,65 @@ export default function CandidateForm({
                   </div>
                 )}
 
-                {/* 分块详情展示 */}
+                {/* Chunk Details Display */}
                 {showChunkDetails && analysisMetadata?.chunk_details && (
                   <div className="mt-3">
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <h4 className="text-sm font-medium text-gray-700 mb-3">
-                        📊 分块分析详情
+                        📊 Chunk Analysis Details
                       </h4>
                       
-                      {/* 相关分块排名 */}
+                      {/* Complete Chunk Content Sent to LLM */}
+                      <div className="mb-4">
+                        <h5 className="text-sm font-medium text-purple-700 mb-2">
+                          🚀 Complete Chunk Content Sent to LLM (for generating personalized questions)
+                        </h5>
+                        <div className="bg-purple-50 border border-purple-200 p-3 rounded">
+                          <div className="text-xs text-purple-600 mb-2">
+                            📝 Following are the actual chunks sent to GPT-4{analysisMetadata.chunk_details.relevant_chunks?.length || 0} complete content of the most relevant chunks
+                          </div>
+                          <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {analysisMetadata.chunk_details.relevant_chunks?.map((chunk: any) => (
+                              <div key={chunk.id} className="bg-white border border-purple-300 rounded-lg">
+                                {/* Chunk Header Information */}
+                                <div className="bg-purple-100 px-3 py-2 rounded-t-lg border-b border-purple-200">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                      <span className="inline-block bg-purple-600 text-white text-xs px-2 py-1 rounded font-bold">
+                                        Rank #{chunk.rank}
+                                      </span>
+                                      <span className="text-xs font-mono text-purple-600">{chunk.id}</span>
+                                      <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded">
+                                        Relevance Score: {chunk.relevance_score}
+                                      </span>
+                                    </div>
+                                    <div className="text-xs text-purple-600">
+                                      {chunk.estimated_tokens} tokens • {chunk.length} characters
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Complete Chunk Content */}
+                                <div className="p-3">
+                                  <div className="text-xs text-gray-800 leading-relaxed whitespace-pre-wrap font-mono">
+                                    {chunk.full_text || chunk.text_preview}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          {/* Summary Information */}
+                          <div className="mt-3 p-2 bg-purple-100 rounded text-xs text-purple-700">
+                            💡 These chunks will be formatted and sent to LLM to generate personalized questions based on your CV and background
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Relevant Chunk Rankings (Simplified) */}
                       <div className="mb-4">
                         <h5 className="text-sm font-medium text-green-700 mb-2">
-                          🎯 相关分块排名 (Top {analysisMetadata.chunk_details.relevant_chunks?.length || 0})
+                          🎯 Chunk Ranking Overview (Top {analysisMetadata.chunk_details.relevant_chunks?.length || 0})
                         </h5>
                         <div className="space-y-2">
                           {analysisMetadata.chunk_details.relevant_chunks?.map((chunk: any) => (
@@ -750,11 +844,11 @@ export default function CandidateForm({
                                   </span>
                                   <span className="text-xs text-gray-600">{chunk.id}</span>
                                   <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                    分数: {chunk.relevance_score}
+                                    Score: {chunk.relevance_score}
                                   </span>
                                 </div>
                                 <div className="text-xs text-gray-500">
-                                  {chunk.estimated_tokens} tokens, {chunk.length} 字符
+                                  {chunk.estimated_tokens} tokens, {chunk.length} characters
                                 </div>
                               </div>
                               <div className="text-xs text-gray-700 bg-white p-2 rounded border">
@@ -765,10 +859,10 @@ export default function CandidateForm({
                         </div>
                       </div>
                       
-                      {/* 所有分块概览 */}
+                      {/* All Chunks Overview */}
                       <div>
                         <h5 className="text-sm font-medium text-gray-700 mb-2">
-                          📋 所有分块概览 (前10个)
+                          📋 All Chunks Overview (first 10)
                         </h5>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           {analysisMetadata.chunk_details.all_chunks_summary?.map((chunk: any, index: number) => (
@@ -788,50 +882,50 @@ export default function CandidateForm({
                   </div>
                 )}
 
-                {/* AI 分析结果 */}
+                {/* AI Analysis Results */}
                 {cvAiAnalysis && (
                   <div className="mt-3">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="text-sm font-medium text-gray-700">
-                        🤖 AI 分析结果:
+                        🤖 AI Analysis Results:
                       </h4>
                       <div className="flex space-x-2">
                         <button
                           type="button"
                           onClick={() => {
-                            console.log('分析元数据:', analysisMetadata);
-                            console.log('完整AI分析结果:', cvAiAnalysis);
-                            console.log('AI分析结果JSON:', JSON.stringify(cvAiAnalysis, null, 2));
+                            console.log('Analysis metadata:', analysisMetadata);
+                            console.log('Complete AI analysis results:', cvAiAnalysis);
+                            console.log('AI analysis results JSON:', JSON.stringify(cvAiAnalysis, null, 2));
                           }}
                           className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
                         >
-                          打印完整信息
+                          Print complete information
                         </button>
                         {analysisMetadata?.analysis_method === 'RAG-based' && (
                           <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                            RAG增强分析
+                            RAG Enhanced Analysis
                           </span>
                         )}
                       </div>
                     </div>
                     <div className="bg-blue-50 p-3 rounded text-xs text-gray-700">
                       <div className="mb-2">
-                        <strong>✅ 分析类型:</strong> {cvAiAnalysis.analysis_type || 'Simple RAG'}
+                        <strong>✅ Analysis Type:</strong> {cvAiAnalysis.analysis_type || 'Simple RAG'}
                       </div>
                       
                       <div className="mb-2">
-                        <strong>📊 分析分块数:</strong> {cvAiAnalysis.chunks_analyzed || 0}
+                        <strong>📊 Analysis Chunks:</strong> {cvAiAnalysis.chunks_analyzed || 0}
                       </div>
                       
                       <div className="mb-2">
-                        <strong>🔍 文本处理状态:</strong> 
+                        <strong>🔍 Text Processing Status:</strong> 
                         <span className={cvAiAnalysis.text_processed ? 'text-green-600 ml-1' : 'text-red-600 ml-1'}>
-                          {cvAiAnalysis.text_processed ? '✓ 已处理' : '✗ 处理失败'}
+                          {cvAiAnalysis.text_processed ? '✓ Processed' : '✗ Processing failed'}
                         </span>
                       </div>
                       
                       <div className="text-xs text-gray-500 mt-2">
-                        💡 简化分析完成 - CV内容已转化为个性化问题
+                        💡 Simplified analysis completed - CV content has been converted to personalized questions
                       </div>
                     </div>
                   </div>
@@ -840,19 +934,19 @@ export default function CandidateForm({
             )}
           </div>
 
-          {/* Q&A 对话组件 */}
+          {/* Q&A Conversation Component */}
           {cvUploadStatus === 'success' && qaQuestions.length > 0 && !showQa && (
             <div className="bg-blue-50 p-4 rounded-lg">
               <h3 className="font-semibold text-gray-700 mb-3">
-                💬 个性化问题
+                💬 Personalized Questions
               </h3>
               <p className="text-sm text-gray-600 mb-3">
-                基于您的简历分析，我们为您准备了 {qaQuestions.length} 个个性化问题，这将帮助我们更准确地为您匹配合适的课程：
+                Based on your resume analysis, we have prepared for you {qaQuestions.length} personalized questions, which will help us more accurately match suitable courses for you:
               </p>
               {qaAnalysis && qaAnalysis.analysis_summary && (
                 <div className="bg-blue-100 p-3 rounded mb-3">
                   <p className="text-xs text-blue-800">
-                    <strong>分析摘要：</strong>{qaAnalysis.analysis_summary}
+                    <strong>Analysis Summary：</strong>{qaAnalysis.analysis_summary}
                   </p>
                 </div>
               )}
@@ -861,7 +955,7 @@ export default function CandidateForm({
                 onClick={startQa}
                 className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
               >
-                开始个性化问答
+                Start Personalized Q&A
               </button>
             </div>
           )}
@@ -870,14 +964,14 @@ export default function CandidateForm({
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-700">
-                  💬 补充信息 ({currentQaIndex + 1}/{qaQuestions.length})
+                  💬 Additional Information ({currentQaIndex + 1}/{qaQuestions.length})
                 </h3>
                 <button
                   type="button"
                   onClick={() => setShowQa(false)}
                   className="text-gray-500 hover:text-gray-700 text-sm"
                 >
-                  ✕ 跳过
+                  ✕ Skip
                 </button>
               </div>
 
@@ -898,7 +992,7 @@ export default function CandidateForm({
                   rows={4}
                 />
                 {qaQuestions[currentQaIndex].required && (
-                  <p className="text-xs text-red-500 mt-1">* 此问题为必填项</p>
+                  <p className="text-xs text-red-500 mt-1">* This question is required</p>
                 )}
               </div>
 
@@ -909,7 +1003,7 @@ export default function CandidateForm({
                   disabled={currentQaIndex === 0}
                   className="px-4 py-2 bg-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  上一题
+                  Previous Question
                 </button>
                 
                 <div className="flex space-x-2">
@@ -918,7 +1012,7 @@ export default function CandidateForm({
                     onClick={() => setShowQa(false)}
                     className="px-4 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 transition-colors"
                   >
-                    跳过
+                    Skip
                   </button>
                   
                   <button
@@ -926,7 +1020,7 @@ export default function CandidateForm({
                     onClick={nextQaQuestion}
                     className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors"
                   >
-                    {currentQaIndex === qaQuestions.length - 1 ? '完成' : '下一题'}
+                    {currentQaIndex === qaQuestions.length - 1 ? 'Complete' : 'Next Question'}
                   </button>
                 </div>
               </div>
@@ -1029,7 +1123,7 @@ export default function CandidateForm({
               onClick={(e) => {
                 e.preventDefault();
                 
-                // 使用相同的增强数据逻辑
+                // Use the same enhanced data logic
                 const enhancedFormData: Candidate = {
                   ...formData
                 };
@@ -1044,7 +1138,7 @@ export default function CandidateForm({
                   enhancedFormData.cv_analysis = cvAiAnalysis;
                 }
                 
-                console.log('Complete Analysis 发送的数据:', enhancedFormData);
+                console.log('Complete Analysis Data being sent:', enhancedFormData);
                 onAllMatch(enhancedFormData);
               }}
               disabled={loading}

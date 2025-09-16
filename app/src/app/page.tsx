@@ -5,7 +5,7 @@ import CandidateForm from "./components/CandidateForm";
 import MatchResults from "./components/MatchResults";
 import type { Candidate, MatchResult, AllMatchResults } from "../types";
 
-// 根据环境动态选择 API 地址
+// Dynamically select API address based on environment
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://api-alex-12345.azurewebsites.net'
   : 'http://127.0.0.1:8000';
