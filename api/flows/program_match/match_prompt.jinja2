@@ -10,12 +10,13 @@ Evaluate this match:
 **Program**: {{program}}
 
 **Evaluation Focus**:
+- **Educational Level Compatibility**: Ensure program level matches candidate's background (high school graduates → undergraduate programs, bachelor's holders → postgraduate programs)
 - If Q&A answers are provided: Pay special attention to Q&A answers for career gaps, motivations, and specific goals
-- If CV analysis is provided: Consider CV analysis insights about skills, experience, and identified gaps
+- If CV analysis is provided: Consider CV analysis insights about skills, experience, identified gaps, and detected education level
 - If both are available: Use Q&A responses to clarify ambiguities and validate candidate suitability, factor in CV-extracted information for more accurate matching
 - If neither is available: Focus on basic candidate information (academic background, English proficiency, interests, budget) for standard matching
 
-**Score (0-100)**: Academic Fit (35) + English (25) + Field Match (20) + Location (10) + Budget (10)
+**Score (0-100)**: Academic Fit (30) + Education Level Match (10) + English (25) + Field Match (20) + Location (10) + Budget (5)
 
 ## Required Output Format:
 Provide your evaluation in the following JSON format:
@@ -25,14 +26,16 @@ Provide your evaluation in the following JSON format:
   "eligible": true/false,
   "overall_score": 0-100,
   "detailed_scores": {
-    "academic_fit": 0-35,
+    "academic_fit": 0-30,
+    "education_level_match": 0-10,
     "english_proficiency": 0-25,
     "field_alignment": 0-20,
     "location_preference": 0-10,
-    "budget_compatibility": 0-10
+    "budget_compatibility": 0-5
   },
   "reasoning": {
     "academic_fit": "Brief explanation of academic compatibility. If Q&A/CV available, reference relevant insights about learning goals and educational background",
+    "education_level_match": "Brief explanation of how candidate's education level matches program requirements (high school → undergraduate, bachelor's → postgraduate)",
     "english_proficiency": "Brief explanation of language readiness. If Q&A/CV available, reference language confidence or skills mentioned",
     "field_alignment": "Brief explanation of interest/field match. If Q&A/CV available, incorporate career aspirations and relevant skills/experience",
     "location_preference": "Brief explanation of location match. If Q&A/CV available, consider location preferences and mobility factors",

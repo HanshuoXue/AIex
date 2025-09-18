@@ -56,6 +56,61 @@ def extract_cv_text(file_path: str) -> str:
             f"Error extracting text from {file_extension} file: {str(e)}")
 
 
+def extract_education_level(cv_text: str) -> str:
+    """
+    Extract education level from CV text
+
+    Args:
+        cv_text: CV text content
+
+    Returns:
+        Education level: 'undergraduate', 'postgraduate', or 'unknown'
+    """
+    import re
+
+    cv_text_lower = cv_text.lower()
+
+    # Postgraduate indicators (stronger signals)
+    postgraduate_patterns = [
+        r'\b(?:master|masters|master\'s|msc|ma|mba|phd|doctorate|graduate)\b',
+        r'\b(?:postgraduate|post-graduate)\b',
+        r'(?:硕士|研究生|博士|学士后)',
+        r'\b(?:bachelor.*degree.*completed|graduated.*bachelor)\b',
+        r'\b(?:university.*graduate|college.*graduate)\b.*(?:20\d{2}|19\d{2})',
+        # Work experience patterns suggesting bachelor's completion
+        r'(?:software engineer|developer|analyst|consultant).*(?:20\d{2}|experience)',
+    ]
+
+    # Undergraduate indicators
+    undergraduate_patterns = [
+        r'\b(?:high school|secondary school|a-level|ib|diploma)\b',
+        r'\b(?:year 12|year 13|grade 12)\b',
+        r'(?:高中|中学|高等中学|高级中学)',
+        r'\b(?:currently.*bachelor|pursuing.*bachelor|studying.*bachelor)\b',
+        r'\b(?:freshman|sophomore|junior|senior).*(?:student|year)\b',
+    ]
+
+    # Check for postgraduate indicators
+    postgrad_score = 0
+    for pattern in postgraduate_patterns:
+        matches = len(re.findall(pattern, cv_text_lower))
+        postgrad_score += matches
+
+    # Check for undergraduate indicators
+    undergrad_score = 0
+    for pattern in undergraduate_patterns:
+        matches = len(re.findall(pattern, cv_text_lower))
+        undergrad_score += matches
+
+    # Decision logic
+    if postgrad_score > undergrad_score and postgrad_score > 0:
+        return 'postgraduate'
+    elif undergrad_score > 0:
+        return 'undergraduate'
+    else:
+        return 'unknown'
+
+
 def extract_work_experience_keywords(cv_text: str) -> str:
     """
     Extract work experience related keywords from CV text
@@ -112,6 +167,44 @@ def extract_work_experience_keywords(cv_text: str) -> str:
     keywords_list = list(extracted_keywords)[:10]  # Maximum 10 keywords
 
     return ' '.join(keywords_list)
+
+
+def determine_program_level(candidate_data: dict, cv_text: str = None) -> str:
+    """
+    Determine the appropriate program level based on candidate data and CV analysis
+
+    Args:
+        candidate_data: Candidate information dictionary
+        cv_text: CV text for analysis (optional)
+
+    Returns:
+        Program level: 'Undergraduate', 'Postgraduate', or None (for all levels)
+    """
+    # Check explicit preference first
+    education_preference = candidate_data.get(
+        'education_level_preference', 'auto')
+
+    if education_preference == 'undergraduate':
+        return 'Undergraduate'
+    elif education_preference == 'postgraduate':
+        return 'Postgraduate'
+    elif education_preference == 'auto':
+        # Auto-detect from CV if available
+        if cv_text:
+            detected_level = extract_education_level(cv_text)
+            if detected_level == 'undergraduate':
+                return 'Undergraduate'
+            elif detected_level == 'postgraduate':
+                return 'Postgraduate'
+
+        # Fallback to bachelor_major logic
+        bachelor_major = candidate_data.get('bachelor_major', '').strip()
+        if not bachelor_major:  # No bachelor's degree mentioned
+            return 'Undergraduate'
+        else:  # Has bachelor's degree, recommend masters
+            return 'Postgraduate'
+
+    return None  # Return all levels
 
 
 app = FastAPI()
@@ -243,14 +336,19 @@ async def match(c: Candidate):
     Quick Match - Return top 3 programs (default view)
     """
     try:
-        # Build search query
-        q = " OR ".join((c.interests or ["Master"])) or "Master"
+        # Determine appropriate program level
+        candidate_dict = c.dict() if hasattr(c, 'dict') else c.__dict__
+        program_level = determine_program_level(candidate_dict)
+
+        # Build search query based on interests
+        q = " OR ".join((c.interests or [])) or "*"
 
         # Extract Q&A and CV analysis from candidate data
         qa_answers = getattr(c, 'qa_answers', None) or {}
         cv_analysis = getattr(c, 'cv_analysis', None) or {}
 
         print(f"Received candidate data: {c}")
+        print(f"Determined program level: {program_level}")
         print(f"Q&A answers: {qa_answers}")
         print(f"CV analysis: {cv_analysis}")
 
@@ -259,7 +357,7 @@ async def match(c: Candidate):
             candidate=c,
             query=q,
             top_k=1,  # Show top 3 by default
-            level=None,
+            level=program_level,
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
         )
@@ -295,13 +393,19 @@ async def match_detailed(c: Candidate):
     Detailed Analysis - Serial evaluation of top 3 programs, show eligible + rejected
     """
     try:
-        q = " OR ".join((c.interests or ["Master"])) or "Master"
+        # Determine appropriate program level
+        candidate_dict = c.dict() if hasattr(c, 'dict') else c.__dict__
+        program_level = determine_program_level(candidate_dict)
+
+        # Build search query based on interests
+        q = " OR ".join((c.interests or [])) or "*"
 
         # Extract Q&A and CV analysis from candidate data
         qa_answers = getattr(c, 'qa_answers', None) or {}
         cv_analysis = getattr(c, 'cv_analysis', None) or {}
 
         print(f"Detailed match - Received candidate data: {c}")
+        print(f"Determined program level: {program_level}")
         print(f"Q&A answers: {qa_answers}")
         print(f"CV analysis: {cv_analysis}")
 
@@ -309,7 +413,7 @@ async def match_detailed(c: Candidate):
             candidate=c,
             query=q,
             top_k=3,
-            level=None,
+            level=program_level,
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
         )
@@ -370,13 +474,19 @@ async def match_all(c: Candidate):
     Complete Analysis - Parallel batch evaluation of top 5 programs, show eligible + rejected
     """
     try:
-        q = " OR ".join((c.interests or ["Master"])) or "Master"
+        # Determine appropriate program level
+        candidate_dict = c.dict() if hasattr(c, 'dict') else c.__dict__
+        program_level = determine_program_level(candidate_dict)
+
+        # Build search query based on interests
+        q = " OR ".join((c.interests or [])) or "*"
 
         # Extract Q&A and CV analysis from candidate data
         qa_answers = getattr(c, 'qa_answers', None) or {}
         cv_analysis = getattr(c, 'cv_analysis', None) or {}
 
         print(f"Complete analysis - Received candidate data: {c}")
+        print(f"Determined program level: {program_level}")
         print(f"Q&A answers: {qa_answers}")
         print(f"CV analysis: {cv_analysis}")
 
@@ -384,7 +494,7 @@ async def match_all(c: Candidate):
             candidate=c,
             query=q,
             top_k=5,
-            level=None,
+            level=program_level,
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
         )
@@ -552,6 +662,11 @@ async def analyze_cv(
             work_keywords = extract_work_experience_keywords(extracted_text)
             print(f"Extracted work keywords: {work_keywords}")
 
+            # 2.5. Extract education level from CV
+            print("Step 2.5: Extract education level...")
+            detected_education_level = extract_education_level(extracted_text)
+            print(f"Detected education level: {detected_education_level}")
+
             # 3. Build enhanced query
             print("Step 3: Build enhanced query...")
             base_query = f"{candidate.get('bachelor_major', '')} {' '.join(candidate.get('interests', []))}"
@@ -584,6 +699,7 @@ async def analyze_cv(
                 "flow_used": "simple_rag_analysis",
                 "chunking_method": "fixed_tokens",
                 "text_length": len(extracted_text),
+                "detected_education_level": detected_education_level,
                 "query_info": {
                     "base_query": base_query,
                     "work_keywords_extracted": work_keywords,

@@ -36,6 +36,7 @@ export default function CandidateForm({
     interests: ["artificial intelligence", "machine learning"],
     city_pref: ["Wellington", "Auckland"],
     budget_nzd_per_year: 60000,
+    education_level_preference: 'auto' as 'undergraduate' | 'postgraduate' | 'auto',
   });
 
   const [cvFile, setCvFile] = useState<File | null>(null);
@@ -414,37 +415,60 @@ export default function CandidateForm({
               🎓 Academic Background
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-3">
+              {/* Education Level Preference */}
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">
-                  Bachelor&apos;s Major
+                  Program Level Preference
                 </label>
-                <input
-                  type="text"
-                  value={formData.bachelor_major}
+                <select
+                  value={formData.education_level_preference}
                   onChange={(e) =>
-                    handleChange("bachelor_major", e.target.value)
+                    handleChange("education_level_preference", e.target.value as 'undergraduate' | 'postgraduate' | 'auto')
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="computer science"
-                />
+                >
+                  <option value="auto">🤖 Auto-detect from CV</option>
+                  <option value="undergraduate">🎓 Undergraduate (Bachelor&apos;s)</option>
+                  <option value="postgraduate">📚 Postgraduate (Master&apos;s)</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Choose how to match programs: auto-detect from CV analysis, or manually select level
+                </p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  GPA ({formData.gpa_scale} scale)
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  max="4"
-                  value={formData.gpa_value}
-                  onChange={(e) =>
-                    handleChange("gpa_value", parseFloat(e.target.value))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">
+                    Bachelor&apos;s Major
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.bachelor_major}
+                    onChange={(e) =>
+                      handleChange("bachelor_major", e.target.value)
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="computer science"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">
+                    GPA ({formData.gpa_scale} scale)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="4"
+                    value={formData.gpa_value}
+                    onChange={(e) =>
+                      handleChange("gpa_value", parseFloat(e.target.value))
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1066,7 +1090,36 @@ export default function CandidateForm({
             <h3 className="font-semibold text-gray-700 mb-2 text-sm">
               ⚡ Quick Test Templates
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData({
+                    bachelor_major: "",
+                    gpa_scale: "5.0",
+                    gpa_value: 4.2,
+                    ielts_overall: 6.5,
+                    ielts_subscores: {
+                      listening: 6.5,
+                      reading: 6.5,
+                      writing: 6.0,
+                      speaking: 6.5,
+                    },
+                    work_years: 0,
+                    interests: ["computer science", "software development"],
+                    city_pref: ["Auckland"],
+                    budget_nzd_per_year: 40000,
+                    education_level_preference: 'undergraduate' as 'undergraduate' | 'postgraduate' | 'auto',
+                  });
+                }}
+                className="bg-orange-100 text-orange-800 py-2 px-4 rounded-lg font-medium hover:bg-orange-200 transition-colors duration-200 text-sm"
+              >
+                🎓 High School Graduate
+                <div className="text-xs mt-1 opacity-75">
+                  No Bachelor&apos;s • IELTS 6.5 • CS Interest
+                </div>
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
@@ -1089,13 +1142,14 @@ export default function CandidateForm({
                     ],
                     city_pref: ["Wellington"],
                     budget_nzd_per_year: 70000,
+                    education_level_preference: 'postgraduate' as 'undergraduate' | 'postgraduate' | 'auto',
                   });
                 }}
                 className="bg-green-100 text-green-800 py-2 px-4 rounded-lg font-medium hover:bg-green-200 transition-colors duration-200 text-sm"
               >
-                💻 Computer Science Template
+                💻 CS Graduate (Masters)
                 <div className="text-xs mt-1 opacity-75">
-                  High GPA • High IELTS • AI Interest • Sufficient Budget
+                  High GPA • High IELTS • AI Interest
                 </div>
               </button>
 
@@ -1117,14 +1171,14 @@ export default function CandidateForm({
                     interests: ["business management", "marketing"],
                     city_pref: ["Auckland"],
                     budget_nzd_per_year: 45000,
+                    education_level_preference: 'postgraduate' as 'undergraduate' | 'postgraduate' | 'auto',
                   });
                 }}
                 className="bg-blue-100 text-blue-800 py-2 px-4 rounded-lg font-medium hover:bg-blue-200 transition-colors duration-200 text-sm"
               >
-                📊 Business Management Template
+                📊 Business Graduate (Masters)
                 <div className="text-xs mt-1 opacity-75">
-                  Medium GPA • Standard IELTS • Business Background • Limited
-                  Budget
+                  Medium GPA • Standard IELTS • Business
                 </div>
               </button>
             </div>

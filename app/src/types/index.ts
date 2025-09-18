@@ -15,6 +15,7 @@ export interface Candidate {
   interests: string[];
   city_pref: string[];
   budget_nzd_per_year?: number;
+  education_level_preference?: 'undergraduate' | 'postgraduate' | 'auto';
   qa_answers?: {[key: string]: string};
   cv_analysis?: {
     personal_info?: {

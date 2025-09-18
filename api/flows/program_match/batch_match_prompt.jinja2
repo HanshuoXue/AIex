@@ -16,13 +16,14 @@ Evaluate all programs for this candidate:
 - If neither is available: Focus on basic candidate information (academic background, English proficiency, interests, budget) for standard matching
 
 **Instructions**: 
-1. Evaluate each program using: Academic Fit (35) + English (25) + Field Match (20) + Location (10) + Budget (10)
-2. Return JSON array with all evaluations
-3. Be concise but accurate
-4. **CRITICAL**: If Q&A responses are available, reference specific answers in reasoning
-5. **CRITICAL**: If CV analysis is available, reference specific findings in reasoning
-6. **CRITICAL**: If both are available, use Q&A insights to resolve any ambiguities or concerns from the CV analysis
-7. **CRITICAL**: If neither is available, base evaluation on basic candidate information
+1. Evaluate each program using: Academic Fit (30) + Education Level Match (10) + English (25) + Field Match (20) + Location (10) + Budget (5)
+2. **CRITICAL**: Ensure education level compatibility - high school graduates should only be matched with undergraduate programs, bachelor's holders with postgraduate programs
+3. Return JSON array with all evaluations
+4. Be concise but accurate
+5. **CRITICAL**: If Q&A responses are available, reference specific answers in reasoning
+6. **CRITICAL**: If CV analysis is available, reference specific findings in reasoning, especially detected education level
+7. **CRITICAL**: If both are available, use Q&A insights to resolve any ambiguities or concerns from the CV analysis
+8. **CRITICAL**: If neither is available, base evaluation on basic candidate information
 
 **Output Format**:
 ```json
