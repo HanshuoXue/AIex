@@ -13,6 +13,7 @@ interface CandidateFormProps {
   onDetailedMatch: (data: Candidate) => void;
   onAllMatch: (data: Candidate) => void;
   loading: boolean;
+  matchingTime?: number | null;
 }
 
 export default function CandidateForm({
@@ -20,6 +21,7 @@ export default function CandidateForm({
   onDetailedMatch,
   onAllMatch,
   loading,
+  matchingTime,
 }: CandidateFormProps) {
   const [formData, setFormData] = useState({
     bachelor_major: "computer science",
@@ -56,6 +58,9 @@ export default function CandidateForm({
   
   // 追踪哪些字段是AI自动填充的
   const [aiFilledFields, setAiFilledFields] = useState<Set<string>>(new Set());
+  
+  // 计时状态
+  const [cvAnalysisTime, setCvAnalysisTime] = useState<number | null>(null);
   const [qaAnswers, setQaAnswers] = useState<{[key: string]: string}>({});
   const [currentQaIndex, setCurrentQaIndex] = useState<number>(0);
   const [showQa, setShowQa] = useState<boolean>(false);
@@ -252,6 +257,8 @@ export default function CandidateForm({
     setAnalysisMetadata(null);
     setQaAnswers({});
     setQaQuestions([]);
+    setCvAnalysisTime(null);
+    setAiFilledFields(new Set());
     setQaAnalysis(null);
     setCurrentQaIndex(0);
     setShowQa(false);
@@ -316,6 +323,9 @@ export default function CandidateForm({
         // Step 2: Perform AI analysis
         setCvUploadStatus('analyzing');
         try {
+          // 开始CV分析计时
+          const cvAnalysisStartTime = Date.now();
+          
           const analyzeFormData = new FormData();
           analyzeFormData.append('file_id', uploadResult.file_id);
           analyzeFormData.append('candidate_data', JSON.stringify(formData));
@@ -374,6 +384,11 @@ export default function CandidateForm({
               // 🚀 动态更新表单内容基于LLM分析结果
               updateFormFromLLMAnalysis(aiAnalysis, analyzeResult.analysis_metadata);
             }
+            
+            // 记录CV分析用时
+            const cvAnalysisEndTime = Date.now();
+            const cvAnalysisElapsed = cvAnalysisEndTime - cvAnalysisStartTime;
+            setCvAnalysisTime(cvAnalysisElapsed);
             
             // Process generated questions
             if (analyzeResult.generated_questions) {
@@ -841,6 +856,25 @@ export default function CandidateForm({
                               analysisMetadata.confidence_score >= 0.6 ? 'text-yellow-600' : 'text-red-600'
                             }`}>
                               {(analysisMetadata.confidence_score * 100).toFixed(0)}%
+                            </span>
+                          </div>
+                        )}
+                        
+                        {/* Performance Timing */}
+                        {cvAnalysisTime && (
+                          <div>
+                            <span className="font-medium">CV Analysis Time:</span>
+                            <span className="ml-1 text-purple-600 font-mono">
+                              {(cvAnalysisTime / 1000).toFixed(2)}s
+                            </span>
+                          </div>
+                        )}
+                        
+                        {matchingTime && (
+                          <div>
+                            <span className="font-medium">Matching Time:</span>
+                            <span className="ml-1 text-blue-600 font-mono">
+                              {(matchingTime / 1000).toFixed(2)}s
                             </span>
                           </div>
                         )}

@@ -202,7 +202,7 @@ async def match(c: Candidate):
 @app.post("/match/detailed")
 async def match_detailed(c: Candidate):
     """
-    Detailed Analysis - Serial evaluation of top 3 programs, show eligible + rejected
+    Detailed Analysis - Comprehensive evaluation of all programs in appropriate level, show eligible + rejected
     """
     try:
         # Determine appropriate program level
@@ -222,11 +222,11 @@ async def match_detailed(c: Candidate):
         print(f"Q&A answers: {qa_answers}")
         print(f"CV analysis: {cv_analysis}")
 
-        results = await flow_matcher.match_programs_fixed_serial(
+        results = await flow_matcher.match_programs_with_rejected(
             candidate=c,
             query=q,
-            top_k=3,
-            level=program_level,
+            top_k=11,  # 评估所有相关级别的项目
+            level=program_level,  # 保持级别过滤
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
         )
@@ -273,7 +273,7 @@ async def match_all(c: Candidate):
             candidate=c,
             query=q,
             top_k=11,  # 匹配所有11个项目
-            level=program_level,
+            level=None,  # Complete Analysis评估所有级别的项目
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
         )

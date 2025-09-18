@@ -17,9 +17,13 @@ export default function Home() {
     MatchResult[] | AllMatchResults | null
   >(null);
   const [loading, setLoading] = useState(false);
+  const [matchingTime, setMatchingTime] = useState<number | null>(null);
 
   const handleMatch = async (candidateData: Candidate) => {
     setLoading(true);
+    setMatchingTime(null); // 清空之前的时间
+    const startTime = Date.now();
+    
     try {
       const response = await fetch(
         `${API_BASE_URL}/match`,
@@ -35,6 +39,9 @@ export default function Home() {
 
       const data = await response.json();
       setResults(data);
+      
+      const endTime = Date.now();
+      setMatchingTime(endTime - startTime);
     } catch (error) {
       console.error("Match failed:", error);
       setResults(null);
@@ -45,6 +52,9 @@ export default function Home() {
 
   const handleDetailedMatch = async (candidateData: Candidate) => {
     setLoading(true);
+    setMatchingTime(null); // 清空之前的时间
+    const startTime = Date.now();
+    
     try {
       const response = await fetch(
         `${API_BASE_URL}/match/detailed`,
@@ -59,6 +69,9 @@ export default function Home() {
 
       const data = await response.json();
       setResults(data);
+      
+      const endTime = Date.now();
+      setMatchingTime(endTime - startTime);
     } catch (error) {
       console.error("Detailed match failed:", error);
       setResults(null);
@@ -69,6 +82,9 @@ export default function Home() {
 
   const handleAllMatch = async (candidateData: Candidate) => {
     setLoading(true);
+    setMatchingTime(null); // 清空之前的时间
+    const startTime = Date.now();
+    
     try {
       const response = await fetch(
         `${API_BASE_URL}/match/all`,
@@ -83,6 +99,9 @@ export default function Home() {
 
       const data = await response.json();
       setResults(data);
+      
+      const endTime = Date.now();
+      setMatchingTime(endTime - startTime);
     } catch (error) {
       console.error("Full analysis failed:", error);
       setResults(null);
@@ -110,6 +129,7 @@ export default function Home() {
               onDetailedMatch={handleDetailedMatch}
               onAllMatch={handleAllMatch}
               loading={loading}
+              matchingTime={matchingTime}
             />
           </div>
 
