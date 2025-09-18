@@ -32,6 +32,7 @@ class Candidate(BaseModel):
     budget_nzd_per_year: Optional[float] = None
     qa_answers: Optional[Dict[str, str]] = None
     cv_analysis: Optional[Dict] = None
+    education_level_preference: Optional[str] = 'auto'
 
 
 class PromptFlowMatcher:
