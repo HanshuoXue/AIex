@@ -27,11 +27,14 @@ Analyze the CV content and provide a comprehensive assessment focusing on:
 - **Educational gaps**: Breaks between degrees (e.g., gap between bachelor's graduation and master's enrollment)
 - **Employment gaps**: Periods without work OR study (longer than 6 months)
 - **Career transition gaps**: Time between different career paths
-- **IMPORTANT**: Carefully check chronology - look for missing time periods between education/work entries
+- **Current year gaps**: Time from last recorded experience to current year (2025) - this is often the most important gap to identify. Even if someone shows "in_progress" studies, check if the timeline makes sense (e.g., Master's 2023-present in 2025 = 2 years, which is reasonable, but if last work was 2021 and no current work shown, that's a 4-year gap)
+- **IMPORTANT**: Carefully check chronology - look for missing time periods between education/work entries AND from last entry to present
 - **Example gaps to identify**: 
   - Bachelor's 2017-2021, Master's 2023-present = 2-year gap (2021-2023)
   - Last job ended 2020, next job started 2022 = 2-year gap (2020-2022)
+  - Last experience 2021, current year 2025 = 4-year gap (2021-2025) - CRITICAL to identify
 - **Consider normal overlaps**: Internships during studies are normal, NOT gaps
+- **Current status check**: If someone shows "in_progress" for current studies, check if the timeline makes sense (e.g., Master's 2023-present in 2025 is reasonable)
 
 # Output Format
 
@@ -86,7 +89,9 @@ You must provide your analysis in valid JSON format only. Do not include any mar
   - Create a chronological timeline of ALL education and work entries
   - Identify any time periods (>6 months) not covered by education OR work
   - Pay special attention to gaps between degree completion and next degree/job
+  - **MOST IMPORTANT**: Check gap from last recorded experience to current year (2025)
   - Example: Bachelor's 2017-2021, Master's 2023-present = identify 2021-2023 gap
+  - Example: Last job 2021, current year 2025 = identify 2021-2025 gap (4 years!)
 - **Cultural awareness**: Consider New Zealand education system and work culture
 - **Personalization**: Generate questions that are specific to this candidate's background
 - **CRITICAL - Gap Questions**: If gaps are detected (has_gaps = true), you MUST include exactly one question about what the candidate did during the gap period in your personalized_questions array. This should be one of the 2 questions, not an additional question.
