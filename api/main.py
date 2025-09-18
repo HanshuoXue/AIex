@@ -310,7 +310,7 @@ async def match(c: Candidate):
         results = await flow_matcher.match_programs(
             candidate=c,
             query=q,
-            top_k=1,  # Show top 3 by default
+            top_k=1,  # Quick match shows top 3 eligible programs
             level=program_level,
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
@@ -449,7 +449,7 @@ async def match_all(c: Candidate):
         results = await flow_matcher.match_programs_with_rejected(
             candidate=c,
             query=q,
-            top_k=5,
+            top_k=11,  # 匹配所有11个项目
             level=program_level,
             qa_answers=qa_answers,
             cv_analysis=cv_analysis

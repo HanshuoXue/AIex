@@ -53,6 +53,9 @@ export default function CandidateForm({
     work_experience_detected?: boolean;
     gaps_detected?: boolean;
   } | null>(null);
+  
+  // 追踪哪些字段是AI自动填充的
+  const [aiFilledFields, setAiFilledFields] = useState<Set<string>>(new Set());
   const [qaAnswers, setQaAnswers] = useState<{[key: string]: string}>({});
   const [currentQaIndex, setCurrentQaIndex] = useState<number>(0);
   const [showQa, setShowQa] = useState<boolean>(false);
@@ -83,6 +86,95 @@ export default function CandidateForm({
       ...prev,
       [field]: value,
     }));
+    
+    // 如果用户手动修改了AI填充的字段，移除AI标记
+    if (aiFilledFields.has(field as string)) {
+      setAiFilledFields(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(field as string);
+        return newSet;
+      });
+    }
+  };
+
+  // 🚀 基于LLM分析结果动态更新表单
+  const updateFormFromLLMAnalysis = (aiAnalysis: Candidate['cv_analysis'], metadata: typeof analysisMetadata) => {
+    const newFilledFields = new Set<string>();
+    const updates: Partial<Candidate> = {};
+
+    try {
+      // 1. 从教育分析更新GPA
+      if (aiAnalysis?.education_analysis?.gpa_or_grades) {
+        const gpaStr = aiAnalysis.education_analysis.gpa_or_grades;
+        const gpaMatch = gpaStr.match(/(\d+\.?\d*)/);
+        if (gpaMatch) {
+          const gpaValue = parseFloat(gpaMatch[1]);
+          if (gpaValue && gpaValue <= 4.0) {
+            updates.gpa_value = gpaValue;
+            newFilledFields.add('gpa_value');
+          }
+        }
+      }
+
+      // 2. 从工作经验更新工作年限
+      if (aiAnalysis?.work_experience_analysis?.years_of_experience) {
+        const years = aiAnalysis.work_experience_analysis.years_of_experience;
+        if (typeof years === 'number' && years >= 0) {
+          updates.work_years = Math.round(years);
+          newFilledFields.add('work_years');
+        }
+      }
+
+      // 3. 从技能更新兴趣领域
+      if (aiAnalysis?.work_experience_analysis?.key_skills && 
+          aiAnalysis.work_experience_analysis.key_skills.length > 0) {
+        const skills = aiAnalysis.work_experience_analysis.key_skills;
+        const aiRelatedSkills = skills.filter((skill: string) => 
+          skill.toLowerCase().includes('machine learning') ||
+          skill.toLowerCase().includes('artificial intelligence') ||
+          skill.toLowerCase().includes('data science') ||
+          skill.toLowerCase().includes('python') ||
+          skill.toLowerCase().includes('tensorflow')
+        );
+        
+        if (aiRelatedSkills.length > 0 && !formData.interests.length) {
+          updates.interests = ['artificial intelligence', 'machine learning'];
+          newFilledFields.add('interests');
+        }
+      }
+
+      // 4. 从检测到的教育水平更新education_level_preference
+      if (metadata?.detected_education_level && formData.education_level_preference === 'auto') {
+        const detectedLevel = metadata.detected_education_level;
+        if (detectedLevel === 'high_school') {
+          updates.education_level_preference = 'undergraduate';
+          newFilledFields.add('education_level_preference');
+        } else if (detectedLevel === 'postgraduate' || detectedLevel === 'undergraduate') {
+          updates.education_level_preference = 'postgraduate';
+          newFilledFields.add('education_level_preference');
+        }
+      }
+
+      // 应用更新
+      if (Object.keys(updates).length > 0) {
+        setFormData(prev => ({ ...prev, ...updates }));
+        setAiFilledFields(newFilledFields);
+        
+        console.log('🤖 AI auto-filled fields:', updates);
+        console.log('🎯 Fields marked as AI-filled:', Array.from(newFilledFields));
+      }
+
+    } catch (error) {
+      console.error('Error updating form from LLM analysis:', error);
+    }
+  };
+
+  // 🎨 获取AI填充字段的特殊样式
+  const getFieldClassName = (fieldName: string, baseClassName: string) => {
+    if (aiFilledFields.has(fieldName)) {
+      return `${baseClassName} border-2 border-blue-400 bg-blue-50 shadow-sm ring-2 ring-blue-200 transition-all duration-300`;
+    }
+    return baseClassName;
   };
 
   const handleArrayChange = (field: string, value: string) => {
@@ -278,6 +370,9 @@ export default function CandidateForm({
               
               setCvAiAnalysis(aiAnalysis);
               console.log('AI Analysis Results:', aiAnalysis);
+              
+              // 🚀 动态更新表单内容基于LLM分析结果
+              updateFormFromLLMAnalysis(aiAnalysis, analyzeResult.analysis_metadata);
             }
             
             // Process generated questions
@@ -448,17 +543,24 @@ export default function CandidateForm({
                   <label className="block text-sm font-medium text-gray-600 mb-1">
                     GPA ({formData.gpa_scale} scale)
                   </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="4"
-                    value={formData.gpa_value}
-                    onChange={(e) =>
-                      handleChange("gpa_value", parseFloat(e.target.value))
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="4"
+                      value={formData.gpa_value}
+                      onChange={(e) =>
+                        handleChange("gpa_value", parseFloat(e.target.value))
+                      }
+                      className={getFieldClassName("gpa_value", "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent")}
+                    />
+                    {aiFilledFields.has('gpa_value') && (
+                      <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-sm">
+                        🤖 AI
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -528,15 +630,22 @@ export default function CandidateForm({
                 <label className="block text-sm font-medium text-gray-600 mb-1">
                   Work Experience (years)
                 </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.work_years}
-                  onChange={(e) =>
-                    handleChange("work_years", parseInt(e.target.value))
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.work_years}
+                    onChange={(e) =>
+                      handleChange("work_years", parseInt(e.target.value))
+                    }
+                    className={getFieldClassName("work_years", "w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent")}
+                  />
+                  {aiFilledFields.has('work_years') && (
+                    <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow-sm">
+                      🤖 AI
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>
