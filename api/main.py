@@ -111,71 +111,14 @@ def extract_education_level(cv_text: str) -> str:
         return 'unknown'
 
 
-def extract_work_experience_keywords(cv_text: str) -> str:
-    """
-    Extract work experience related keywords from CV text
-
-    Args:
-        cv_text: CV text content
-
-    Returns:
-        Extracted work experience keywords string
-    """
-    import re
-
-    # Work experience related keyword patterns
-    work_patterns = [
-        # English keywords
-        r'\b(?:work|working|worked|employment|employed|job|position|role|career)\b',
-        r'\b(?:experience|experiences|professional|occupation|industry)\b',
-        r'\b(?:company|corporation|firm|organization|startup|enterprise)\b',
-        r'\b(?:manager|developer|engineer|analyst|consultant|specialist|director)\b',
-        r'\b(?:intern|internship|volunteer|project|team|lead|senior|junior)\b',
-
-        # Chinese keywords
-        r'(?:工作|就业|职业|岗位|职位|角色|经历)',
-        r'(?:公司|企业|机构|组织|团队|部门)',
-        r'(?:经理|开发|工程师|分析师|顾问|专家|主管)',
-        r'(?:实习|项目|负责|参与|管理|领导)',
-    ]
-
-    extracted_keywords = set()
-    cv_text_lower = cv_text.lower()
-
-    # Extract matching keywords
-    for pattern in work_patterns:
-        matches = re.findall(pattern, cv_text_lower, re.IGNORECASE)
-        extracted_keywords.update(matches)
-
-    # Extract additional work-related proper nouns (company names, tech stack, etc.)
-    # Find possible company names (words starting with capital letters)
-    company_pattern = r'\b[A-Z][a-zA-Z]{2,}\s*(?:Inc|Corp|Ltd|LLC|Technology|Tech|Software|Systems|Solutions|Group|Company)?\b'
-    company_matches = re.findall(company_pattern, cv_text)
-
-    # Technology-related keywords
-    tech_patterns = [
-        r'\b(?:Python|Java|JavaScript|C\+\+|React|Node\.js|SQL|AWS|Azure|Docker)\b',
-        r'\b(?:machine learning|artificial intelligence|data science|backend|frontend)\b',
-        r'\b(?:agile|scrum|git|github|database|API|microservices|cloud)\b'
-    ]
-
-    for pattern in tech_patterns:
-        tech_matches = re.findall(pattern, cv_text, re.IGNORECASE)
-        extracted_keywords.update([match.lower() for match in tech_matches])
-
-    # Limit keyword count to avoid overly long queries
-    keywords_list = list(extracted_keywords)[:10]  # Maximum 10 keywords
-
-    return ' '.join(keywords_list)
-
-
-def determine_program_level(candidate_data: dict, cv_text: str = None) -> str:
+def determine_program_level(candidate_data: dict, cv_analysis: dict = None, cv_text: str = None) -> str:
     """
     Determine the appropriate program level based on candidate data and CV analysis
 
     Args:
         candidate_data: Candidate information dictionary
-        cv_text: CV text for analysis (optional)
+        cv_analysis: LLM CV analysis results (preferred)
+        cv_text: CV text for fallback analysis (optional)
 
     Returns:
         Program level: 'Undergraduate', 'Postgraduate', or None (for all levels)
@@ -189,7 +132,17 @@ def determine_program_level(candidate_data: dict, cv_text: str = None) -> str:
     elif education_preference == 'postgraduate':
         return 'Postgraduate'
     elif education_preference == 'auto':
-        # Auto-detect from CV if available
+        # Use LLM analysis if available
+        if cv_analysis and cv_analysis.get('education_level'):
+            detected_level = cv_analysis.get('education_level')
+            if detected_level == 'high_school':
+                return 'Undergraduate'
+            elif detected_level == 'undergraduate':
+                return 'Undergraduate'
+            elif detected_level == 'postgraduate':
+                return 'Postgraduate'
+
+        # Fallback to old method if LLM analysis not available
         if cv_text:
             detected_level = extract_education_level(cv_text)
             if detected_level == 'undergraduate':
@@ -197,7 +150,7 @@ def determine_program_level(candidate_data: dict, cv_text: str = None) -> str:
             elif detected_level == 'postgraduate':
                 return 'Postgraduate'
 
-        # Fallback to bachelor_major logic
+        # Final fallback to bachelor_major logic
         bachelor_major = candidate_data.get('bachelor_major', '').strip()
         if not bachelor_major:  # No bachelor's degree mentioned
             return 'Undergraduate'
@@ -338,7 +291,8 @@ async def match(c: Candidate):
     try:
         # Determine appropriate program level
         candidate_dict = c.dict() if hasattr(c, 'dict') else c.__dict__
-        program_level = determine_program_level(candidate_dict)
+        cv_analysis = getattr(c, 'cv_analysis', None) or {}
+        program_level = determine_program_level(candidate_dict, cv_analysis)
 
         # Build search query based on interests
         q = " OR ".join((c.interests or [])) or "*"
@@ -395,7 +349,8 @@ async def match_detailed(c: Candidate):
     try:
         # Determine appropriate program level
         candidate_dict = c.dict() if hasattr(c, 'dict') else c.__dict__
-        program_level = determine_program_level(candidate_dict)
+        cv_analysis = getattr(c, 'cv_analysis', None) or {}
+        program_level = determine_program_level(candidate_dict, cv_analysis)
 
         # Build search query based on interests
         q = " OR ".join((c.interests or [])) or "*"
@@ -476,7 +431,8 @@ async def match_all(c: Candidate):
     try:
         # Determine appropriate program level
         candidate_dict = c.dict() if hasattr(c, 'dict') else c.__dict__
-        program_level = determine_program_level(candidate_dict)
+        cv_analysis = getattr(c, 'cv_analysis', None) or {}
+        program_level = determine_program_level(candidate_dict, cv_analysis)
 
         # Build search query based on interests
         q = " OR ".join((c.interests or [])) or "*"
@@ -636,117 +592,58 @@ async def analyze_cv(
         # Re-extract text (can be optimized with caching)
         extracted_text = extract_cv_text(file_path)
 
-        # Use simplified RAG analysis
+        # Use advanced LLM-based CV analysis
         try:
-            print(f"Start simplified RAG analysis...")
+            print(f"Starting LLM-based CV analysis...")
             print(f"CV text length: {len(extracted_text)} characters")
 
-            # Import simplified components
-            import sys
-            import os
-            current_dir = os.path.dirname(__file__)
-            chat_rag_path = os.path.join(current_dir, "flows", "chat_rag")
-            sys.path.insert(0, chat_rag_path)
+            # Import the new CV analyzer
+            from cv_analyzer import cv_analyzer
 
-            from simple_chunker import simple_chunk_by_tokens, get_relevant_chunks_simple, format_chunks_for_llm
-            from simple_question_generator import generate_questions_from_chunks
+            # Run LLM analysis on the full CV text
+            print("Running comprehensive LLM analysis...")
+            analysis_result = await cv_analyzer.analyze_cv(
+                cv_text=extracted_text,
+                candidate_info=candidate
+            )
 
-            # 1. Simple token chunking
-            print("Step 1: Text chunking...")
-            chunks = simple_chunk_by_tokens(
-                extracted_text, max_tokens=300, overlap_tokens=50)
-            print(f"Generated {len(chunks)} chunks")
+            print(f"LLM analysis completed!")
+            print(
+                f"- Education level: {analysis_result.get('education_level')}")
+            print(
+                f"- Work experience: {analysis_result.get('work_experience', {}).get('has_experience')}")
+            print(
+                f"- Questions generated: {len(analysis_result.get('personalized_questions', []))}")
+            print(
+                f"- Confidence score: {analysis_result.get('confidence_score')}")
 
-            # 2. Extract work experience keywords from CV
-            print("Step 2: Extract work experience keywords...")
-            work_keywords = extract_work_experience_keywords(extracted_text)
-            print(f"Extracted work keywords: {work_keywords}")
-
-            # 2.5. Extract education level from CV
-            print("Step 2.5: Extract education level...")
-            detected_education_level = extract_education_level(extracted_text)
-            print(f"Detected education level: {detected_education_level}")
-
-            # 3. Build enhanced query
-            print("Step 3: Build enhanced query...")
-            base_query = f"{candidate.get('bachelor_major', '')} {' '.join(candidate.get('interests', []))}"
-            query = f"{base_query} {work_keywords}".strip()
-            print(f"Final query: {query}")
-
-            # 4. Get relevant chunks
-            relevant_chunks = get_relevant_chunks_simple(
-                chunks, query, top_k=2)
-            print(f"Selected {len(relevant_chunks)} relevant chunks")
-
-            # 5. Format chunks
-            formatted_chunks = format_chunks_for_llm(relevant_chunks)
-
-            # 6. Generate questions
-            print("Step 5: Generate personalized questions...")
-            question_result = generate_questions_from_chunks(
-                formatted_chunks, candidate)
-
-            # Build return result
-            if question_result.get("status") == "success":
-                generated_questions = question_result["data"]
-            else:
-                generated_questions = question_result.get(
-                    "fallback_questions", {})
-
-            # Build analysis metadata
+            # Build analysis metadata for frontend
             analysis_metadata = {
-                "analysis_method": "Simple RAG",
-                "flow_used": "simple_rag_analysis",
-                "chunking_method": "fixed_tokens",
+                "analysis_method": "LLM Analysis",
+                "flow_used": "cv_analysis_flow",
                 "text_length": len(extracted_text),
-                "detected_education_level": detected_education_level,
-                "query_info": {
-                    "base_query": base_query,
-                    "work_keywords_extracted": work_keywords,
-                    "final_query": query,
-                    "query_enhancement_ratio": len(query.split()) / len(base_query.split()) if base_query.strip() else 1
-                },
-                "chunk_info": {
-                    "total_chunks": len(chunks),
-                    "relevant_chunks_used": len(relevant_chunks),
-                    "avg_chunk_tokens": sum(chunk['estimated_tokens'] for chunk in chunks) // len(chunks) if chunks else 0,
-                    "chunking_successful": True
-                },
-                "chunk_details": {
-                    "all_chunks_summary": [
-                        {
-                            "id": chunk["id"],
-                            "text_preview": chunk["text"][:100] + "..." if len(chunk["text"]) > 100 else chunk["text"],
-                            "length": chunk["length"],
-                            "estimated_tokens": chunk["estimated_tokens"]
-                        } for chunk in chunks[:10]  # Only show first 10 chunks
-                    ],
-                    "relevant_chunks": [
-                        {
-                            "id": chunk["id"],
-                            "text_preview": chunk["text"][:150] + "..." if len(chunk["text"]) > 150 else chunk["text"],
-                            "full_text": chunk["text"],  # Add full text
-                            "length": chunk["length"],
-                            "estimated_tokens": chunk["estimated_tokens"],
-                            "relevance_score": chunk.get("relevance_score", 0),
-                            "rank": i + 1
-                        } for i, chunk in enumerate(relevant_chunks)
-                    ]
-                }
+                "confidence_score": analysis_result.get('confidence_score', 0.8),
+                "detected_education_level": analysis_result.get('education_level'),
+                "work_experience_detected": analysis_result.get('work_experience', {}).get('has_experience', False),
+                "gaps_detected": analysis_result.get('gaps_analysis', {}).get('has_gaps', False)
             }
 
-            # No longer extract complex AI analysis, directly return basic information
+            # Format the questions for frontend compatibility
+            generated_questions = {
+                "questions": analysis_result.get('personalized_questions', []),
+                "analysis_summary": analysis_result.get('analysis_summary', 'CV analysis completed'),
+                "analysis_type": "llm_comprehensive"
+            }
+
+            # Comprehensive AI analysis result
             ai_analysis = {
-                "analysis_type": "simple_rag",
-                "chunks_analyzed": len(relevant_chunks),
+                "analysis_type": "llm_comprehensive",
+                "education_analysis": analysis_result.get('education_details', {}),
+                "work_experience_analysis": analysis_result.get('work_experience', {}),
+                "gaps_analysis": analysis_result.get('gaps_analysis', {}),
+                "confidence_score": analysis_result.get('confidence_score', 0.8),
                 "text_processed": True
             }
-
-            print(f"Analysis completed!")
-            print(f"- Total chunks: {len(chunks)}")
-            print(f"- Relevant chunks: {len(relevant_chunks)}")
-            print(
-                f"- Generated questions: {len(generated_questions.get('questions', []))}")
 
             return {
                 "success": True,

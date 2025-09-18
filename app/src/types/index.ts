@@ -18,45 +18,30 @@ export interface Candidate {
   education_level_preference?: 'undergraduate' | 'postgraduate' | 'auto';
   qa_answers?: {[key: string]: string};
   cv_analysis?: {
-    personal_info?: {
-      name?: string;
-      email?: string;
-      phone?: string;
-      location?: string;
-    };
-    education?: {
-      degree?: string;
-      major?: string;
-      university?: string;
+    analysis_type?: string;
+    education_analysis?: {
+      highest_qualification?: string;
+      institution?: string;
       graduation_year?: string;
-      gpa?: string;
+      gpa_or_grades?: string;
+      current_status?: string;
     };
-    work_experience?: Array<{
-      company?: string;
-      position?: string;
-      duration?: string;
-      start_date?: string;
-      end_date?: string;
-      responsibilities?: string[];
-    }>;
-    projects?: Array<{
-      name?: string;
-      description?: string;
-      technologies?: string[];
-    }>;
-    skills?: {
-      programming_languages?: string[];
-      tools_and_frameworks?: string[];
-      soft_skills?: string[];
+    work_experience_analysis?: {
+      has_experience: boolean;
+      years_of_experience: number;
+      experience_level: string;
+      relevant_industries: string[];
+      key_skills: string[];
+      job_titles: string[];
     };
-    gaps?: string[];
-    gaps_identified?: Array<{
-      start_date?: string;
-      end_date?: string;
-      duration_months?: number;
-      reason_inferred?: string;
-    }>;
-    career_transitions?: string[];
+    gaps_analysis?: {
+      has_gaps: boolean;
+      gap_types: string[];
+      gap_duration: string;
+      gap_explanation: string;
+    };
+    confidence_score?: number;
+    text_processed?: boolean;
   };
 }
 

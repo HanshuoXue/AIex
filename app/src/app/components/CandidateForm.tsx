@@ -47,37 +47,11 @@ export default function CandidateForm({
   const [analysisMetadata, setAnalysisMetadata] = useState<{
     analysis_method?: string;
     flow_used?: string;
-    chunking_method?: string;
     text_length?: number;
-    query_info?: {
-      base_query: string;
-      work_keywords_extracted: string;
-      final_query: string;
-      query_enhancement_ratio: number;
-    };
-    chunk_info?: {
-      total_chunks: number;
-      relevant_chunks_used: number;
-      avg_chunk_tokens: number;
-      chunking_successful: boolean;
-    };
-    chunk_details?: {
-      all_chunks_summary: Array<{
-        id: string;
-        text_preview: string;
-        length: number;
-        estimated_tokens: number;
-      }>;
-      relevant_chunks: Array<{
-        id: string;
-        text_preview: string;
-        full_text: string;
-        length: number;
-        estimated_tokens: number;
-        relevance_score: number;
-        rank: number;
-      }>;
-    };
+    confidence_score?: number;
+    detected_education_level?: string;
+    work_experience_detected?: boolean;
+    gaps_detected?: boolean;
   } | null>(null);
   const [qaAnswers, setQaAnswers] = useState<{[key: string]: string}>({});
   const [currentQaIndex, setCurrentQaIndex] = useState<number>(0);
@@ -100,7 +74,6 @@ export default function CandidateForm({
     analysis_summary: string;
     priority_areas: string[];
   } | null>(null);
-  const [showChunkDetails, setShowChunkDetails] = useState<boolean>(false);
 
   const handleChange = (
     field: keyof Candidate,
@@ -190,7 +163,6 @@ export default function CandidateForm({
     setQaAnalysis(null);
     setCurrentQaIndex(0);
     setShowQa(false);
-    setShowChunkDetails(false);
     setCvUploadStatus('idle');
   };
 
@@ -752,219 +724,60 @@ export default function CandidateForm({
                           <span className="font-medium">Text Length:</span>
                           <span className="ml-1 text-gray-600">{analysisMetadata.text_length} characters</span>
                         </div>
-                        {analysisMetadata.chunking_method && (
+                        {analysisMetadata.confidence_score && (
                           <div>
-                            <span className="font-medium">Chunking Method:</span>
-                            <span className="ml-1 text-gray-600">{analysisMetadata.chunking_method}</span>
+                            <span className="font-medium">Analysis Confidence:</span>
+                            <span className={`ml-1 font-mono ${
+                              analysisMetadata.confidence_score >= 0.8 ? 'text-green-600' : 
+                              analysisMetadata.confidence_score >= 0.6 ? 'text-yellow-600' : 'text-red-600'
+                            }`}>
+                              {(analysisMetadata.confidence_score * 100).toFixed(0)}%
+                            </span>
                           </div>
                         )}
                       </div>
                       
-                      {/* Chunk Information */}
-                      {analysisMetadata.chunk_info && (
-                        <div className="mt-2 pt-2 border-t border-indigo-200">
-                          <div className="font-medium mb-1">📊 Chunk Statistics:</div>
-                          <div className="grid grid-cols-2 gap-2">
+                      {/* LLM Analysis Results */}
+                      <div className="mt-2 pt-2 border-t border-indigo-200">
+                        <div className="font-medium mb-2">🤖 LLM Analysis Results:</div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          {analysisMetadata.detected_education_level && (
                             <div>
-                              <span className="font-medium">Total Chunks:</span>
-                              <span className="ml-1 text-green-700">{analysisMetadata.chunk_info.total_chunks}</span>
+                              <span className="font-medium">Education Level:</span>
+                              <span className="ml-1 text-blue-600 capitalize">{analysisMetadata.detected_education_level}</span>
                             </div>
-                            <div>
-                              <span className="font-medium">Relevant Chunks:</span>
-                              <span className="ml-1 text-green-700">{analysisMetadata.chunk_info.relevant_chunks_used}</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Query Enhancement Information */}
-                      {analysisMetadata.query_info && (
-                        <div className="mt-2 pt-2 border-t border-orange-200">
-                          <div className="font-medium mb-1">🔍 Query Enhancement Information:</div>
+                          )}
                           
-                          {/* Work Keywords */}
-                          <div className="mb-2">
-                            <div className="font-medium text-sm text-orange-700 mb-1">Work Keywords Extracted from CV:</div>
-                            <div className="bg-orange-50 p-2 rounded border">
-                              {analysisMetadata.query_info.work_keywords_extracted ? (
-                                <div className="flex flex-wrap gap-1">
-                                  {analysisMetadata.query_info.work_keywords_extracted.split(' ').map((keyword: string, index: number) => (
-                                    <span key={index} className="inline-block bg-orange-200 text-orange-800 text-xs px-2 py-1 rounded">
-                                      {keyword}
-                                    </span>
-                                  ))}
-                                </div>
-                              ) : (
-                                <span className="text-gray-500 text-sm">No work keywords extracted</span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Query Comparison */}
-                          <div className="grid grid-cols-1 gap-2">
+                          {typeof analysisMetadata.work_experience_detected === 'boolean' && (
                             <div>
-                              <span className="font-medium text-sm">Original Query:</span>
-                              <div className="text-xs text-gray-600 bg-gray-50 p-1 rounded mt-1">
-                                &ldquo;{analysisMetadata.query_info.base_query}&rdquo;
-                              </div>
-                            </div>
-                            <div>
-                              <span className="font-medium text-sm">Enhanced Query:</span>
-                              <div className="text-xs text-gray-600 bg-blue-50 p-1 rounded mt-1">
-                                &ldquo;{analysisMetadata.query_info.final_query}&rdquo;
-                              </div>
-                            </div>
-                            <div>
-                              <span className="font-medium text-sm">Enhancement Ratio:</span>
-                              <span className="ml-1 text-blue-700 font-bold">
-                                {analysisMetadata.query_info.query_enhancement_ratio?.toFixed(1)}x
+                              <span className="font-medium">Work Experience:</span>
+                              <span className={`ml-1 ${analysisMetadata.work_experience_detected ? 'text-green-600' : 'text-orange-600'}`}>
+                                {analysisMetadata.work_experience_detected ? '✓ Detected' : '✗ None'}
                               </span>
                             </div>
-                          </div>
+                          )}
                           
-                          {/* Simplified RAG Information */}
-                          {analysisMetadata.chunk_info?.avg_chunk_tokens && (
-                            <div className="mt-2">
-                              <div className="text-xs text-gray-600">
-                                <span className="font-medium">Average Chunk Size:</span>
-                                <span className="ml-1">{analysisMetadata.chunk_info.avg_chunk_tokens} tokens</span>
-                                <span className="ml-2 text-green-600">✓ Fixed Token Chunking</span>
-                              </div>
+                          {typeof analysisMetadata.gaps_detected === 'boolean' && (
+                            <div>
+                              <span className="font-medium">Career Gaps:</span>
+                              <span className={`ml-1 ${analysisMetadata.gaps_detected ? 'text-orange-600' : 'text-green-600'}`}>
+                                {analysisMetadata.gaps_detected ? '⚠ Found' : '✓ None'}
+                              </span>
                             </div>
                           )}
                         </div>
-                      )}
-                      
-                      {/* Chunk Details Button */}
-                      {analysisMetadata.chunk_details && (
-                        <div className="mt-3">
-                          <button
-                            type="button"
-                            onClick={() => setShowChunkDetails(!showChunkDetails)}
-                            className="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 transition-colors"
-                          >
-                            {showChunkDetails ? '🔼 Hide Chunk Details' : '🔽 View Chunk Details'}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Chunk Details Display */}
-                {showChunkDetails && analysisMetadata?.chunk_details && (
-                  <div className="mt-3">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="text-sm font-medium text-gray-700 mb-3">
-                        📊 Chunk Analysis Details
-                      </h4>
-                      
-                      {/* Complete Chunk Content Sent to LLM */}
-                      <div className="mb-4">
-                        <h5 className="text-sm font-medium text-purple-700 mb-2">
-                          🚀 Complete Chunk Content Sent to LLM (for generating personalized questions)
-                        </h5>
-                        <div className="bg-purple-50 border border-purple-200 p-3 rounded">
-                          <div className="text-xs text-purple-600 mb-2">
-                            📝 Following are the actual chunks sent to GPT-4{analysisMetadata.chunk_details.relevant_chunks?.length || 0} complete content of the most relevant chunks
-                          </div>
-                          <div className="space-y-3 max-h-96 overflow-y-auto">
-                            {analysisMetadata.chunk_details.relevant_chunks?.map((chunk) => (
-                              <div key={chunk.id} className="bg-white border border-purple-300 rounded-lg">
-                                {/* Chunk Header Information */}
-                                <div className="bg-purple-100 px-3 py-2 rounded-t-lg border-b border-purple-200">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-2">
-                                      <span className="inline-block bg-purple-600 text-white text-xs px-2 py-1 rounded font-bold">
-                                        Rank #{chunk.rank}
-                                      </span>
-                                      <span className="text-xs font-mono text-purple-600">{chunk.id}</span>
-                                      <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                        Relevance Score: {chunk.relevance_score}
-                                      </span>
-                                    </div>
-                                    <div className="text-xs text-purple-600">
-                                      {chunk.estimated_tokens} tokens • {chunk.length} characters
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                {/* Complete Chunk Content */}
-                                <div className="p-3">
-                                  <div className="text-xs text-gray-800 leading-relaxed whitespace-pre-wrap font-mono">
-                                    {chunk.full_text || chunk.text_preview}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          {/* Summary Information */}
-                          <div className="mt-3 p-2 bg-purple-100 rounded text-xs text-purple-700">
-                            💡 These chunks will be formatted and sent to LLM to generate personalized questions based on your CV and background
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Relevant Chunk Rankings (Simplified) */}
-                      <div className="mb-4">
-                        <h5 className="text-sm font-medium text-green-700 mb-2">
-                          🎯 Chunk Ranking Overview (Top {analysisMetadata.chunk_details.relevant_chunks?.length || 0})
-                        </h5>
-                        <div className="space-y-2">
-                          {analysisMetadata.chunk_details.relevant_chunks?.map((chunk) => (
-                            <div key={chunk.id} className="bg-green-50 border border-green-200 p-3 rounded">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center space-x-2">
-                                  <span className="inline-block bg-green-600 text-white text-xs px-2 py-1 rounded font-bold">
-                                    #{chunk.rank}
-                                  </span>
-                                  <span className="text-xs text-gray-600">{chunk.id}</span>
-                                  <span className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded">
-                                    Score: {chunk.relevance_score}
-                                  </span>
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {chunk.estimated_tokens} tokens, {chunk.length} characters
-                                </div>
-                              </div>
-                              <div className="text-xs text-gray-700 bg-white p-2 rounded border">
-                                {chunk.text_preview}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* All Chunks Overview */}
-                      <div>
-                        <h5 className="text-sm font-medium text-gray-700 mb-2">
-                          📋 All Chunks Overview (first 10)
-                        </h5>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                          {analysisMetadata.chunk_details.all_chunks_summary?.map((chunk) => (
-                            <div key={chunk.id} className="bg-gray-100 border p-2 rounded text-xs">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="font-mono text-blue-600">{chunk.id}</span>
-                                <span className="text-gray-500">{chunk.estimated_tokens}t</span>
-                              </div>
-                              <div className="text-gray-700 truncate">
-                                {chunk.text_preview}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* AI Analysis Results */}
+
+                {/* LLM CV Analysis Results */}
                 {cvAiAnalysis && (
                   <div className="mt-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-sm font-medium text-gray-700">
-                        🤖 AI Analysis Results:
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        🤖 LLM CV Analysis Results
                       </h4>
                       <div className="flex space-x-2">
                         <button
@@ -976,33 +789,223 @@ export default function CandidateForm({
                           }}
                           className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
                         >
-                          Print complete information
+                          Debug Info
                         </button>
-                        {analysisMetadata?.analysis_method === 'RAG-based' && (
+                        {analysisMetadata?.analysis_method === 'LLM Analysis' && (
                           <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                            RAG Enhanced Analysis
+                            LLM Enhanced
                           </span>
                         )}
                       </div>
                     </div>
-                    <div className="bg-blue-50 p-3 rounded text-xs text-gray-700">
-                      <div className="mb-2">
-                        <strong>✅ Analysis Type:</strong> Simple RAG
+
+                    {/* Education Analysis */}
+                    {cvAiAnalysis.education_analysis && (
+                      <div className="mb-4 bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                        <h5 className="font-semibold text-blue-800 mb-3 flex items-center">
+                          🎓 Education Analysis
+                        </h5>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                          {cvAiAnalysis.education_analysis.highest_qualification && (
+                            <div>
+                              <span className="font-medium text-blue-700">Highest Qualification:</span>
+                              <div className="text-gray-700 mt-1">{cvAiAnalysis.education_analysis.highest_qualification}</div>
+                            </div>
+                          )}
+                          {cvAiAnalysis.education_analysis.institution && (
+                            <div>
+                              <span className="font-medium text-blue-700">Institution:</span>
+                              <div className="text-gray-700 mt-1">{cvAiAnalysis.education_analysis.institution}</div>
+                            </div>
+                          )}
+                          {cvAiAnalysis.education_analysis.graduation_year && (
+                            <div>
+                              <span className="font-medium text-blue-700">Graduation Year:</span>
+                              <div className="text-gray-700 mt-1">{cvAiAnalysis.education_analysis.graduation_year}</div>
+                            </div>
+                          )}
+                          {cvAiAnalysis.education_analysis.gpa_or_grades && (
+                            <div>
+                              <span className="font-medium text-blue-700">GPA/Grades:</span>
+                              <div className="text-gray-700 mt-1">{cvAiAnalysis.education_analysis.gpa_or_grades}</div>
+                            </div>
+                          )}
+                          {cvAiAnalysis.education_analysis.current_status && (
+                            <div>
+                              <span className="font-medium text-blue-700">Status:</span>
+                              <div className="text-gray-700 mt-1 capitalize">{cvAiAnalysis.education_analysis.current_status}</div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      
-                      <div className="mb-2">
-                        <strong>📊 Analysis Chunks:</strong> {analysisMetadata?.chunk_info?.relevant_chunks_used || 0}
+                    )}
+
+                    {/* Work Experience Analysis */}
+                    {cvAiAnalysis.work_experience_analysis && (
+                      <div className="mb-4 bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                        <h5 className="font-semibold text-green-800 mb-3 flex items-center">
+                          💼 Work Experience Analysis
+                        </h5>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="font-medium text-green-700">Has Experience:</span>
+                            <div className="mt-1">
+                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                cvAiAnalysis.work_experience_analysis.has_experience 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-orange-100 text-orange-800'
+                              }`}>
+                                {cvAiAnalysis.work_experience_analysis.has_experience ? '✓ Yes' : '✗ No'}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {cvAiAnalysis.work_experience_analysis.years_of_experience > 0 && (
+                            <div>
+                              <span className="font-medium text-green-700">Years of Experience:</span>
+                              <div className="text-gray-700 mt-1">{cvAiAnalysis.work_experience_analysis.years_of_experience} years</div>
+                            </div>
+                          )}
+                          
+                          {cvAiAnalysis.work_experience_analysis.experience_level && (
+                            <div>
+                              <span className="font-medium text-green-700">Experience Level:</span>
+                              <div className="text-gray-700 mt-1 capitalize">{cvAiAnalysis.work_experience_analysis.experience_level}</div>
+                            </div>
+                          )}
+                          
+                          {cvAiAnalysis.work_experience_analysis.relevant_industries?.length > 0 && (
+                            <div>
+                              <span className="font-medium text-green-700">Industries:</span>
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {cvAiAnalysis.work_experience_analysis.relevant_industries.map((industry, index) => (
+                                  <span key={index} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                    {industry}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {cvAiAnalysis.work_experience_analysis.key_skills?.length > 0 && (
+                            <div className="md:col-span-2">
+                              <span className="font-medium text-green-700">Key Skills:</span>
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {cvAiAnalysis.work_experience_analysis.key_skills.map((skill, index) => (
+                                  <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {cvAiAnalysis.work_experience_analysis.job_titles?.length > 0 && (
+                            <div className="md:col-span-2">
+                              <span className="font-medium text-green-700">Job Titles:</span>
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {cvAiAnalysis.work_experience_analysis.job_titles.map((title, index) => (
+                                  <span key={index} className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                                    {title}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      
-                      <div className="mb-2">
-                        <strong>🔍 Text Processing Status:</strong> 
-                        <span className={analysisMetadata?.chunk_info?.chunking_successful ? 'text-green-600 ml-1' : 'text-red-600 ml-1'}>
-                          {analysisMetadata?.chunk_info?.chunking_successful ? '✓ Processed' : '✗ Processing failed'}
-                        </span>
+                    )}
+
+                    {/* Gaps Analysis */}
+                    {cvAiAnalysis.gaps_analysis && (
+                      <div className="mb-4 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                        <h5 className="font-semibold text-yellow-800 mb-3 flex items-center">
+                          ⚠️ Career Gaps Analysis
+                        </h5>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <span className="font-medium text-yellow-700">Has Gaps:</span>
+                            <div className="mt-1">
+                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                cvAiAnalysis.gaps_analysis.has_gaps 
+                                  ? 'bg-yellow-100 text-yellow-800' 
+                                  : 'bg-green-100 text-green-800'
+                              }`}>
+                                {cvAiAnalysis.gaps_analysis.has_gaps ? '⚠ Yes' : '✓ No Gaps'}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {cvAiAnalysis.gaps_analysis.gap_types?.length > 0 && (
+                            <div>
+                              <span className="font-medium text-yellow-700">Gap Types:</span>
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {cvAiAnalysis.gaps_analysis.gap_types.map((type, index) => (
+                                  <span key={index} className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                                    {type}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {cvAiAnalysis.gaps_analysis.gap_duration && (
+                            <div>
+                              <span className="font-medium text-yellow-700">Gap Duration:</span>
+                              <div className="text-gray-700 mt-1">{cvAiAnalysis.gaps_analysis.gap_duration}</div>
+                            </div>
+                          )}
+                          
+                          {cvAiAnalysis.gaps_analysis.gap_explanation && (
+                            <div className="md:col-span-2">
+                              <span className="font-medium text-yellow-700">Explanation:</span>
+                              <div className="text-gray-700 mt-1 italic">{cvAiAnalysis.gaps_analysis.gap_explanation}</div>
+                            </div>
+                          )}
+                        </div>
                       </div>
+                    )}
+
+                    {/* Analysis Summary & Confidence */}
+                    <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400">
+                      <h5 className="font-semibold text-gray-800 mb-3 flex items-center">
+                        📊 Analysis Summary
+                      </h5>
                       
-                      <div className="text-xs text-gray-500 mt-2">
-                        💡 Simplified analysis completed - CV content has been converted to personalized questions
+                      {analysisMetadata?.confidence_score && (
+                        <div className="mb-3">
+                          <span className="font-medium text-gray-700">Confidence Score:</span>
+                          <div className="mt-1 flex items-center">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
+                              <div 
+                                className={`h-2 rounded-full ${
+                                  analysisMetadata.confidence_score >= 0.8 ? 'bg-green-500' : 
+                                  analysisMetadata.confidence_score >= 0.6 ? 'bg-yellow-500' : 'bg-red-500'
+                                }`}
+                                style={{ width: `${(analysisMetadata.confidence_score * 100)}%` }}
+                              ></div>
+                            </div>
+                            <span className={`text-sm font-mono ${
+                              analysisMetadata.confidence_score >= 0.8 ? 'text-green-600' : 
+                              analysisMetadata.confidence_score >= 0.6 ? 'text-yellow-600' : 'text-red-600'
+                            }`}>
+                              {(analysisMetadata.confidence_score * 100).toFixed(0)}%
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {analysisMetadata?.detected_education_level && (
+                        <div className="mb-3">
+                          <span className="font-medium text-gray-700">Detected Education Level:</span>
+                          <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
+                            {analysisMetadata.detected_education_level.replace('_', ' ')}
+                          </span>
+                        </div>
+                      )}
+                      
+                      <div className="text-sm text-gray-600">
+                        <span className="font-medium">Analysis Method:</span> {analysisMetadata?.analysis_method || 'LLM Comprehensive Analysis'}
                       </div>
                     </div>
                   </div>
