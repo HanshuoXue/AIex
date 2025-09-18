@@ -213,9 +213,19 @@ class PromptFlowMatcher:
 
             # Filter by level if specified
             if level:
+                print(f"DEBUG: Filtering programs by level '{level}'")
+                print(
+                    f"DEBUG: Total programs before filtering: {len(programs)}")
                 programs = [p for p in programs if p.get('level') == level]
                 print(
-                    f"Filtered to {len(programs)} programs with level '{level}'")
+                    f"DEBUG: Filtered to {len(programs)} programs with level '{level}'")
+                # Print first few programs for debugging
+                for i, p in enumerate(programs[:3]):
+                    print(
+                        f"DEBUG: Program {i+1}: {p.get('program')} - Level: {p.get('level')}")
+            else:
+                print(
+                    f"DEBUG: No level filter applied, returning all {len(programs)} programs")
 
             # Shuffle to get random selection instead of always the same first N
             random.shuffle(programs)
@@ -236,6 +246,7 @@ class PromptFlowMatcher:
         filter by level if provided
         return list of programs
         """
+        print(f"DEBUG: fetch_programs called with level='{level}'")
         if not self.search_client:
             print(
                 f"Warning: Azure Search client not initialized. Using local fallback data with level filter: {level}")

@@ -78,9 +78,14 @@ def determine_program_level(candidate_data: dict, cv_analysis: dict = None, cv_t
     education_preference = candidate_data.get(
         'education_level_preference', 'auto')
 
+    print(f"DEBUG: education_level_preference = '{education_preference}'")
+    print(f"DEBUG: candidate_data keys = {list(candidate_data.keys())}")
+
     if education_preference == 'undergraduate':
+        print("DEBUG: Returning 'Undergraduate'")
         return 'Undergraduate'
     elif education_preference == 'postgraduate':
+        print("DEBUG: Returning 'Postgraduate'")
         return 'Postgraduate'
     elif education_preference == 'auto':
         # Use LLM analysis if available
@@ -121,9 +126,11 @@ async def options_handler(path: str):
     """Handle CORS preflight requests"""
     return Response(status_code=200)
 
+
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
+
 
 @app.get("/health")
 def health():
