@@ -96,6 +96,12 @@ You must provide your analysis in valid JSON format only. Do not include any mar
 - **Personalization**: Generate questions that are specific to this candidate's background
 - **CRITICAL - Gap Questions**: If gaps are detected (has_gaps = true), you MUST include exactly one question about what the candidate did during the gap period in your personalized_questions array. This should be one of the 2 questions, not an additional question.
 - **Professional tone**: Maintain a supportive and encouraging tone
+- **Confidence Score Calculation**: Calculate confidence_score (0.0-1.0) based on:
+  - 0.9-1.0: Complete CV with clear timeline, detailed experience, and specific information
+  - 0.7-0.8: Good CV with most information present but some gaps or unclear details
+  - 0.5-0.6: Basic CV with limited information or unclear timeline
+  - 0.3-0.4: Very limited CV with minimal information or significant gaps
+  - 0.0-0.2: Insufficient information for reliable analysis
 
 user:
 # CV Content Analysis
