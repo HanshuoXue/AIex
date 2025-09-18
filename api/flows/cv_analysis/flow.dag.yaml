@@ -20,7 +20,7 @@ nodes:
       path: cv_analyzer.jinja2
     inputs:
       deployment_name: gpt-4.1
-      temperature: 0.1
+      temperature: 0.0
       top_p: 0.9
       max_tokens: 2000
       cv_text: ${inputs.cv_text}
