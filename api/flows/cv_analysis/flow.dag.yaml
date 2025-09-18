@@ -21,8 +21,8 @@ nodes:
     inputs:
       deployment_name: gpt-4.1
       temperature: 0.1
-      top_p: 1
-      max_tokens: 1000
+      top_p: 0.9
+      max_tokens: 2000
       cv_text: ${inputs.cv_text}
       candidate_info: ${inputs.candidate_info}
     connection: azure_openai_connection

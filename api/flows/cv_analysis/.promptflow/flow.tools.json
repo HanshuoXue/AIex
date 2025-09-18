@@ -1,0 +1,21 @@
+{
+  "package": {},
+  "code": {
+    "cv_analyzer.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "candidate_info": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_text": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "cv_analyzer.jinja2"
+    }
+  }
+}

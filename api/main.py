@@ -119,26 +119,15 @@ app.add_middleware(
 @app.options("/{path:path}")
 async def options_handler(path: str):
     """Handle CORS preflight requests"""
-    return Response(
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Max-Age": "86400",
-        }
-    )
-
+    return Response(status_code=200)
 
 @app.get("/healthz")
 def healthz():
-    return {"ok": True}  # Health check endpoint
-
+    return {"status": "ok"}
 
 @app.get("/health")
 def health():
-    # Docker health check endpoint
-    return {"status": "healthy", "version": "1.3"}
+    return {"status": "healthy"}
 
 
 @app.post("/match")

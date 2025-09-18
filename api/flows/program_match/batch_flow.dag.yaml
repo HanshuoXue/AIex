@@ -23,9 +23,9 @@ nodes:
     inputs:
       candidate: ${inputs.candidate_profile}
       programs: ${inputs.programs_batch}
-      deployment_name: gpt-4
+      deployment_name: gpt-4.1
       max_tokens: 16000
-      temperature: 0.2
+      temperature: 0.0
     connection: azure_openai_connection
     api: chat
   - name: batch_evaluator
