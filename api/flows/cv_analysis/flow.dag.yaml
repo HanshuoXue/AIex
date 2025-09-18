@@ -13,17 +13,17 @@ outputs:
     type: object
     reference: ${cv_analyzer.output}
 nodes:
-- name: cv_analyzer
-  type: llm
-  source:
-    type: code
-    path: cv_analyzer.jinja2
-  inputs:
-    deployment_name: gpt-4
-    temperature: 0.1
-    top_p: 1.0
-    max_tokens: 1000
-    cv_text: ${inputs.cv_text}
-    candidate_info: ${inputs.candidate_info}
-  connection: azure_openai_connection
-  api: chat
+  - name: cv_analyzer
+    type: llm
+    source:
+      type: code
+      path: cv_analyzer.jinja2
+    inputs:
+  deployment_name: gpt-4.1
+      temperature: 0.1
+      top_p: 1
+      max_tokens: 1000
+      cv_text: ${inputs.cv_text}
+      candidate_info: ${inputs.candidate_info}
+    connection: azure_openai_connection
+    api: chat

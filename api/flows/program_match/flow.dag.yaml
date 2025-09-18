@@ -43,7 +43,7 @@ nodes:
       qa_answers: ${inputs.qa_answers}
       cv_analysis: ${inputs.cv_analysis}
       program: ${inputs.program_details}
-      deployment_name: gpt-4
+  deployment_name: gpt-4.1
       max_tokens: 800
       temperature: 0.1
     connection: azure_openai_connection
@@ -73,7 +73,7 @@ nodes:
       qa_answers: ${inputs.qa_answers}
       cv_analysis: ${inputs.cv_analysis}
       programs: ${inputs.programs_batch}
-      deployment_name: gpt-4
+  deployment_name: gpt-4.1
       max_tokens: 4000
       temperature: 0.1
     connection: azure_openai_connection
