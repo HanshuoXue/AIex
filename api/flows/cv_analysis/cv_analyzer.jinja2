@@ -23,10 +23,15 @@ Analyze the CV content and provide a comprehensive assessment focusing on:
 - Level of responsibility (entry-level, mid-level, senior)
 - Relevant skills and technologies
 
-**Gap Analysis:**
-- Educational gaps (time between high school and university)
-- Employment gaps (periods without work/study)
-- Career transition gaps
+**Gap Analysis (CRITICAL - Analyze Timeline Carefully):**
+- **Educational gaps**: Breaks between degrees (e.g., gap between bachelor's graduation and master's enrollment)
+- **Employment gaps**: Periods without work OR study (longer than 6 months)
+- **Career transition gaps**: Time between different career paths
+- **IMPORTANT**: Carefully check chronology - look for missing time periods between education/work entries
+- **Example gaps to identify**: 
+  - Bachelor's 2017-2021, Master's 2023-present = 2-year gap (2021-2023)
+  - Last job ended 2020, next job started 2022 = 2-year gap (2020-2022)
+- **Consider normal overlaps**: Internships during studies are normal, NOT gaps
 
 # Output Format
 
@@ -77,6 +82,11 @@ You must provide your analysis in valid JSON format only. Do not include any mar
 
 - **Be precise and evidence-based**: Base your analysis on specific information found in the CV
 - **Handle incomplete information**: If certain details are missing, indicate this in your analysis
+- **CRITICAL - Timeline Gap Analysis**: 
+  - Create a chronological timeline of ALL education and work entries
+  - Identify any time periods (>6 months) not covered by education OR work
+  - Pay special attention to gaps between degree completion and next degree/job
+  - Example: Bachelor's 2017-2021, Master's 2023-present = identify 2021-2023 gap
 - **Cultural awareness**: Consider New Zealand education system and work culture
 - **Personalization**: Generate questions that are specific to this candidate's background
 - **Professional tone**: Maintain a supportive and encouraging tone

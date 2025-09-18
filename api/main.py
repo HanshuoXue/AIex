@@ -249,7 +249,7 @@ async def match_detailed(c: Candidate):
 @app.post("/match/all")
 async def match_all(c: Candidate):
     """
-    Complete Analysis - Parallel batch evaluation of top 5 programs, show eligible + rejected
+    Complete Analysis - Random selection of 6 programs from all levels, show eligible + rejected
     """
     try:
         # Determine appropriate program level
@@ -272,7 +272,7 @@ async def match_all(c: Candidate):
         results = await flow_matcher.match_programs_with_rejected(
             candidate=c,
             query=q,
-            top_k=11,  # 匹配所有11个项目
+            top_k=6,  # 随机取6个项目进行分析
             level=None,  # Complete Analysis评估所有级别的项目
             qa_answers=qa_answers,
             cv_analysis=cv_analysis
