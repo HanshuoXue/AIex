@@ -194,6 +194,40 @@ class PromptFlowMatcher:
         logger.info(
             f"=== CONNECTION CHECK END (lean, success={attempt['success']}) ===")
 
+    def _get_fallback_programs(self, level: str = None, top: int = 50) -> List[Dict]:
+        """Fallback method to get programs from local data when Azure Search is unavailable"""
+        import json
+        import random
+
+        try:
+            # Read local programs data
+            programs_file = os.path.join(os.path.dirname(
+                __file__), "..", "data", "curated", "programs.jsonl")
+            programs = []
+
+            with open(programs_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    if line.strip():
+                        programs.append(json.loads(line))
+
+            # Filter by level if specified
+            if level:
+                programs = [p for p in programs if p.get('level') == level]
+                print(
+                    f"Filtered to {len(programs)} programs with level '{level}'")
+
+            # Shuffle to get random selection instead of always the same first N
+            random.shuffle(programs)
+
+            # Return top N programs
+            result = programs[:top]
+            print(f"Returning {len(result)} programs from fallback data")
+            return result
+
+        except Exception as e:
+            print(f"Failed to load fallback data: {e}")
+            return []
+
     def fetch_programs(self, query: str = "*", top: int = 50, level: str = None) -> List[Dict]:
         """Get program list :
         match all programs by default
@@ -203,20 +237,24 @@ class PromptFlowMatcher:
         """
         if not self.search_client:
             print(
-                "Warning: Azure Search client not initialized. Returning empty results.")
-            return []
+                f"Warning: Azure Search client not initialized. Using local fallback data with level filter: {level}")
+            return self._get_fallback_programs(level=level, top=top)
 
-        filt = f"level eq '{level}'" if level else None
-        select = ",".join([
-            "id", "university", "program", "fields", "type", "campus", "intakes",
-            "tuition_nzd_per_year",
-            "english_ielts", "english_no_band_below",
-            "duration_years", "level", "academic_reqs", "other_reqs",
-            "url", "source_updated"
-        ])
-        results = self.search_client.search(
-            search_text=query, top=top, filter=filt, select=select)
-        return [dict(r) for r in results]
+        try:
+            filt = f"level eq '{level}'" if level else None
+            select = ",".join([
+                "id", "university", "program", "fields", "type", "campus", "intakes",
+                "tuition_nzd_per_year",
+                "english_ielts", "english_no_band_below",
+                "duration_years", "level", "academic_reqs", "other_reqs",
+                "url", "source_updated"
+            ])
+            results = self.search_client.search(
+                search_text=query, top=top, filter=filt, select=select)
+            return [dict(r) for r in results]
+        except Exception as e:
+            print(f"Azure Search failed: {e}. Using local fallback data.")
+            return self._get_fallback_programs(level=level, top=top)
 
     async def evaluate_match(self, candidate: Candidate, program: Dict[str, Any], qa_answers: Dict = None, cv_analysis: Dict = None) -> Dict[str, Any]:
         """

@@ -440,7 +440,12 @@ export default function CandidateForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-600 mb-1">
-                    Bachelor&apos;s Major
+                    {formData.education_level_preference === 'undergraduate' ? 
+                      'Intended Study Field' : 
+                      formData.education_level_preference === 'postgraduate' ? 
+                      'Previous Bachelor\'s Major' : 
+                      'Academic Background/Field of Interest'
+                    }
                   </label>
                   <input
                     type="text"
@@ -449,8 +454,22 @@ export default function CandidateForm({
                       handleChange("bachelor_major", e.target.value)
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="computer science"
+                    placeholder={
+                      formData.education_level_preference === 'undergraduate' ? 
+                      'computer science, business, engineering...' : 
+                      formData.education_level_preference === 'postgraduate' ? 
+                      'computer science' : 
+                      'computer science'
+                    }
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.education_level_preference === 'undergraduate' ? 
+                      'What field do you want to study for your bachelor\'s degree?' : 
+                      formData.education_level_preference === 'postgraduate' ? 
+                      'What was your undergraduate major?' : 
+                      'Your academic background or field of interest'
+                    }
+                  </p>
                 </div>
 
                 <div>
@@ -1042,16 +1061,25 @@ export default function CandidateForm({
                     💡 {qaQuestions[currentQaIndex].reason}
                   </p>
                 )}
-                <textarea
-                  value={qaAnswers[qaQuestions[currentQaIndex].id] || ''}
-                  onChange={(e) => handleQaAnswer(qaQuestions[currentQaIndex].id, e.target.value)}
-                  placeholder={qaQuestions[currentQaIndex].placeholder}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                  rows={4}
-                />
-                {qaQuestions[currentQaIndex].required && (
-                  <p className="text-xs text-red-500 mt-1">* This question is required</p>
-                )}
+                <div className="relative">
+                  <textarea
+                    value={qaAnswers[qaQuestions[currentQaIndex].id] || ''}
+                    onChange={(e) => handleQaAnswer(qaQuestions[currentQaIndex].id, e.target.value)}
+                    placeholder={qaQuestions[currentQaIndex].placeholder}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    rows={4}
+                  />
+                  {!qaAnswers[qaQuestions[currentQaIndex].id] && qaQuestions[currentQaIndex].placeholder && (
+                    <button
+                      type="button"
+                      onClick={() => handleQaAnswer(qaQuestions[currentQaIndex].id, qaQuestions[currentQaIndex].placeholder)}
+                      className="absolute top-2 right-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-md hover:bg-blue-200 transition-colors"
+                      title="Click to use placeholder as template"
+                    >
+                      💡 Use template
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="flex justify-between">
@@ -1095,7 +1123,7 @@ export default function CandidateForm({
                 type="button"
                 onClick={() => {
                   setFormData({
-                    bachelor_major: "",
+                    bachelor_major: "computer science",
                     gpa_scale: "5.0",
                     gpa_value: 4.2,
                     ielts_overall: 6.5,

@@ -55,7 +55,7 @@ Please return JSON format:
       "id": "q1",
       "question": "Specific question content",
       "placeholder": "Answer example",
-      "required": true,
+      "required": false,
       "reason": "Reason for asking"
     }}
   ],

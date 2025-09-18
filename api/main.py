@@ -773,14 +773,14 @@ async def analyze_cv(
                             "id": "fallback_question_1",
                             "question": "Please briefly introduce your professional background and learning goals?",
                             "placeholder": "Please describe your work experience, skills and learning goals",
-                            "required": True,
+                            "required": False,
                             "reason": "Help understand your basic situation"
                         },
                         {
                             "id": "fallback_question_2",
                             "question": "What major do you want to study in New Zealand? Why did you choose this direction?",
                             "placeholder": "Please explain your areas of interest and reasons",
-                            "required": True,
+                            "required": False,
                             "reason": "Help match suitable courses"
                         }
                     ],

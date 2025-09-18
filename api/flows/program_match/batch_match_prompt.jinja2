@@ -16,14 +16,18 @@ Evaluate all programs for this candidate:
 - If neither is available: Focus on basic candidate information (academic background, English proficiency, interests, budget) for standard matching
 
 **Instructions**: 
-1. Evaluate each program using: Academic Fit (30) + Education Level Match (10) + English (25) + Field Match (20) + Location (10) + Budget (5)
-2. **CRITICAL**: Ensure education level compatibility - high school graduates should only be matched with undergraduate programs, bachelor's holders with postgraduate programs
-3. Return JSON array with all evaluations
-4. Be concise but accurate
-5. **CRITICAL**: If Q&A responses are available, reference specific answers in reasoning
-6. **CRITICAL**: If CV analysis is available, reference specific findings in reasoning, especially detected education level
-7. **CRITICAL**: If both are available, use Q&A insights to resolve any ambiguities or concerns from the CV analysis
-8. **CRITICAL**: If neither is available, base evaluation on basic candidate information
+1. Evaluate each program using: Education Level Match (15) + Academic Fit (25) + English (25) + Field Match (20) + Location (10) + Budget (5)
+2. **EDUCATION LEVEL MISMATCH = INELIGIBLE**: 
+   - High school graduates are NOT eligible for Master's/Postgraduate programs
+   - Bachelor's holders seeking undergraduate programs should be questioned
+   - Set "eligible" to false for education level mismatches - DO NOT force compatibility
+3. **DO NOT force matches when there are fundamental incompatibilities** - rejection is better than false hope
+4. Return JSON array with all evaluations
+5. Be concise but accurate in your assessments
+6. **CRITICAL**: If Q&A responses are available, reference specific answers in reasoning
+7. **CRITICAL**: If CV analysis is available, reference specific findings in reasoning, especially detected education level
+8. **CRITICAL**: If both are available, use Q&A insights to resolve any ambiguities or concerns from the CV analysis
+9. **CRITICAL**: If neither is available, base evaluation on basic candidate information
 
 **Output Format**:
 ```json

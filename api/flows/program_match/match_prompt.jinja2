@@ -16,7 +16,15 @@ Evaluate this match:
 - If both are available: Use Q&A responses to clarify ambiguities and validate candidate suitability, factor in CV-extracted information for more accurate matching
 - If neither is available: Focus on basic candidate information (academic background, English proficiency, interests, budget) for standard matching
 
-**Score (0-100)**: Academic Fit (30) + Education Level Match (10) + English (25) + Field Match (20) + Location (10) + Budget (5)
+**Score (0-100)**: Education Level Match (15) + Academic Fit (25) + English (25) + Field Match (20) + Location (10) + Budget (5)
+
+**SCORING GUIDELINES**:
+- Education Level Match: 15 points (CRITICAL - if mismatch, award 0 points and set eligible=false)
+- Academic Fit: 25 points (GPA, academic background compatibility)
+- English Proficiency: 25 points (IELTS/TOEFL requirements)
+- Field Alignment: 20 points (Interest and career goal match)
+- Location Preference: 10 points (City/campus preference)
+- Budget Compatibility: 5 points (Tuition affordability)
 
 ## Required Output Format:
 Provide your evaluation in the following JSON format:
@@ -26,8 +34,8 @@ Provide your evaluation in the following JSON format:
   "eligible": true/false,
   "overall_score": 0-100,
   "detailed_scores": {
-    "academic_fit": 0-30,
-    "education_level_match": 0-10,
+    "education_level_match": 0-15,
+    "academic_fit": 0-25,
     "english_proficiency": 0-25,
     "field_alignment": 0-20,
     "location_preference": 0-10,
@@ -48,12 +56,16 @@ Provide your evaluation in the following JSON format:
 ```
 
 ## Important Notes:
-- Set "eligible" to true for most reasonable matches - only set to false for severe mismatches (e.g., IELTS significantly below requirement, budget less than 70% of tuition, completely unrelated academic background)
+- **EDUCATION LEVEL MISMATCH IS A DEAL-BREAKER**: If candidate education level doesn't match program requirements, set "eligible" to false
+  - High school graduates should NOT be eligible for Master's programs
+  - Bachelor's degree holders seeking undergraduate programs should be questioned
+- Set "eligible" to false for severe mismatches: education level incompatibility, IELTS significantly below requirement, budget less than 70% of tuition, completely unrelated academic background
+- **DO NOT force matches when there are fundamental incompatibilities** - it's better to reject than give false hope
 - Be precise and varied in scoring - differentiate clearly between programs based on fit quality
 - Use the full 0-100 scale: excellent matches (80-100), good matches (60-79), fair matches (40-59), poor matches (20-39)
 - Consider specific factors that make each program unique for this candidate
 - Factor in New Zealand's welcoming education environment
-- If the candidate meets basic requirements (IELTS, academic background, reasonable budget), they should generally be considered eligible
+- Only mark as eligible if candidate genuinely meets the core requirements (education level, IELTS, academic background, reasonable budget)
 - ALWAYS provide the "overall_assessment" field in reasoning with a comprehensive summary
 - **CRITICAL**: If Q&A responses are available, reference specific answers in your reasoning
 - **CRITICAL**: If CV analysis is available, reference specific findings in your reasoning
