@@ -56,69 +56,19 @@ def extract_cv_text(file_path: str) -> str:
             f"Error extracting text from {file_extension} file: {str(e)}")
 
 
-def extract_education_level(cv_text: str) -> str:
-    """
-    Extract education level from CV text
-
-    Args:
-        cv_text: CV text content
-
-    Returns:
-        Education level: 'undergraduate', 'postgraduate', or 'unknown'
-    """
-    import re
-
-    cv_text_lower = cv_text.lower()
-
-    # Postgraduate indicators (stronger signals)
-    postgraduate_patterns = [
-        r'\b(?:master|masters|master\'s|msc|ma|mba|phd|doctorate|graduate)\b',
-        r'\b(?:postgraduate|post-graduate)\b',
-        r'(?:硕士|研究生|博士|学士后)',
-        r'\b(?:bachelor.*degree.*completed|graduated.*bachelor)\b',
-        r'\b(?:university.*graduate|college.*graduate)\b.*(?:20\d{2}|19\d{2})',
-        # Work experience patterns suggesting bachelor's completion
-        r'(?:software engineer|developer|analyst|consultant).*(?:20\d{2}|experience)',
-    ]
-
-    # Undergraduate indicators
-    undergraduate_patterns = [
-        r'\b(?:high school|secondary school|a-level|ib|diploma)\b',
-        r'\b(?:year 12|year 13|grade 12)\b',
-        r'(?:高中|中学|高等中学|高级中学)',
-        r'\b(?:currently.*bachelor|pursuing.*bachelor|studying.*bachelor)\b',
-        r'\b(?:freshman|sophomore|junior|senior).*(?:student|year)\b',
-    ]
-
-    # Check for postgraduate indicators
-    postgrad_score = 0
-    for pattern in postgraduate_patterns:
-        matches = len(re.findall(pattern, cv_text_lower))
-        postgrad_score += matches
-
-    # Check for undergraduate indicators
-    undergrad_score = 0
-    for pattern in undergraduate_patterns:
-        matches = len(re.findall(pattern, cv_text_lower))
-        undergrad_score += matches
-
-    # Decision logic
-    if postgrad_score > undergrad_score and postgrad_score > 0:
-        return 'postgraduate'
-    elif undergrad_score > 0:
-        return 'undergraduate'
-    else:
-        return 'unknown'
-
-
 def determine_program_level(candidate_data: dict, cv_analysis: dict = None, cv_text: str = None) -> str:
     """
     Determine the appropriate program level based on candidate data and CV analysis
 
+    Priority order:
+    1. User explicit preference (undergraduate/postgraduate)  
+    2. LLM CV analysis results (education_level)
+    3. Academic background field logic (bachelor_major field - legacy name)
+
     Args:
-        candidate_data: Candidate information dictionary
-        cv_analysis: LLM CV analysis results (preferred)
-        cv_text: CV text for fallback analysis (optional)
+        candidate_data: Candidate info including education_level_preference and academic background
+        cv_analysis: LLM CV analysis results (preferred method)
+        cv_text: CV text for fallback analysis (deprecated, not used)
 
     Returns:
         Program level: 'Undergraduate', 'Postgraduate', or None (for all levels)
@@ -142,19 +92,13 @@ def determine_program_level(candidate_data: dict, cv_analysis: dict = None, cv_t
             elif detected_level == 'postgraduate':
                 return 'Postgraduate'
 
-        # Fallback to old method if LLM analysis not available
-        if cv_text:
-            detected_level = extract_education_level(cv_text)
-            if detected_level == 'undergraduate':
-                return 'Undergraduate'
-            elif detected_level == 'postgraduate':
-                return 'Postgraduate'
+        # Note: Old keyword-based extraction removed - relying on LLM analysis
 
-        # Final fallback to bachelor_major logic
-        bachelor_major = candidate_data.get('bachelor_major', '').strip()
-        if not bachelor_major:  # No bachelor's degree mentioned
-            return 'Undergraduate'
-        else:  # Has bachelor's degree, recommend masters
+        # Final fallback: academic background logic
+        academic_background = candidate_data.get('bachelor_major', '').strip()
+        if not academic_background:  # No academic background specified
+            return 'Undergraduate'  # Default to undergraduate
+        else:  # Has academic background, may suggest postgraduate
             return 'Postgraduate'
 
     return None  # Return all levels
