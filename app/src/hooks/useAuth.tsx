@@ -203,9 +203,12 @@ export async function apiCall(
 ) {
   const url = `${API_BASE_URL}${endpoint}`;
   
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+  const headers: Record<string, string> = {};
+  
+  // 只有在不是FormData时才设置Content-Type
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   // 添加其他headers
   if (options.headers) {

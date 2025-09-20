@@ -218,7 +218,7 @@ export default function QAAssistant() {
         city_pref: []
       }));
 
-      const uploadResponse = await apiCall('/api/upload-cv', {
+      const uploadResponse = await apiCall('/upload-cv', {
         method: 'POST',
         body: formData,
         headers: {
@@ -236,7 +236,7 @@ export default function QAAssistant() {
           city_pref: []
         }));
 
-        const analysisResponse = await apiCall('/api/analyze-cv', {
+        const analysisResponse = await apiCall('/analyze-cv', {
           method: 'POST',
           body: analyzeFormData,
           headers: {
