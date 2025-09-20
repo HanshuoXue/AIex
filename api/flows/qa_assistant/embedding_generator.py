@@ -2,6 +2,10 @@ from promptflow import tool
 from typing import Dict, Any, List
 import os
 from openai import AzureOpenAI
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
 
 
 @tool
