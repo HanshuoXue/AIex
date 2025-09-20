@@ -28,7 +28,13 @@ outputs:
     reference: ${report_generator.output}
   matched_programs:
     type: object
-    reference: ${rag_matcher.output.matched_programs}
+    reference: ${default_matcher.output.matched_programs}
+  embedding_result:
+    type: object
+    reference: ${embedding_generator.output}
+  rag_result:
+    type: object
+    reference: ${rag_matcher.output}
 
 nodes:
 - name: qa_controller
@@ -77,9 +83,7 @@ nodes:
   inputs:
     conversation_history: ${inputs.conversation_history}
     cv_analysis: ${inputs.cv_analysis}
-  activate:
-    when: ${qa_controller.output}
-    is: "ask_question"
+    query_embedding: ${embedding_generator.output}
 
 - name: rag_matcher
   type: python
@@ -90,6 +94,9 @@ nodes:
     query_embedding: ${embedding_generator.output}
     conversation_history: ${inputs.conversation_history}
     cv_analysis: ${inputs.cv_analysis}
+  activate:
+    when: ${qa_controller.output}
+    is: "generate_report"
 
 - name: report_generator
   type: llm

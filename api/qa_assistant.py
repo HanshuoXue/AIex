@@ -237,26 +237,50 @@ class QAAssistant:
                 "rag_matching_status": "unknown"  # 将在下面更新
             }
 
-            # 检查embedding和RAG状态
-            embedding_result = flow_result.get("embedding_generator", {})
-            rag_result = flow_result.get("rag_matcher", {})
+            # 检查embedding和RAG状态 - 修复逻辑
+            # 从flow_result中获取实际的embedding和rag结果
+            embedding_result = flow_result.get("embedding_result", {})
+            rag_result = flow_result.get("rag_result", {})
 
-            if embedding_result.get("status") == "success":
+            # 检查embedding状态
+            if isinstance(embedding_result, dict) and embedding_result.get("status") == "success":
                 debug_info["embedding_status"] = "success"
                 debug_info["embedding_dimension"] = embedding_result.get(
                     "dimension", 0)
             else:
-                debug_info["embedding_status"] = "fallback_used"
-                debug_info["embedding_error"] = embedding_result.get(
-                    "error", "unknown")
+                # 如果embedding_result不是预期的格式，检查是否有其他成功指标
+                if isinstance(embedding_result, dict) and "embedding" in embedding_result:
+                    debug_info["embedding_status"] = "success"
+                    debug_info["embedding_dimension"] = len(
+                        embedding_result.get("embedding", []))
+                else:
+                    debug_info["embedding_status"] = "fallback_used"
+                    debug_info["embedding_error"] = embedding_result.get(
+                        "error", "unknown")
 
-            if rag_result.get("status") == "success":
+            # 检查RAG匹配状态
+            if isinstance(rag_result, dict) and rag_result.get("status") == "success":
                 debug_info["rag_matching_status"] = "success"
                 debug_info["rag_programs_count"] = rag_result.get(
                     "programs_count", 0)
+                debug_info["search_method"] = rag_result.get(
+                    "search_method", "unknown")
             else:
-                debug_info["rag_matching_status"] = "fallback_used"
-                debug_info["rag_reason"] = rag_result.get("reason", "unknown")
+                # 如果rag_result不是预期的格式，检查是否有匹配的项目
+                if isinstance(rag_result, dict) and "matched_programs" in rag_result:
+                    matched_count = len(rag_result.get("matched_programs", []))
+                    if matched_count > 0:
+                        debug_info["rag_matching_status"] = "success"
+                        debug_info["rag_programs_count"] = matched_count
+                        debug_info["search_method"] = rag_result.get(
+                            "search_method", "unknown")
+                    else:
+                        debug_info["rag_matching_status"] = "fallback_used"
+                        debug_info["rag_reason"] = "no_programs_matched"
+                else:
+                    debug_info["rag_matching_status"] = "fallback_used"
+                    debug_info["rag_reason"] = rag_result.get(
+                        "reason", "unknown")
 
             logger.info(f"🔍 Debug info: {debug_info}")
             print(f"🔍 Debug info: {debug_info}")
