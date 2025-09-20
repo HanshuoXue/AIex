@@ -1,0 +1,55 @@
+{
+  "nodeLayouts": {
+    "inputs": {
+      "x": 1242.5,
+      "y": 42,
+      "index": -1
+    },
+    "outputs": {
+      "x": 1017.5,
+      "y": 712,
+      "index": -1
+    },
+    "conversation_analyzer": {
+      "x": 345,
+      "y": 176,
+      "index": 0
+    },
+    "question_generator": {
+      "x": 140,
+      "y": 310,
+      "index": 1
+    },
+    "completion_checker": {
+      "x": 1025,
+      "y": 176,
+      "index": 2
+    },
+    "embedding_generator": {
+      "x": 695,
+      "y": 176,
+      "index": -1
+    },
+    "rag_retriever": {
+      "x": 655,
+      "y": 310,
+      "index": 3
+    },
+    "report_generator": {
+      "x": 860,
+      "y": 444,
+      "index": 4
+    },
+    "conversation_manager": {
+      "x": 762.5,
+      "y": 578,
+      "index": 5
+    },
+    "session_manager": {
+      "x": 1492.5,
+      "y": 310,
+      "index": 6
+    }
+  },
+  "orientation": "Vertical"
+}

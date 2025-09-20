@@ -34,6 +34,16 @@
           "type": [
             "string"
           ]
+        },
+        "qa_answers": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "string"
+          ]
         }
       },
       "source": "match_prompt.jinja2"
@@ -70,6 +80,16 @@
           ]
         },
         "candidate": {
+          "type": [
+            "string"
+          ]
+        },
+        "qa_answers": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_analysis": {
           "type": [
             "string"
           ]

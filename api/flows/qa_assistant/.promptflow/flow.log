@@ -1,0 +1,20 @@
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Start executing nodes in thread pool mode.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Start to run 5 nodes with concurrency level 16.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Executing node qa_controller. node run id: 226192f7-ee97-41a8-96a4-470a7902f1c1_qa_controller_0
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 当前问题数量: 0
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 用户消息: 你好，我想了解新西兰留学
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 是否有CV: False
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 继续提问 (第1个问题)
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Node qa_controller completes.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     The node 'question_asker' will be executed because the activate condition is met, i.e. '${qa_controller.output}' is equal to 'ask_question'.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     The node 'embedding_generator' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'generate_report'.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     The node 'rag_matcher' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'generate_report'.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     The node 'report_generator' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'generate_report'.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Bypassing node embedding_generator. node run id: 226192f7-ee97-41a8-96a4-470a7902f1c1_embedding_generator_0
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Bypassing node rag_matcher. node run id: 226192f7-ee97-41a8-96a4-470a7902f1c1_rag_matcher_0
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Bypassing node report_generator. node run id: 226192f7-ee97-41a8-96a4-470a7902f1c1_report_generator_0
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     The node 'question_asker' will be executed because the activate condition is met, i.e. '${qa_controller.output}' is equal to 'ask_question'.
+2025-09-21 00:57:30 +1200   66733 execution.flow     INFO     Executing node question_asker. node run id: 226192f7-ee97-41a8-96a4-470a7902f1c1_question_asker_0
+2025-09-21 00:57:31 +1200   66733 execution.flow     INFO     Node question_asker completes.
+2025-09-21 00:57:31 +1200   66733 execution.flow     WARNING  The node referenced by output:'report_generator' is bypassed, which is not recommended.
+2025-09-21 00:57:31 +1200   66733 execution.flow     WARNING  The node referenced by output:'rag_matcher' is bypassed, which is not recommended.

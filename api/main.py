@@ -23,6 +23,9 @@ except ImportError:
         from user_routes import router as user_router
         from auth import get_current_active_user, get_current_user
 
+# 延迟导入QA助手，避免启动时错误
+qa_assistant = None
+
 # CV text extraction functions
 
 
@@ -529,3 +532,132 @@ async def analyze_cv(
             "success": False,
             "error": f"Analysis failed: {str(e)}"
         }
+
+
+@app.post("/api/qa-assistant/conversation")
+async def qa_conversation(
+    request_data: dict,
+    current_user: dict = Depends(get_current_active_user)
+):
+    """
+    QA助手智能对话处理
+    """
+    try:
+        # 延迟导入QA助手
+        global qa_assistant
+        if qa_assistant is None:
+            try:
+                from qa_assistant import QAAssistant
+                qa_assistant = QAAssistant()
+            except Exception as import_error:
+                from fastapi import HTTPException
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"QA Assistant not available: {str(import_error)}"
+                )
+
+        conversation_history = request_data.get(
+            "conversation_history", {"messages": []})
+        user_message = request_data.get("user_message", "")
+        cv_analysis = request_data.get("cv_analysis", {})
+        session_state = request_data.get("session_state", {})
+
+        # 调用智能QA助手处理对话
+        result = await qa_assistant.process_conversation(
+            conversation_history=conversation_history,
+            user_message=user_message,
+            cv_analysis=cv_analysis,
+            session_state=session_state
+        )
+
+        return result
+
+    except Exception as e:
+        print(f"Error in QA conversation processing: {e}")
+        import traceback
+        print(f"Full traceback: {traceback.format_exc()}")
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=500,
+            detail=f"Conversation processing failed: {str(e)}"
+        )
+
+
+@app.post("/api/qa-assistant/generate-report")
+async def generate_qa_report(
+    request_data: dict,
+    current_user: dict = Depends(get_current_active_user)
+):
+    """
+    QA助手生成个性化留学报告
+    """
+    try:
+        # 延迟导入QA助手
+        global qa_assistant
+        if qa_assistant is None:
+            try:
+                from qa_assistant import QAAssistant
+                qa_assistant = QAAssistant()
+            except Exception as import_error:
+                from fastapi import HTTPException
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"QA Assistant not available: {str(import_error)}"
+                )
+
+        cv_analysis = request_data.get("cv_analysis", {})
+        conversation_history = request_data.get("conversation_history", {})
+        user_id = request_data.get(
+            "user_id", current_user.get("id", "unknown"))
+        report_content = request_data.get("report_content", None)
+        matched_programs = request_data.get("matched_programs", None)
+
+        # 调用QA助手生成报告
+        result = await qa_assistant.generate_report(
+            cv_analysis=cv_analysis,
+            conversation_history=conversation_history,
+            user_id=str(user_id),
+            report_content=report_content,
+            matched_programs=matched_programs
+        )
+
+        return result
+
+    except Exception as e:
+        print(f"Error in QA assistant report generation: {e}")
+        import traceback
+        print(f"Full traceback: {traceback.format_exc()}")
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=500,
+            detail=f"Report generation failed: {str(e)}"
+        )
+
+
+@app.get("/api/reports/{filename}")
+async def serve_report(filename: str):
+    """
+    提供PDF报告下载服务
+    """
+    try:
+        reports_dir = os.path.join(os.path.dirname(
+            os.path.abspath(__file__)), "..", "reports")
+        file_path = os.path.join(reports_dir, filename)
+
+        if not os.path.exists(file_path):
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404, detail="Report not found")
+
+        from fastapi.responses import FileResponse
+        return FileResponse(
+            path=file_path,
+            filename=filename,
+            media_type='application/pdf'
+        )
+
+    except Exception as e:
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error serving report: {str(e)}"
+        )

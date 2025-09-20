@@ -97,6 +97,17 @@ export default function UserNavigation({ onNavigate, currentPage }: UserNavigati
                 个人设置
               </button>
               
+              <button
+                onClick={() => onNavigate('qa-assistant')}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  currentPage === 'qa-assistant'
+                    ? 'bg-purple-100 text-purple-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                QA助手
+              </button>
+              
               {isAdmin && (
                 <button
                   onClick={() => onNavigate('admin')}
@@ -204,6 +215,17 @@ export default function UserNavigation({ onNavigate, currentPage }: UserNavigati
             }`}
           >
             个人设置
+          </button>
+          
+          <button
+            onClick={() => onNavigate('qa-assistant')}
+            className={`flex-shrink-0 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              currentPage === 'qa-assistant'
+                ? 'bg-purple-100 text-purple-700'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            }`}
+          >
+            QA助手
           </button>
           
           {isAdmin && (

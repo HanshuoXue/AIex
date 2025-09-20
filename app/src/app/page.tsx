@@ -11,6 +11,7 @@ import ForgotPasswordForm from "./components/ForgotPasswordForm";
 import ChangePasswordForm from "./components/ChangePasswordForm";
 import ProfileEditForm from "./components/ProfileEditForm";
 import PermissionExtensionForm from "./components/PermissionExtensionForm";
+import QAAssistant from "./components/QAAssistant";
 import UserNavigation from "./components/UserNavigation";
 import AdminDashboard from "./components/AdminDashboard";
 import type { Candidate, MatchResult, AllMatchResults } from "../types";
@@ -509,6 +510,13 @@ function HomeContent() {
           </div>
         );
         
+        
+      case 'qa-assistant':
+        return (
+          <div className="flex-1">
+            <QAAssistant />
+          </div>
+        );
         
       case 'admin':
         return (

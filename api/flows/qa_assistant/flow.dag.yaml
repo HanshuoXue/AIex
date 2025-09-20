@@ -1,0 +1,104 @@
+environment:
+  python_requirements_txt: requirements.txt
+
+inputs:
+  conversation_history:
+    type: object
+    description: "Complete conversation history"
+  user_message:
+    type: string
+    description: "Latest user message"
+  cv_analysis:
+    type: object
+    description: "CV analysis results"
+  question_count:
+    type: int
+    default: 0
+    description: "Number of questions asked so far"
+
+outputs:
+  action:
+    type: string
+    reference: ${qa_controller.output}
+  next_question:
+    type: string
+    reference: ${question_asker.output}
+  final_report:
+    type: string
+    reference: ${report_generator.output}
+  matched_programs:
+    type: object
+    reference: ${rag_matcher.output}
+
+nodes:
+- name: qa_controller
+  type: python
+  source:
+    type: code
+    path: qa_controller.py
+  inputs:
+    conversation_history: ${inputs.conversation_history}
+    user_message: ${inputs.user_message}
+    cv_analysis: ${inputs.cv_analysis}
+    question_count: ${inputs.question_count}
+
+- name: question_asker
+  type: llm
+  source:
+    type: code
+    path: question_asker.jinja2
+  inputs:
+    deployment_name: gpt-4.1
+    temperature: 0.7
+    max_tokens: 200
+    conversation_history: ${inputs.conversation_history}
+    cv_analysis: ${inputs.cv_analysis}
+    question_number: ${qa_controller.output}
+  connection: azure_openai_connection
+  api: chat
+  activate:
+    when: ${qa_controller.output}
+    is: "ask_question"
+
+- name: embedding_generator
+  type: python
+  source:
+    type: code
+    path: embedding_generator.py
+  inputs:
+    conversation_history: ${inputs.conversation_history}
+    cv_analysis: ${inputs.cv_analysis}
+  activate:
+    when: ${qa_controller.output}
+    is: "generate_report"
+
+- name: rag_matcher
+  type: python
+  source:
+    type: code
+    path: rag_matcher.py
+  inputs:
+    query_embedding: ${embedding_generator.output}
+    conversation_history: ${inputs.conversation_history}
+    cv_analysis: ${inputs.cv_analysis}
+  activate:
+    when: ${qa_controller.output}
+    is: "generate_report"
+
+- name: report_generator
+  type: llm
+  source:
+    type: code
+    path: report_generator.jinja2
+  inputs:
+    deployment_name: gpt-4.1
+    temperature: 0.3
+    max_tokens: 4000
+    conversation_history: ${inputs.conversation_history}
+    cv_analysis: ${inputs.cv_analysis}
+    matched_programs: ${rag_matcher.output}
+  connection: azure_openai_connection
+  api: chat
+  activate:
+    when: ${qa_controller.output}
+    is: "generate_report"

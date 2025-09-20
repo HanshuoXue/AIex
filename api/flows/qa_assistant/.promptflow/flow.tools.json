@@ -1,0 +1,236 @@
+{
+  "package": {},
+  "code": {
+    "conversation_analyzer.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "conversation_history": {
+          "type": [
+            "string"
+          ]
+        },
+        "user_message": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "string"
+          ]
+        },
+        "session_state": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "conversation_analyzer.jinja2"
+    },
+    "question_generator.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "conversation_analysis": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "string"
+          ]
+        },
+        "session_state": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "question_generator.jinja2"
+    },
+    "completion_checker.py": {
+      "type": "python",
+      "inputs": {
+        "conversation_history": {
+          "type": [
+            "object"
+          ]
+        },
+        "session_state": {
+          "type": [
+            "object"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "object"
+          ]
+        }
+      },
+      "description": "\u68c0\u67e5\u5bf9\u8bdd\u662f\u5426\u5df2\u7ecf\u6536\u96c6\u5230\u8db3\u591f\u7684\u4fe1\u606f\u8fdb\u884c\u9879\u76ee\u5339\u914d",
+      "source": "completion_checker.py",
+      "function": "check_completion"
+    },
+    "embedding_query.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "user_profile": {
+          "type": [
+            "string"
+          ]
+        },
+        "profile": {
+          "type": [
+            "string"
+          ]
+        },
+        "academic": {
+          "type": [
+            "string"
+          ]
+        },
+        "career": {
+          "type": [
+            "string"
+          ]
+        },
+        "constraints": {
+          "type": [
+            "string"
+          ]
+        },
+        "conversation_history": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "embedding_query.jinja2"
+    },
+    "rag_retriever.py": {
+      "type": "python",
+      "inputs": {
+        "user_profile": {
+          "type": [
+            "object"
+          ]
+        },
+        "conversation_history": {
+          "type": [
+            "object"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "object"
+          ]
+        },
+        "is_ready_for_matching": {
+          "type": [
+            "object"
+          ]
+        },
+        "query_embedding": {
+          "type": [
+            "object"
+          ]
+        }
+      },
+      "description": "\u4f7f\u7528RAG\u6280\u672f\u68c0\u7d22\u6700\u5339\u914d\u7684\u9879\u76ee",
+      "source": "rag_retriever.py",
+      "function": "retrieve_matching_programs"
+    },
+    "final_report_generator.jinja2": {
+      "type": "llm",
+      "inputs": {
+        "user_profile": {
+          "type": [
+            "string"
+          ]
+        },
+        "matched_programs": {
+          "type": [
+            "string"
+          ]
+        },
+        "conversation_history": {
+          "type": [
+            "string"
+          ]
+        },
+        "cv_analysis": {
+          "type": [
+            "string"
+          ]
+        },
+        "is_complete": {
+          "type": [
+            "string"
+          ]
+        }
+      },
+      "source": "final_report_generator.jinja2"
+    },
+    "conversation_manager.py": {
+      "type": "python",
+      "inputs": {
+        "next_question": {
+          "type": [
+            "object"
+          ]
+        },
+        "completion_status": {
+          "type": [
+            "object"
+          ]
+        },
+        "final_report": {
+          "type": [
+            "string"
+          ]
+        },
+        "session_state": {
+          "type": [
+            "object"
+          ]
+        }
+      },
+      "description": "\u7ba1\u7406\u5bf9\u8bdd\u6d41\u7a0b\uff0c\u51b3\u5b9a\u4e0b\u4e00\u6b65\u7684\u54cd\u5e94",
+      "source": "conversation_manager.py",
+      "function": "manage_conversation"
+    },
+    "session_manager.py": {
+      "type": "python",
+      "inputs": {
+        "conversation_history": {
+          "type": [
+            "object"
+          ]
+        },
+        "user_message": {
+          "type": [
+            "string"
+          ]
+        },
+        "session_state": {
+          "type": [
+            "object"
+          ]
+        },
+        "completion_status": {
+          "type": [
+            "object"
+          ]
+        }
+      },
+      "description": "\u7ba1\u7406\u4f1a\u8bdd\u72b6\u6001\uff0c\u66f4\u65b0\u5bf9\u8bdd\u5386\u53f2\u548c\u4f1a\u8bdd\u4fe1\u606f",
+      "source": "session_manager.py",
+      "function": "manage_session"
+    }
+  }
+}

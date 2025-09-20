@@ -45,7 +45,7 @@ nodes:
       program: ${inputs.program_details}
       deployment_name: gpt-4.1
       max_tokens: 2000
-      temperature: 0.0
+      temperature: 0
     connection: azure_openai_connection
     api: chat
     activate:
@@ -75,7 +75,7 @@ nodes:
       programs: ${inputs.programs_batch}
       deployment_name: gpt-4.1
       max_tokens: 8000
-      temperature: 0.0
+      temperature: 0
     connection: azure_openai_connection
     api: chat
     activate:
