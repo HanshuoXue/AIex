@@ -5,16 +5,39 @@ import os
 
 
 @tool
-def match_programs(query_embedding: List[float], conversation_history: Dict[str, Any], cv_analysis: Dict[str, Any]) -> List[Dict]:
+def match_programs(query_embedding: Dict[str, Any], conversation_history: Dict[str, Any], cv_analysis: Dict[str, Any]) -> Dict[str, Any]:
     """
     使用embedding向量匹配top3项目
     """
     try:
-        if not query_embedding:
-            print("没有有效的embedding，使用fallback匹配")
-            return get_fallback_programs()
+        # 检查是否在对话阶段（没有embedding数据）
+        if not query_embedding or (isinstance(query_embedding, dict) and not query_embedding.get("embedding")):
+            print("没有embedding数据，使用fallback匹配")
+            fallback_programs = get_fallback_programs()
+            return {
+                "matched_programs": fallback_programs,
+                "status": "fallback_used",
+                "reason": "no_embedding",
+                "programs_count": len(fallback_programs)
+            }
+        # 检查embedding状态
+        embedding_data = query_embedding.get("embedding", []) if isinstance(
+            query_embedding, dict) else query_embedding
+        embedding_status = query_embedding.get("status", "unknown") if isinstance(
+            query_embedding, dict) else "unknown"
 
-        print(f"使用embedding匹配项目，向量维度: {len(query_embedding)}")
+        if not embedding_data or embedding_status != "success":
+            print("没有有效的embedding，使用fallback匹配")
+            fallback_programs = get_fallback_programs()
+            return {
+                "matched_programs": fallback_programs,
+                "status": "fallback_used",
+                "reason": "embedding_failed",
+                "embedding_status": embedding_status,
+                "programs_count": len(fallback_programs)
+            }
+
+        print(f"使用embedding匹配项目，向量维度: {len(embedding_data)}")
 
         # TODO: 这里应该使用Azure Search的向量搜索
         # 目前使用简化的本地搜索
@@ -36,11 +59,24 @@ def match_programs(query_embedding: List[float], conversation_history: Dict[str,
         top3 = scored_programs[:3]
 
         print(f"匹配完成，返回{len(top3)}个项目")
-        return top3
+        return {
+            "matched_programs": top3,
+            "status": "success",
+            "embedding_status": embedding_status,
+            "programs_count": len(top3),
+            "user_text": user_text[:100] + "..." if len(user_text) > 100 else user_text
+        }
 
     except Exception as e:
         print(f"RAG匹配失败: {e}")
-        return get_fallback_programs()
+        fallback_programs = get_fallback_programs()
+        return {
+            "matched_programs": fallback_programs,
+            "status": "fallback_used",
+            "reason": "matching_failed",
+            "error": str(e),
+            "programs_count": len(fallback_programs)
+        }
 
 
 def load_local_programs() -> List[Dict]:

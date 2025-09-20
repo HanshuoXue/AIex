@@ -28,7 +28,7 @@ outputs:
     reference: ${report_generator.output}
   matched_programs:
     type: object
-    reference: ${rag_matcher.output}
+    reference: ${rag_matcher.output.matched_programs}
 
 nodes:
 - name: qa_controller
@@ -68,9 +68,18 @@ nodes:
   inputs:
     conversation_history: ${inputs.conversation_history}
     cv_analysis: ${inputs.cv_analysis}
+
+- name: default_matcher
+  type: python
+  source:
+    type: code
+    path: default_matcher.py
+  inputs:
+    conversation_history: ${inputs.conversation_history}
+    cv_analysis: ${inputs.cv_analysis}
   activate:
     when: ${qa_controller.output}
-    is: "generate_report"
+    is: "ask_question"
 
 - name: rag_matcher
   type: python
@@ -81,9 +90,6 @@ nodes:
     query_embedding: ${embedding_generator.output}
     conversation_history: ${inputs.conversation_history}
     cv_analysis: ${inputs.cv_analysis}
-  activate:
-    when: ${qa_controller.output}
-    is: "generate_report"
 
 - name: report_generator
   type: llm
@@ -96,7 +102,7 @@ nodes:
     max_tokens: 4000
     conversation_history: ${inputs.conversation_history}
     cv_analysis: ${inputs.cv_analysis}
-    matched_programs: ${rag_matcher.output}
+    matched_programs: ${rag_matcher.output.matched_programs}
   connection: azure_openai_connection
   api: chat
   activate:

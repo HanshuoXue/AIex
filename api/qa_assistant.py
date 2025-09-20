@@ -82,12 +82,14 @@ class QAAssistant:
         # QA助手flow路径 - 使用智能化Flow
         current_dir = os.path.dirname(os.path.abspath(__file__))
         self.flow_path = os.path.join(current_dir, "flows", "qa_assistant")
-        self.intelligent_flow_config = os.path.join(
-            self.flow_path, "intelligent_qa_flow.dag.yaml")
+        self.flow_config = os.path.join(self.flow_path, "flow.dag.yaml")
 
         # 确保flow路径存在
         if not os.path.exists(self.flow_path):
             logger.error(f"QA Assistant flow path not found: {self.flow_path}")
+        if not os.path.exists(self.flow_config):
+            logger.error(
+                f"QA Assistant flow config not found: {self.flow_config}")
 
         # 报告存储目录
         self.reports_dir = os.path.join(current_dir, "..", "reports")
@@ -180,89 +182,97 @@ class QAAssistant:
                 }
             }
 
-    async def generate_report(self, cv_analysis: Dict[str, Any], conversation_history: Dict[str, str], user_id: str, report_content: str = None, matched_programs: List[Dict] = None) -> Dict[str, Any]:
+    async def generate_report(self, cv_analysis: Dict[str, Any], conversation_history: Dict[str, str], user_id: str) -> Dict[str, Any]:
         """
-        生成个性化留学建议报告
+        生成个性化留学建议报告 - 完整模式
+        结合CV分析、聊天历史和项目匹配，生成个性化报告
         """
         try:
             logger.info(f"Starting report generation for user {user_id}")
+            logger.info(
+                "🔄 FULL MODE: Running complete QA Assistant flow for report generation")
+            print("🔄 FULL MODE: Running complete QA Assistant flow for report generation")
 
-            # 如果已经有报告内容，直接生成PDF
-            if report_content and matched_programs is not None:
-                logger.info(
-                    "🚀 FAST MODE: Using provided report content for PDF generation")
-                print("🚀 FAST MODE: Using provided report content for PDF generation")
-
-                # 生成PDF报告
-                report_filename = f"study_report_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                report_path = os.path.join(self.reports_dir, report_filename)
-
-                pdf_success = await self.generate_pdf_from_content(
-                    report_content=report_content,
-                    programs=matched_programs,
-                    conversation_history=conversation_history,
-                    output_path=report_path
-                )
-
-                if pdf_success:
-                    return {
-                        "success": True,
-                        "report_url": f"/api/reports/{report_filename}",
-                        "report_path": report_path,
-                        "programs_matched": len(matched_programs),
-                        "generation_time": datetime.now().isoformat(),
-                        "generation_mode": "FAST_MODE"
-                    }
-                else:
-                    return {
-                        "success": False,
-                        "error": "PDF generation failed",
-                        "report_content": report_content
-                    }
-
-            # 否则运行完整的flow生成报告
-            else:
-                logger.info(
-                    "🔄 FULL MODE: Running complete QA Assistant flow for report generation")
-                print(
-                    "🔄 FULL MODE: Running complete QA Assistant flow for report generation")
-
-                # 准备用户画像
-                user_profile = {
-                    "user_id": user_id,
-                    "analysis_timestamp": datetime.now().isoformat(),
-                    "basic_info": {
-                        "has_cv": bool(cv_analysis),
-                        "conversation_completed": len(conversation_history) >= 8
-                    }
+            # 准备用户画像
+            user_profile = {
+                "user_id": user_id,
+                "analysis_timestamp": datetime.now().isoformat(),
+                "basic_info": {
+                    "has_cv": bool(cv_analysis),
+                    "conversation_completed": len(conversation_history) >= 8
                 }
+            }
 
-                # 运行QA助手flow
-                flow_result = self.pf_client.test(
-                    flow=self.flow_path,
-                    inputs={
-                        "cv_analysis": cv_analysis or {},
-                        "conversation_history": {"messages": []},
-                        "user_profile": user_profile
-                    }
-                )
+            # 运行QA助手flow
+            logger.info("🔄 开始执行PromptFlow...")
+            print("🔄 开始执行PromptFlow...")
 
-                logger.info("Flow execution completed")
+            flow_result = self.pf_client.test(
+                flow=self.flow_config,
+                inputs={
+                    "cv_analysis": cv_analysis or {},
+                    "conversation_history": conversation_history,
+                    "user_message": "Generate personalized study abroad report",
+                    "question_count": 2  # 表示已经问够问题，可以生成报告
+                }
+            )
 
-                # 提取结果
-                top_programs = flow_result.get("matched_programs", [])
-                final_report_content = flow_result.get("final_report", "")
+            logger.info("✅ Flow execution completed")
+            print("✅ Flow execution completed")
+            logger.info(
+                f"📊 Flow result keys: {list(flow_result.keys()) if flow_result else 'None'}")
+            print(
+                f"📊 Flow result keys: {list(flow_result.keys()) if flow_result else 'None'}")
 
-                # 生成PDF报告
-                report_filename = f"study_report_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                report_path = os.path.join(self.reports_dir, report_filename)
+            # 提取结果
+            top_programs = flow_result.get("matched_programs", [])
+            final_report_content = flow_result.get("final_report", "")
 
-                pdf_success = await self.generate_pdf_from_content(
-                    report_content=final_report_content,
-                    programs=top_programs,
-                    conversation_history=conversation_history,
-                    output_path=report_path
-                )
+            # 详细调试信息
+            debug_info = {
+                "flow_result_keys": list(flow_result.keys()) if flow_result else [],
+                "matched_programs_count": len(top_programs) if isinstance(top_programs, list) else 0,
+                "final_report_length": len(final_report_content) if final_report_content else 0,
+                "embedding_status": "unknown",  # 将在下面更新
+                "rag_matching_status": "unknown"  # 将在下面更新
+            }
+
+            # 检查embedding和RAG状态
+            embedding_result = flow_result.get("embedding_generator", {})
+            rag_result = flow_result.get("rag_matcher", {})
+
+            if embedding_result.get("status") == "success":
+                debug_info["embedding_status"] = "success"
+                debug_info["embedding_dimension"] = embedding_result.get(
+                    "dimension", 0)
+            else:
+                debug_info["embedding_status"] = "fallback_used"
+                debug_info["embedding_error"] = embedding_result.get(
+                    "error", "unknown")
+
+            if rag_result.get("status") == "success":
+                debug_info["rag_matching_status"] = "success"
+                debug_info["rag_programs_count"] = rag_result.get(
+                    "programs_count", 0)
+            else:
+                debug_info["rag_matching_status"] = "fallback_used"
+                debug_info["rag_reason"] = rag_result.get("reason", "unknown")
+
+            logger.info(f"🔍 Debug info: {debug_info}")
+            print(f"🔍 Debug info: {debug_info}")
+
+            # 生成PDF报告
+            report_filename = f"study_report_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            report_path = os.path.join(self.reports_dir, report_filename)
+
+            pdf_success = await self.generate_pdf_report(
+                cv_analysis=cv_analysis,
+                matched_programs=top_programs,
+                conversation_history=conversation_history,
+                user_profile=user_profile,
+                final_report_content=final_report_content,
+                output_path=report_path
+            )
 
             if pdf_success:
                 # 返回成功结果
@@ -270,13 +280,15 @@ class QAAssistant:
                     "success": True,
                     "report_url": f"/api/reports/{report_filename}",
                     "report_path": report_path,
-                    "programs_matched": len(top_programs.get("matched_programs", [])),
+                    "programs_matched": len(top_programs) if isinstance(top_programs, list) else 0,
                     "generation_time": datetime.now().isoformat(),
                     "generation_mode": "FULL_MODE",
                     "flow_details": {
-                        "matching_status": top_programs.get("status", "unknown"),
-                        "matching_strategy": top_programs.get("matching_details", {}).get("matching_strategy", "default")
-                    }
+                        "matching_status": "completed",
+                        "matching_strategy": "full_llm_analysis"
+                    },
+                    "debug_info": debug_info,
+                    "flow_result": flow_result  # 包含完整的flow结果
                 }
             else:
                 return {
@@ -296,12 +308,15 @@ class QAAssistant:
                 "details": str(e)
             }
 
-    async def generate_pdf_from_content(self, report_content: str, programs: list, conversation_history: Dict[str, str], output_path: str) -> bool:
+    async def generate_pdf_report(self, cv_analysis: Dict[str, Any], matched_programs: list, conversation_history: Dict[str, str], user_profile: Dict[str, Any], final_report_content: str, output_path: str) -> bool:
         """
-        从报告内容生成PDF
+        生成PDF报告 - 使用LLM模板生成英文内容
         """
         try:
-            logger.info(f"Generating PDF from content: {output_path}")
+            logger.info(f"Generating PDF report: {output_path}")
+
+            # 使用已经生成的报告内容
+            report_content = final_report_content
 
             # 创建PDF文档
             doc = SimpleDocTemplate(output_path, pagesize=A4)
@@ -310,8 +325,10 @@ class QAAssistant:
 
             # 强制使用Helvetica字体，避免编码问题
             base_font = 'Helvetica'
-            logger.info(f"generate_pdf_from_content - Using font: {base_font}")
-            print(f"generate_pdf_from_content - Using font: {base_font}")
+            logger.info(
+                f"Using font: {base_font} (forced to avoid encoding issues)")
+            print(
+                f"PDF Generation - Using font: {base_font} (forced to avoid encoding issues)")
 
             # 更新默认样式以使用Helvetica
             for style_name in ['Normal', 'Heading1', 'Heading2', 'Heading3', 'Heading4']:
@@ -336,14 +353,14 @@ class QAAssistant:
                 Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y')}", styles['Normal']))
             story.append(Spacer(1, 20))
 
-            # 报告内容（转换Markdown为PDF）
+            # 使用LLM生成的内容
             content_lines = report_content.split('\n')
             for line in content_lines:
                 line = line.strip()
                 if not line:
                     story.append(Spacer(1, 6))
                 else:
-                    # 过滤中文字符，只保留ASCII字符
+                    # 过滤非ASCII字符，确保只有英文
                     filtered_line = ''.join(
                         char for char in line if ord(char) < 128)
 
@@ -367,163 +384,6 @@ class QAAssistant:
             # 构建PDF
             doc.build(story)
 
-            logger.info(f"PDF report generated successfully: {output_path}")
-            return True
-
-        except Exception as e:
-            logger.error(f"PDF generation failed: {e}")
-            return False
-
-    async def generate_pdf_report(self, report_content: Dict[str, Any], programs: list, user_profile: Dict[str, Any], conversation_history: Dict[str, str], output_path: str) -> bool:
-        """
-        生成PDF报告
-        """
-        try:
-            logger.info(f"Generating PDF report: {output_path}")
-
-            # 创建PDF文档
-            doc = SimpleDocTemplate(output_path, pagesize=A4)
-            styles = getSampleStyleSheet()
-            story = []
-
-            # 强制使用Helvetica字体，避免编码问题
-            base_font = 'Helvetica'
-
-            logger.info(
-                f"Using font: {base_font} (forced to avoid encoding issues)")
-            print(
-                f"PDF Generation - Using font: {base_font} (forced to avoid encoding issues)")
-
-            # 自定义样式
-            title_style = ParagraphStyle(
-                'CustomTitle',
-                parent=styles['Heading1'],
-                fontName=base_font,
-                fontSize=24,
-                spaceAfter=30,
-                textColor=colors.darkblue,
-                alignment=1  # 居中
-            )
-
-            heading_style = ParagraphStyle(
-                'CustomHeading',
-                parent=styles['Heading2'],
-                fontName=base_font,
-                fontSize=16,
-                spaceAfter=12,
-                textColor=colors.darkblue
-            )
-
-            # 更新默认样式以支持中文
-            for style_name in ['Normal', 'Heading1', 'Heading2', 'Heading3', 'Heading4']:
-                if style_name in styles:
-                    styles[style_name].fontName = base_font
-
-            # 1. Title Page
-            story.append(Paragraph(
-                "New Zealand Study Abroad Personalized Recommendation Report", title_style))
-            story.append(Spacer(1, 20))
-            story.append(
-                Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y')}", styles['Normal']))
-            story.append(Spacer(1, 40))
-
-            # 2. Executive Summary
-            story.append(Paragraph("Executive Summary", heading_style))
-
-            # 基于对话生成摘要
-            summary_text = self.generate_executive_summary(
-                conversation_history, programs)
-            story.append(Paragraph(summary_text, styles['Normal']))
-            story.append(Spacer(1, 20))
-
-            # 3. Background Analysis
-            story.append(Paragraph("Background Analysis", heading_style))
-
-            background_analysis = self.generate_background_analysis(
-                conversation_history)
-            for section_title, content in background_analysis.items():
-                story.append(
-                    Paragraph(f"<b>{section_title}</b>", styles['Heading3']))
-                story.append(Paragraph(content, styles['Normal']))
-                story.append(Spacer(1, 12))
-
-            # 4. Program Recommendations
-            story.append(Paragraph("Program Recommendations", heading_style))
-
-            for i, program in enumerate(programs[:3], 1):
-                story.append(Paragraph(
-                    f"Recommended Program {i}: {program.get('program', 'Unknown Program')}", styles['Heading3']))
-
-                # Program basic information table
-                program_data = [
-                    ['University', program.get('university', 'N/A')],
-                    ['Campus', program.get('campus', 'N/A')],
-                    ['Duration',
-                        f"{program.get('duration_years', 'N/A')} years"],
-                    ['Annual Tuition', f"NZ$ {program.get('tuition_nzd_per_year', 'N/A'):,}" if program.get(
-                        'tuition_nzd_per_year') else 'N/A'],
-                    ['Match Score',
-                        f"{(program.get('matching_score', 0) * 100):.1f}%"]
-                ]
-
-                program_table = Table(program_data, colWidths=[2*inch, 3*inch])
-                program_table.setStyle(TableStyle([
-                    ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
-                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                    ('FONTSIZE', (0, 0), (-1, 0), 12),
-                    ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                    ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                    ('GRID', (0, 0), (-1, -1), 1, colors.black)
-                ]))
-
-                story.append(program_table)
-                story.append(Spacer(1, 12))
-
-                # Match Analysis
-                match_analysis = self.generate_program_match_analysis(
-                    program, conversation_history)
-                story.append(
-                    Paragraph("<b>Match Analysis</b>", styles['Heading4']))
-                story.append(Paragraph(match_analysis, styles['Normal']))
-                story.append(Spacer(1, 20))
-
-            # 5. Application Strategy
-            story.append(Paragraph("Application Strategy", heading_style))
-
-            application_strategy = self.generate_application_strategy(
-                conversation_history, programs)
-            for section_title, content in application_strategy.items():
-                story.append(
-                    Paragraph(f"<b>{section_title}</b>", styles['Heading3']))
-                story.append(Paragraph(content, styles['Normal']))
-                story.append(Spacer(1, 12))
-
-            # 6. New Zealand Study Guide
-            story.append(Paragraph("New Zealand Study Guide", heading_style))
-
-            study_guide = self.generate_study_guide()
-            for section_title, content in study_guide.items():
-                story.append(
-                    Paragraph(f"<b>{section_title}</b>", styles['Heading3']))
-                story.append(Paragraph(content, styles['Normal']))
-                story.append(Spacer(1, 12))
-
-            # 7. Action Plan
-            story.append(Paragraph("Action Plan", heading_style))
-
-            action_plan = self.generate_action_plan(conversation_history)
-            for section_title, items in action_plan.items():
-                story.append(
-                    Paragraph(f"<b>{section_title}</b>", styles['Heading3']))
-                for item in items:
-                    story.append(Paragraph(f"• {item}", styles['Normal']))
-                story.append(Spacer(1, 12))
-
-            # 构建PDF
-            doc.build(story)
-
             # 验证PDF文件
             if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
                 logger.info(
@@ -539,102 +399,73 @@ class QAAssistant:
             logger.error(f"Full traceback: {traceback.format_exc()}")
             return False
 
-    def generate_executive_summary(self, conversation_history: Dict[str, str], programs: list) -> str:
-        """Generate executive summary"""
-        motivation = conversation_history.get(
-            "study_motivation", "enhance personal capabilities")
-        field = conversation_history.get("preferred_field", "business")
-        level = conversation_history.get("study_level", "postgraduate")
+    async def generate_llm_report_content(self, cv_analysis: Dict[str, Any], matched_programs: list, conversation_history: Dict[str, str], user_profile: Dict[str, Any]) -> str:
+        """
+        使用LLM生成英文报告内容 - 完全个性化，无预填写模板
+        """
+        try:
+            logger.info(
+                "Generating personalized report content using PromptFlow LLM")
 
-        summary = f"Based on your background analysis and detailed conversation, we have carefully selected {len(programs)} most suitable study abroad programs in New Zealand for you. "
-        summary += f"You aim to {motivation} through {level} level studies, focusing on {field} related fields. "
-        summary += "Our recommendations fully consider your academic background, career planning, budget constraints, and city preferences, "
-        summary += "aiming to provide you with the most valuable study abroad experience and career development opportunities."
+            # 调用PromptFlow生成完全个性化的报告内容
+            logger.info(
+                f"Calling PromptFlow with inputs: cv_analysis={bool(cv_analysis)}, conversation_history={len(conversation_history)}")
 
-        return summary
+            response = self.pf_client.test(
+                flow=self.flow_config,
+                inputs={
+                    "cv_analysis": cv_analysis,
+                    "conversation_history": conversation_history,
+                    "user_message": "Generate personalized study abroad report",
+                    "question_count": 2  # 表示已经问够问题，可以生成报告
+                }
+            )
 
-    def generate_background_analysis(self, conversation_history: Dict[str, str]) -> Dict[str, str]:
-        """Generate background analysis"""
-        return {
-            "Study Motivation": conversation_history.get("study_motivation", "Not clearly specified"),
-            "Field Interest": conversation_history.get("preferred_field", "Not clearly specified"),
-            "Career Goals": conversation_history.get("career_goals", "Not clearly specified"),
-            "Work Experience": conversation_history.get("work_experience", "Not clearly specified"),
-            "English Proficiency": conversation_history.get("english_proficiency", "Not clearly specified"),
-            "Special Requirements": conversation_history.get("special_requirements", "No special requirements") or "No special requirements"
-        }
+            logger.info(
+                f"PromptFlow response keys: {list(response.keys()) if response else 'None'}")
+            logger.info(f"PromptFlow response: {response}")
 
-    def generate_program_match_analysis(self, program: Dict[str, Any], conversation_history: Dict[str, str]) -> str:
-        """Generate program match analysis"""
-        analysis = f"This program is highly suitable for you, with the following key reasons: "
+            # 提取生成的报告内容
+            report_content = response.get("final_report", "")
 
-        # Field match
-        preferred_field = conversation_history.get("preferred_field", "")
-        if preferred_field:
-            analysis += f"Field alignment - the program's focus aligns perfectly with your interest in {preferred_field}; "
+            if not report_content:
+                logger.warning(
+                    "LLM did not return report content, using fallback")
+                logger.warning(f"Response was: {response}")
+                report_content = self.generate_fallback_report(
+                    cv_analysis, matched_programs, conversation_history)
+            else:
+                logger.info(
+                    "Successfully generated personalized report content from LLM")
+                logger.info(f"Report content length: {len(report_content)}")
 
-        # Location match
-        location_pref = conversation_history.get("location_preference", "")
-        campus = program.get("campus", "")
-        if location_pref and campus:
-            if any(city.lower() in location_pref.lower() for city in [campus]):
-                analysis += f"Campus location - the {campus} campus is in your preferred area; "
+            return report_content
 
-        # Budget match
-        budget = conversation_history.get("budget_range", "")
-        tuition = program.get("tuition_nzd_per_year")
-        if budget and tuition:
-            analysis += f"Tuition affordability - annual tuition NZ${tuition:,} fits your budget expectations; "
+        except Exception as e:
+            logger.error(f"LLM report generation failed: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
+            # 使用备用模板
+            return self.generate_fallback_report(cv_analysis, matched_programs, conversation_history)
 
-        # Career development
-        career_goals = conversation_history.get("career_goals", "")
-        if career_goals:
-            analysis += f"Career alignment - the curriculum closely relates to your career development goals: {career_goals}."
+    def generate_fallback_report(self, cv_analysis: Dict[str, Any], matched_programs: list, conversation_history: Dict[str, str]) -> str:
+        """
+        备用报告模板（当LLM失败时使用）
+        """
+        return """# Study Abroad Report Generation Failed
 
-        return analysis
+We apologize, but we were unable to generate your personalized study abroad report at this time. 
 
-    def generate_application_strategy(self, conversation_history: Dict[str, str], programs: list) -> Dict[str, str]:
-        """生成申请策略"""
-        english_level = conversation_history.get("english_proficiency", "")
+Please try again or contact support if the issue persists.
 
-        return {
-            "Application Timeline": "Recommend starting application preparation 12-18 months in advance to ensure sufficient time for document preparation and language tests. Main intake periods are February and July each year.",
-            "Document Checklist": "Academic transcripts, English test scores (IELTS/TOEFL), personal statement, recommendation letters, CV/resume, passport copy, etc.",
-            "Language Test Advice": f"Based on your current English level ({english_level}), recommend targeted IELTS preparation with target score 6.5-7.0.",
-            "Background Enhancement": "Consider participating in relevant internships, volunteer activities, professional certifications to enhance application competitiveness."
-        }
+## Error Information
+- CV Analysis: Available
+- Conversation History: Available  
+- Matched Programs: Available
+- Report Generation: Failed
 
-    def generate_study_guide(self) -> Dict[str, str]:
-        """Generate study guide"""
-        return {
-            "Visa Application": "Student visa application requires offer letter, financial proof, medical examination report, etc. Recommend applying 2-3 months in advance.",
-            "Accommodation Options": "Choose from university dormitories, homestay, or private rental. University dorms are safer and convenient, homestay helps with cultural integration.",
-            "Living Costs": "New Zealand living expenses approximately NZ$15,000-20,000/year, including accommodation, meals, transportation, entertainment, etc.",
-            "Work Opportunities": "Student visa allows 20 hours work per week, full-time during holidays. Can apply for work visa after graduation."
-        }
-
-    def generate_action_plan(self, conversation_history: Dict[str, str]) -> Dict[str, list]:
-        """生成行动计划"""
-        return {
-            "Short-term Actions (1-3 months)": [
-                "Complete personal statement and application materials",
-                "Prepare and take IELTS exam",
-                "Contact recommenders for recommendation letters",
-                "Research specific application requirements and deadlines"
-            ],
-            "Medium-term Planning (3-6 months)": [
-                "Submit formal applications",
-                "Prepare visa application materials",
-                "Arrange accommodation and airport pickup",
-                "Learn about target city living information"
-            ],
-            "Long-term Goals (6+ months)": [
-                "Receive offer letters",
-                "Complete visa application",
-                "Arrange pre-departure preparations",
-                "Develop study and career development plans"
-            ]
-        }
+Please retry the report generation process.
+"""
 
 
 # 全局实例

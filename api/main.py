@@ -609,16 +609,12 @@ async def generate_qa_report(
         conversation_history = request_data.get("conversation_history", {})
         user_id = request_data.get(
             "user_id", current_user.get("id", "unknown"))
-        report_content = request_data.get("report_content", None)
-        matched_programs = request_data.get("matched_programs", None)
 
-        # 调用QA助手生成报告
+        # 调用QA助手生成报告（完整模式）
         result = await qa_assistant.generate_report(
             cv_analysis=cv_analysis,
             conversation_history=conversation_history,
-            user_id=str(user_id),
-            report_content=report_content,
-            matched_programs=matched_programs
+            user_id=str(user_id)
         )
 
         return result

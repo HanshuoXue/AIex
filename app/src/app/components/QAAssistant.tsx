@@ -178,6 +178,14 @@ export default function QAAssistant() {
       timestamp: new Date()
     };
     setMessages(prev => [...prev, newMessage]);
+    return newMessage;
+  };
+
+  // 更新消息内容
+  const updateMessage = (messageId: string, updates: Partial<Message>) => {
+    setMessages(prev => prev.map(msg => 
+      msg.id === messageId ? { ...msg, ...updates } : msg
+    ));
   };
 
   // 添加打字效果消息
@@ -412,7 +420,10 @@ export default function QAAssistant() {
         // 处理不同类型的响应
         if (aiResponse.response_type === 'final_report') {
           // 显示最终报告完成消息
-          await addTypingMessage('🎉 您的个性化留学建议报告已生成完成！');
+          await addTypingMessage('🎉 您的个性化留学建议报告已生成完成！正在为您生成PDF报告...');
+          
+          // 添加进度指示器
+          await addTypingMessage('⏳ 正在分析您的背景和匹配最佳项目...');
           
           // 生成PDF报告并提供下载
           try {
@@ -430,20 +441,51 @@ export default function QAAssistant() {
                   }
                   return acc;
                 }, {} as { [key: string]: string }),
-                user_id: user?.id,
-                report_content: aiResponse.content,
-                matched_programs: aiResponse.matched_programs || []
+                user_id: user?.id
               })
             });
 
             if (reportResponse.success) {
+              // 显示调试信息
+              const debugInfo = reportResponse.debug_info;
+              const flowResult = reportResponse.flow_result;
+              
+              let debugContent = `🔍 **系统执行状态：**\n`;
+              debugContent += `- 匹配项目数量: ${debugInfo?.matched_programs_count || 0}\n`;
+              debugContent += `- 报告内容长度: ${debugInfo?.final_report_length || 0} 字符\n`;
+              debugContent += `- Embedding状态: ${debugInfo?.embedding_status === 'success' ? '✅ 成功' : '⚠️ 使用备用方案'}\n`;
+              if (debugInfo?.embedding_dimension) {
+                debugContent += `  - Embedding维度: ${debugInfo.embedding_dimension}\n`;
+              }
+              if (debugInfo?.embedding_error) {
+                debugContent += `  - Embedding错误: ${debugInfo.embedding_error}\n`;
+              }
+              debugContent += `- RAG匹配状态: ${debugInfo?.rag_matching_status === 'success' ? '✅ 成功' : '⚠️ 使用备用方案'}\n`;
+              if (debugInfo?.rag_programs_count) {
+                debugContent += `  - 实际匹配项目数: ${debugInfo.rag_programs_count}\n`;
+              }
+              if (debugInfo?.rag_reason) {
+                debugContent += `  - 使用备用方案原因: ${debugInfo.rag_reason}\n`;
+              }
+              debugContent += `- Flow结果键: ${debugInfo?.flow_result_keys?.join(', ') || '无'}\n\n`;
+              
+              // 显示匹配的项目
+              if (flowResult?.matched_programs && Array.isArray(flowResult.matched_programs)) {
+                debugContent += `📋 **匹配的项目：**\n`;
+                flowResult.matched_programs.slice(0, 3).forEach((program: any, index: number) => {
+                  debugContent += `${index + 1}. ${program.program || program.name || '未知项目'}\n`;
+                  debugContent += `   - 大学: ${program.university || '未知'}\n`;
+                  debugContent += `   - 学费: NZ$ ${program.tuition_nzd_per_year || '未知'}\n`;
+                  debugContent += `   - 匹配度: ${((program.match_score || 0) * 100).toFixed(1)}%\n\n`;
+                });
+              }
+              
               // 显示下载链接
-              const mode = reportResponse.generation_mode || 'UNKNOWN';
-              const modeText = mode === 'FAST_MODE' ? '快速模式' : mode === 'FULL_MODE' ? '完整模式' : '未知模式';
+              debugContent += `📄 **您的个性化留学建议报告已准备就绪！**\n\n基于您的CV分析、聊天历史和项目匹配，我们为您生成了完整的个性化报告。`;
               
               addMessage({
                 type: 'assistant',
-                content: `📄 您的个性化留学建议报告已准备就绪！\n\n生成模式: ${modeText}`,
+                content: debugContent,
                 reportUrl: reportResponse.report_url
               });
             } else {
@@ -593,12 +635,35 @@ export default function QAAssistant() {
     );
   };
 
+  // 重置对话
+  const resetConversation = () => {
+    setMessages([]);
+    setConversationState({
+      sessionId: Date.now().toString(),
+      cvUploaded: false,
+      cvAnalysis: undefined,
+      sessionState: {},
+      isComplete: false,
+      isGeneratingReport: false
+    });
+    setCurrentInput('');
+    setSelectedFile(null);
+  };
+
   // 渲染当前输入区域
   const renderInputArea = () => {
     if (conversationState.isComplete && !conversationState.isGeneratingReport) {
       return (
-        <div className="text-center text-gray-500">
-          对话已完成，感谢您的参与！
+        <div className="text-center">
+          <div className="text-gray-500 mb-4">
+            对话已完成，感谢您的参与！
+          </div>
+          <button
+            onClick={resetConversation}
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            开始新的对话
+          </button>
         </div>
       );
     }

@@ -17,15 +17,19 @@ def control_qa_flow(conversation_history: Dict[str, Any], user_message: str, cv_
         current_question_count = len(user_messages)
 
         print(f"当前问题数量: {current_question_count}")
+        print(f"传入question_count: {question_count}")
         print(f"用户消息: {user_message}")
         print(f"是否有CV: {bool(cv_analysis)}")
 
-        # 阶段1: 如果问题少于10个，继续提问
-        if current_question_count < 2:
+        # 使用传入的question_count参数，如果为2或以上，直接生成报告
+        if question_count >= 2:
+            print("问题收集完成，开始生成报告")
+            return "generate_report"
+        # 阶段1: 如果问题少于2个，继续提问
+        elif current_question_count < 2:
             print(f"继续提问 (第{current_question_count + 1}个问题)")
             return "ask_question"
-
-        # 阶段2: 问够10个问题，生成报告
+        # 阶段2: 问够2个问题，生成报告
         else:
             print("问题收集完成，开始生成报告")
             return "generate_report"

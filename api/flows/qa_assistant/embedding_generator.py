@@ -5,7 +5,7 @@ from openai import AzureOpenAI
 
 
 @tool
-def generate_embedding(conversation_history: Dict[str, Any], cv_analysis: Dict[str, Any]) -> List[float]:
+def generate_embedding(conversation_history: Dict[str, Any], cv_analysis: Dict[str, Any]) -> Dict[str, Any]:
     """
     使用Azure OpenAI生成embedding向量
     """
@@ -52,8 +52,19 @@ def generate_embedding(conversation_history: Dict[str, Any], cv_analysis: Dict[s
         embedding = response.data[0].embedding
         print(f"生成embedding成功，维度: {len(embedding)}")
 
-        return embedding
+        return {
+            "embedding": embedding,
+            "status": "success",
+            "query_text": query_text,
+            "dimension": len(embedding)
+        }
 
     except Exception as e:
         print(f"Embedding生成失败: {e}")
-        return []
+        return {
+            "embedding": [],
+            "status": "failed",
+            "error": str(e),
+            "query_text": query_text if 'query_text' in locals() else "",
+            "dimension": 0
+        }
