@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 import type { Candidate } from "../../types";
 
 // Unified API configuration
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://api-alex-12345.azurewebsites.net'
-  : 'http://127.0.0.1:8000';
+  : 'http://localhost:8000';
 
 interface CandidateFormProps {
   onMatch: (data: Candidate) => void;
@@ -23,6 +24,7 @@ export default function CandidateForm({
   loading,
   matchingTime,
 }: CandidateFormProps) {
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     bachelor_major: "computer science",
     gpa_scale: "4.0",
@@ -301,6 +303,9 @@ export default function CandidateForm({
       
       const uploadResponse = await fetch(`${API_BASE_URL}/upload-cv`, {
         method: 'POST',
+        headers: {
+          ...(token && { "Authorization": `Bearer ${token}` }),
+        },
         body: formDataWithFile,
       });
       
@@ -332,6 +337,9 @@ export default function CandidateForm({
           
           const analyzeResponse = await fetch(`${API_BASE_URL}/analyze-cv`, {
             method: 'POST',
+            headers: {
+              ...(token && { "Authorization": `Bearer ${token}` }),
+            },
             body: analyzeFormData,
           });
           

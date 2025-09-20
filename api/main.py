@@ -1,5 +1,5 @@
 # api/main.py
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 import os
@@ -7,8 +7,21 @@ import uuid
 from datetime import datetime
 try:
     from .match_flow import flow_matcher, Candidate
+    from .user_routes import router as user_router
+    from .auth import get_current_active_user, get_current_user
 except ImportError:
-    from match_flow import flow_matcher, Candidate
+    try:
+        from match_flow import flow_matcher, Candidate
+        from user_routes import router as user_router
+        from auth import get_current_active_user, get_current_user
+    except ImportError:
+        # 如果所有导入都失败，尝试从当前目录导入
+        import sys
+        import os
+        sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+        from match_flow import flow_matcher, Candidate
+        from user_routes import router as user_router
+        from auth import get_current_active_user, get_current_user
 
 # CV text extraction functions
 
@@ -110,7 +123,7 @@ def determine_program_level(candidate_data: dict, cv_analysis: dict = None, cv_t
     return None  # Return all levels
 
 
-app = FastAPI()
+app = FastAPI(title="Alex Study Program Matching System", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -119,6 +132,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 注册用户管理路由
+app.include_router(user_router)
 
 
 @app.options("/{path:path}")
@@ -138,7 +154,7 @@ def health():
 
 
 @app.post("/match")
-async def match(c: Candidate):
+async def match(c: Candidate, current_user: dict = Depends(get_current_active_user)):
     """
     Quick Match - Return top 3 programs (default view)
     """
@@ -196,7 +212,7 @@ async def match(c: Candidate):
 
 
 @app.post("/match/detailed")
-async def match_detailed(c: Candidate):
+async def match_detailed(c: Candidate, current_user: dict = Depends(get_current_active_user)):
     """
     Detailed Analysis - Comprehensive evaluation of all programs in appropriate level, show eligible + rejected
     """
@@ -243,7 +259,7 @@ async def match_detailed(c: Candidate):
 
 
 @app.post("/match/all")
-async def match_all(c: Candidate):
+async def match_all(c: Candidate, current_user: dict = Depends(get_current_active_user)):
     """
     Complete Analysis - Random selection of 6 programs from all levels, show eligible + rejected
     """
@@ -292,7 +308,8 @@ async def match_all(c: Candidate):
 @app.post("/upload-cv")
 async def upload_cv(
     cv: UploadFile = File(...),
-    candidate_data: str = Form(...)
+    candidate_data: str = Form(...),
+    current_user: dict = Depends(get_current_active_user)
 ):
     """
     Upload CV file and store it for processing
@@ -385,7 +402,8 @@ async def upload_cv(
 @app.post("/analyze-cv")
 async def analyze_cv(
     file_id: str = Form(...),
-    candidate_data: str = Form(...)
+    candidate_data: str = Form(...),
+    current_user: dict = Depends(get_current_active_user)
 ):
     """
     Perform AI analysis on uploaded CV

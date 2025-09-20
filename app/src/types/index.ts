@@ -83,3 +83,84 @@ export interface AllMatchResults {
   rejected_matches: MatchResult[];
   total_evaluated: number;
 }
+
+// 用户管理相关类型
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  full_name?: string;
+  status: 'pending' | 'active' | 'suspended' | 'inactive';
+  role: 'user' | 'admin';
+  permission_granted_at?: string;
+  permission_expires_at?: string;
+  created_at: string;
+  last_login?: string;
+}
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+  full_name?: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  user: User;
+}
+
+export interface PermissionRequest {
+  request_reason: string;
+  requested_duration: '1week' | '1month' | '3months' | '6months' | '1year';
+}
+
+export interface PermissionRequestResponse {
+  id: number;
+  user_id: number;
+  username: string;
+  email: string;
+  full_name?: string;
+  request_reason: string;
+  requested_duration: string;
+  status: 'pending' | 'approved' | 'rejected';
+  reviewed_by?: number;
+  reviewed_by_username?: string;
+  reviewed_at?: string;
+  reviewer_comments?: string;
+  approved_duration?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PermissionReview {
+  request_id: number;
+  approved: boolean;
+  reviewer_comments?: string;
+  approved_duration?: '1week' | '1month' | '3months' | '6months' | '1year';
+}
+
+export interface AdminStats {
+  total_users: number;
+  admin_users: number;
+  pending_requests: number;
+  active_users: number;
+  expired_permissions: number;
+}
+
+export interface MessageResponse {
+  message: string;
+  success: boolean;
+}
+
+export interface ChangePasswordRequest {
+  current_password: string;
+  new_password: string;
+  confirm_password: string;
+}

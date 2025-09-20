@@ -32,3 +32,8 @@ python-multipart
 # CV processing
 PyPDF2==3.0.1
 python-docx==1.1.0
+# User management and authentication
+psycopg2-binary==2.9.9
+bcrypt==4.1.2
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
