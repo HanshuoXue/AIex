@@ -23,7 +23,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
   //https://api-alex-test-1757506758.azurewebsites.net
 
 function HomeContent() {
-  const { isAuthenticated, user, token, loading: authLoading, refreshUser } = useAuth();
+  const { isAuthenticated, user, token, loading: authLoading, refreshUser, isAdmin } = useAuth();
   const [authMode, setAuthMode] = useState<'login' | 'register' | 'forgot-password'>('login');
   const [currentPage, setCurrentPage] = useState(() => {
     // 从localStorage恢复页面状态
@@ -39,7 +39,6 @@ function HomeContent() {
   const [matchingTime, setMatchingTime] = useState<number | null>(null);
   const [showPermissionRequest, setShowPermissionRequest] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [profileTab, setProfileTab] = useState<'info' | 'password' | 'permission'>('info');
   const editFormRef = useRef<HTMLDivElement>(null);
 
   // 当编辑表单出现时，滚动到表单位置
@@ -275,7 +274,7 @@ function HomeContent() {
                     <div className="ml-3">
                       <p className="text-sm text-orange-700">
                         <strong>权限即将过期：</strong>
-                        您的访问权限将于 {new Date(user?.permission_expires_at!).toLocaleDateString('zh-CN')} 过期。
+                        您的访问权限将于 {user?.permission_expires_at ? new Date(user.permission_expires_at).toLocaleDateString('zh-CN') : '未知时间'} 过期。
                       </p>
                     </div>
                   </div>
@@ -311,175 +310,110 @@ function HomeContent() {
           </div>
         );
         
-      case 'permissions':
-        return (
-          <div className="flex-1 max-w-4xl mx-auto">
-            <PermissionRequestForm />
-          </div>
-        );
-        
       case 'profile':
         return (
-          <div className="flex-1 max-w-4xl mx-auto">
-            {/* 选项卡导航 */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden mb-6">
-              <div className="border-b border-gray-200">
-                <nav className="flex space-x-8 px-6" aria-label="Tabs">
-                  <button
-                    onClick={() => setProfileTab('info')}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                      profileTab === 'info'
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex-1 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* 左侧：个人信息 */}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-white flex items-center">
+                      <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       个人信息
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => setProfileTab('password')}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                      profileTab === 'password'
-                        ? 'border-green-500 text-green-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                      </svg>
-                      修改密码
-                    </div>
-                  </button>
-                  {/* 只有非永久权限的用户才显示权限申请选项卡 */}
-                  {user?.permission_expires_at && (
-                    <button
-                      onClick={() => setProfileTab('permission')}
-                      className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                        profileTab === 'permission'
-                          ? 'border-purple-500 text-purple-600'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        权限申请
-                      </div>
-                    </button>
-                  )}
-                </nav>
-              </div>
-            </div>
-
-            {/* 选项卡内容 */}
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-              {profileTab === 'info' && (
-                <>
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
-                    <div className="flex items-center justify-between">
-                      <h2 className="text-xl font-bold text-white flex items-center">
-                        <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        个人信息
-                      </h2>
-                      <button
-                        onClick={() => setIsEditingProfile(true)}
-                        className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 backdrop-blur-sm"
-                      >
-                        编辑信息
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <div className="space-y-6">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                          {user?.username?.charAt(0).toUpperCase() || 'U'}
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900">{user?.full_name || '未设置姓名'}</h3>
-                          <p className="text-sm text-gray-500">@{user?.username}</p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 gap-4">
-                        <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
-                          <div>
-                            <p className="text-sm font-medium text-gray-700">邮箱</p>
-                            <p className="text-sm text-gray-900">{user?.email}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <div>
-                            <p className="text-sm font-medium text-gray-700">账户状态</p>
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              user?.status === 'active' ? 'bg-green-100 text-green-800' : 
-                              user?.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
-                            }`}>
-                              {user?.status === 'active' ? '正常' : 
-                               user?.status === 'pending' ? '等待审批' : '已禁用'}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          <div>
-                            <p className="text-sm font-medium text-gray-700">权限过期时间</p>
-                            <p className="text-sm text-gray-900">
-                              {user?.permission_expires_at 
-                                ? new Date(user.permission_expires_at).toLocaleDateString('zh-CN')
-                                : '永久'
-                              }
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {profileTab === 'password' && (
-                <>
-                  <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
-                    <h2 className="text-xl font-bold text-white flex items-center">
-                      <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                      </svg>
-                      修改密码
                     </h2>
+                    <button
+                      onClick={() => setIsEditingProfile(true)}
+                      className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 backdrop-blur-sm"
+                    >
+                      编辑信息
+                    </button>
                   </div>
-                  
-                  <div className="p-6">
-                    <ChangePasswordForm 
-                      onSuccess={() => {
-                        // 密码修改成功后的处理
-                      }}
-                    />
-                  </div>
-                </>
-              )}
+                </div>
+                
+                <div className="p-6">
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                        {user?.username?.charAt(0).toUpperCase() || 'U'}
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900">{user?.full_name || '未设置姓名'}</h3>
+                        <p className="text-sm text-gray-500">@{user?.username}</p>
+                      </div>
+                    </div>
 
-              {profileTab === 'permission' && user?.permission_expires_at && (
-                <>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">邮箱</p>
+                          <p className="text-sm text-gray-900">{user?.email}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">账户状态</p>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            user?.status === 'active' ? 'bg-green-100 text-green-800' : 
+                            user?.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                          }`}>
+                            {user?.status === 'active' ? '正常' : 
+                             user?.status === 'pending' ? '等待审批' : '已禁用'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">权限过期时间</p>
+                          <p className="text-sm text-gray-900">
+                            {user?.permission_expires_at 
+                              ? new Date(user.permission_expires_at).toLocaleDateString('zh-CN')
+                              : '永久'
+                            }
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 中间：修改密码 */}
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4">
+                  <h2 className="text-xl font-bold text-white flex items-center">
+                    <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1721 9z" />
+                    </svg>
+                    修改密码
+                  </h2>
+                </div>
+                
+                <div className="p-6">
+                  <ChangePasswordForm 
+                    onSuccess={() => {
+                      // 密码修改成功后的处理
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* 右侧：权限申请 - 只有非管理员且非永久权限的用户才显示 */}
+              {!isAdmin && user?.permission_expires_at ? (
+                <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                   <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
                     <h2 className="text-xl font-bold text-white flex items-center">
                       <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -496,9 +430,47 @@ function HomeContent() {
                       }}
                     />
                   </div>
-                </>
+                </div>
+              ) : (
+                <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-gray-400 to-gray-500 px-6 py-4">
+                    <h2 className="text-xl font-bold text-white flex items-center">
+                      <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      权限状态
+                    </h2>
+                  </div>
+                  
+                  <div className="p-6">
+                    <div className="text-center text-gray-500">
+                      {isAdmin ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div>
+                            <p className="text-lg font-medium text-gray-700">管理员权限</p>
+                            <p className="text-sm text-gray-500">您拥有永久管理权限</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center space-x-2">
+                          <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div>
+                            <p className="text-lg font-medium text-gray-700">永久权限</p>
+                            <p className="text-sm text-gray-500">您拥有永久访问权限</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
+
 
             {/* 编辑信息表单 - 直接显示在页面上 */}
             {isEditingProfile && (
@@ -522,14 +494,13 @@ function HomeContent() {
                       </button>
                     </div>
                   </div>
+                  
                   <div className="p-6">
                     <ProfileEditForm 
-                      onSuccess={async () => {
+                      onSuccess={() => {
                         setIsEditingProfile(false);
-                        // 刷新用户信息以更新UI
-                        await refreshUser();
+                        refreshUser();
                       }}
-                      onCancel={() => setIsEditingProfile(false)}
                     />
                   </div>
                 </div>
@@ -537,6 +508,7 @@ function HomeContent() {
             )}
           </div>
         );
+        
         
       case 'admin':
         return (
