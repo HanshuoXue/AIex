@@ -12,12 +12,66 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors
 from reportlab.lib.units import inch
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from io import BytesIO
 import tempfile
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# 注册中文字体
+
+
+def register_chinese_fonts():
+    """注册中文字体"""
+    try:
+        # 尝试注册系统中文字体
+        import platform
+        system = platform.system()
+
+        if system == "Darwin":  # macOS
+            font_paths = [
+                "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+                "/System/Library/Fonts/HelveticaNeue.ttc",
+                "/System/Library/Fonts/Supplemental/Arial.ttf"
+            ]
+        elif system == "Windows":
+            font_paths = [
+                "C:/Windows/Fonts/simsun.ttc",
+                "C:/Windows/Fonts/msyh.ttc",
+                "C:/Windows/Fonts/simhei.ttf"
+            ]
+        else:  # Linux
+            font_paths = [
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+                "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+            ]
+
+        # 尝试注册字体
+        for font_path in font_paths:
+            try:
+                if os.path.exists(font_path):
+                    pdfmetrics.registerFont(TTFont('ChineseFont', font_path))
+                    logger.info(
+                        f"Successfully registered Chinese font: {font_path}")
+                    return True
+            except Exception as e:
+                logger.warning(f"Failed to register font {font_path}: {e}")
+                continue
+
+        # 如果都失败了，使用默认字体
+        logger.warning("No Chinese fonts found, using default font")
+        return False
+
+    except Exception as e:
+        logger.error(f"Error registering Chinese fonts: {e}")
+        return False
+
+
+# 初始化时注册字体
+register_chinese_fonts()
 
 
 class QAAssistant:
@@ -135,7 +189,9 @@ class QAAssistant:
 
             # 如果已经有报告内容，直接生成PDF
             if report_content and matched_programs is not None:
-                logger.info("Using provided report content for PDF generation")
+                logger.info(
+                    "🚀 FAST MODE: Using provided report content for PDF generation")
+                print("🚀 FAST MODE: Using provided report content for PDF generation")
 
                 # 生成PDF报告
                 report_filename = f"study_report_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
@@ -154,7 +210,8 @@ class QAAssistant:
                         "report_url": f"/api/reports/{report_filename}",
                         "report_path": report_path,
                         "programs_matched": len(matched_programs),
-                        "generation_time": datetime.now().isoformat()
+                        "generation_time": datetime.now().isoformat(),
+                        "generation_mode": "FAST_MODE"
                     }
                 else:
                     return {
@@ -166,7 +223,9 @@ class QAAssistant:
             # 否则运行完整的flow生成报告
             else:
                 logger.info(
-                    "Running full QA Assistant flow for report generation")
+                    "🔄 FULL MODE: Running complete QA Assistant flow for report generation")
+                print(
+                    "🔄 FULL MODE: Running complete QA Assistant flow for report generation")
 
                 # 准备用户画像
                 user_profile = {
@@ -213,6 +272,7 @@ class QAAssistant:
                     "report_path": report_path,
                     "programs_matched": len(top_programs.get("matched_programs", [])),
                     "generation_time": datetime.now().isoformat(),
+                    "generation_mode": "FULL_MODE",
                     "flow_details": {
                         "matching_status": top_programs.get("status", "unknown"),
                         "matching_strategy": top_programs.get("matching_details", {}).get("matching_strategy", "default")
@@ -248,20 +308,32 @@ class QAAssistant:
             styles = getSampleStyleSheet()
             story = []
 
+            # 强制使用Helvetica字体，避免编码问题
+            base_font = 'Helvetica'
+            logger.info(f"generate_pdf_from_content - Using font: {base_font}")
+            print(f"generate_pdf_from_content - Using font: {base_font}")
+
+            # 更新默认样式以使用Helvetica
+            for style_name in ['Normal', 'Heading1', 'Heading2', 'Heading3', 'Heading4']:
+                if style_name in styles:
+                    styles[style_name].fontName = base_font
+
             # 标题
             title_style = ParagraphStyle(
                 'CustomTitle',
                 parent=styles['Heading1'],
+                fontName=base_font,
                 fontSize=20,
                 spaceAfter=20,
                 textColor=colors.darkblue,
                 alignment=1
             )
 
-            story.append(Paragraph("新西兰留学个性化建议报告", title_style))
+            story.append(Paragraph(
+                "New Zealand Study Abroad Personalized Recommendation Report", title_style))
             story.append(Spacer(1, 20))
             story.append(
-                Paragraph(f"生成时间: {datetime.now().strftime('%Y年%m月%d日')}", styles['Normal']))
+                Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y')}", styles['Normal']))
             story.append(Spacer(1, 20))
 
             # 报告内容（转换Markdown为PDF）
@@ -270,17 +342,27 @@ class QAAssistant:
                 line = line.strip()
                 if not line:
                     story.append(Spacer(1, 6))
-                elif line.startswith('# '):
-                    story.append(Paragraph(line[2:], styles['Heading1']))
-                elif line.startswith('## '):
-                    story.append(Paragraph(line[3:], styles['Heading2']))
-                elif line.startswith('### '):
-                    story.append(Paragraph(line[4:], styles['Heading3']))
-                elif line.startswith('- '):
-                    story.append(Paragraph(f"• {line[2:]}", styles['Normal']))
                 else:
-                    story.append(Paragraph(line, styles['Normal']))
-                story.append(Spacer(1, 3))
+                    # 过滤中文字符，只保留ASCII字符
+                    filtered_line = ''.join(
+                        char for char in line if ord(char) < 128)
+
+                    if filtered_line.startswith('# '):
+                        story.append(
+                            Paragraph(filtered_line[2:], styles['Heading1']))
+                    elif filtered_line.startswith('## '):
+                        story.append(
+                            Paragraph(filtered_line[3:], styles['Heading2']))
+                    elif filtered_line.startswith('### '):
+                        story.append(
+                            Paragraph(filtered_line[4:], styles['Heading3']))
+                    elif filtered_line.startswith('- '):
+                        story.append(
+                            Paragraph(f"• {filtered_line[2:]}", styles['Normal']))
+                    else:
+                        story.append(
+                            Paragraph(filtered_line, styles['Normal']))
+                    story.append(Spacer(1, 3))
 
             # 构建PDF
             doc.build(story)
@@ -304,10 +386,19 @@ class QAAssistant:
             styles = getSampleStyleSheet()
             story = []
 
+            # 强制使用Helvetica字体，避免编码问题
+            base_font = 'Helvetica'
+
+            logger.info(
+                f"Using font: {base_font} (forced to avoid encoding issues)")
+            print(
+                f"PDF Generation - Using font: {base_font} (forced to avoid encoding issues)")
+
             # 自定义样式
             title_style = ParagraphStyle(
                 'CustomTitle',
                 parent=styles['Heading1'],
+                fontName=base_font,
                 fontSize=24,
                 spaceAfter=30,
                 textColor=colors.darkblue,
@@ -317,20 +408,27 @@ class QAAssistant:
             heading_style = ParagraphStyle(
                 'CustomHeading',
                 parent=styles['Heading2'],
+                fontName=base_font,
                 fontSize=16,
                 spaceAfter=12,
                 textColor=colors.darkblue
             )
 
-            # 1. 标题页
-            story.append(Paragraph("新西兰留学个性化建议报告", title_style))
+            # 更新默认样式以支持中文
+            for style_name in ['Normal', 'Heading1', 'Heading2', 'Heading3', 'Heading4']:
+                if style_name in styles:
+                    styles[style_name].fontName = base_font
+
+            # 1. Title Page
+            story.append(Paragraph(
+                "New Zealand Study Abroad Personalized Recommendation Report", title_style))
             story.append(Spacer(1, 20))
             story.append(
-                Paragraph(f"生成时间: {datetime.now().strftime('%Y年%m月%d日')}", styles['Normal']))
+                Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y')}", styles['Normal']))
             story.append(Spacer(1, 40))
 
-            # 2. 执行摘要
-            story.append(Paragraph("执行摘要", heading_style))
+            # 2. Executive Summary
+            story.append(Paragraph("Executive Summary", heading_style))
 
             # 基于对话生成摘要
             summary_text = self.generate_executive_summary(
@@ -338,8 +436,8 @@ class QAAssistant:
             story.append(Paragraph(summary_text, styles['Normal']))
             story.append(Spacer(1, 20))
 
-            # 3. 用户背景分析
-            story.append(Paragraph("用户背景分析", heading_style))
+            # 3. Background Analysis
+            story.append(Paragraph("Background Analysis", heading_style))
 
             background_analysis = self.generate_background_analysis(
                 conversation_history)
@@ -349,21 +447,23 @@ class QAAssistant:
                 story.append(Paragraph(content, styles['Normal']))
                 story.append(Spacer(1, 12))
 
-            # 4. 项目推荐详解
-            story.append(Paragraph("项目推荐详解", heading_style))
+            # 4. Program Recommendations
+            story.append(Paragraph("Program Recommendations", heading_style))
 
             for i, program in enumerate(programs[:3], 1):
                 story.append(Paragraph(
-                    f"推荐项目 {i}: {program.get('program', 'Unknown Program')}", styles['Heading3']))
+                    f"Recommended Program {i}: {program.get('program', 'Unknown Program')}", styles['Heading3']))
 
-                # 项目基本信息表格
+                # Program basic information table
                 program_data = [
-                    ['大学', program.get('university', 'N/A')],
-                    ['校区', program.get('campus', 'N/A')],
-                    ['学制', f"{program.get('duration_years', 'N/A')} 年"],
-                    ['年学费', f"NZ$ {program.get('tuition_nzd_per_year', 'N/A'):,}" if program.get(
+                    ['University', program.get('university', 'N/A')],
+                    ['Campus', program.get('campus', 'N/A')],
+                    ['Duration',
+                        f"{program.get('duration_years', 'N/A')} years"],
+                    ['Annual Tuition', f"NZ$ {program.get('tuition_nzd_per_year', 'N/A'):,}" if program.get(
                         'tuition_nzd_per_year') else 'N/A'],
-                    ['匹配度', f"{(program.get('matching_score', 0) * 100):.1f}%"]
+                    ['Match Score',
+                        f"{(program.get('matching_score', 0) * 100):.1f}%"]
                 ]
 
                 program_table = Table(program_data, colWidths=[2*inch, 3*inch])
@@ -381,15 +481,16 @@ class QAAssistant:
                 story.append(program_table)
                 story.append(Spacer(1, 12))
 
-                # 匹配分析
+                # Match Analysis
                 match_analysis = self.generate_program_match_analysis(
                     program, conversation_history)
-                story.append(Paragraph("<b>匹配分析</b>", styles['Heading4']))
+                story.append(
+                    Paragraph("<b>Match Analysis</b>", styles['Heading4']))
                 story.append(Paragraph(match_analysis, styles['Normal']))
                 story.append(Spacer(1, 20))
 
-            # 5. 申请策略建议
-            story.append(Paragraph("申请策略建议", heading_style))
+            # 5. Application Strategy
+            story.append(Paragraph("Application Strategy", heading_style))
 
             application_strategy = self.generate_application_strategy(
                 conversation_history, programs)
@@ -399,8 +500,8 @@ class QAAssistant:
                 story.append(Paragraph(content, styles['Normal']))
                 story.append(Spacer(1, 12))
 
-            # 6. 新西兰留学指南
-            story.append(Paragraph("新西兰留学指南", heading_style))
+            # 6. New Zealand Study Guide
+            story.append(Paragraph("New Zealand Study Guide", heading_style))
 
             study_guide = self.generate_study_guide()
             for section_title, content in study_guide.items():
@@ -409,8 +510,8 @@ class QAAssistant:
                 story.append(Paragraph(content, styles['Normal']))
                 story.append(Spacer(1, 12))
 
-            # 7. 后续行动计划
-            story.append(Paragraph("后续行动计划", heading_style))
+            # 7. Action Plan
+            story.append(Paragraph("Action Plan", heading_style))
 
             action_plan = self.generate_action_plan(conversation_history)
             for section_title, items in action_plan.items():
@@ -423,63 +524,72 @@ class QAAssistant:
             # 构建PDF
             doc.build(story)
 
-            logger.info(f"PDF report generated successfully: {output_path}")
-            return True
+            # 验证PDF文件
+            if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                logger.info(
+                    f"PDF report generated successfully: {output_path} (size: {os.path.getsize(output_path)} bytes)")
+                return True
+            else:
+                logger.error(f"PDF file not created or empty: {output_path}")
+                return False
 
         except Exception as e:
             logger.error(f"PDF generation failed: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
             return False
 
     def generate_executive_summary(self, conversation_history: Dict[str, str], programs: list) -> str:
-        """生成执行摘要"""
-        motivation = conversation_history.get("study_motivation", "提升个人能力")
-        field = conversation_history.get("preferred_field", "商科")
-        level = conversation_history.get("study_level", "研究生")
+        """Generate executive summary"""
+        motivation = conversation_history.get(
+            "study_motivation", "enhance personal capabilities")
+        field = conversation_history.get("preferred_field", "business")
+        level = conversation_history.get("study_level", "postgraduate")
 
-        summary = f"基于您的背景分析和详细对话，我们为您精选了{len(programs)}个最适合的新西兰留学项目。"
-        summary += f"您希望通过{level}阶段的学习来{motivation}，专注于{field}相关领域。"
-        summary += "我们的推荐充分考虑了您的学术背景、职业规划、预算限制和城市偏好，"
-        summary += "旨在为您提供最具价值的留学体验和职业发展机会。"
+        summary = f"Based on your background analysis and detailed conversation, we have carefully selected {len(programs)} most suitable study abroad programs in New Zealand for you. "
+        summary += f"You aim to {motivation} through {level} level studies, focusing on {field} related fields. "
+        summary += "Our recommendations fully consider your academic background, career planning, budget constraints, and city preferences, "
+        summary += "aiming to provide you with the most valuable study abroad experience and career development opportunities."
 
         return summary
 
     def generate_background_analysis(self, conversation_history: Dict[str, str]) -> Dict[str, str]:
-        """生成背景分析"""
+        """Generate background analysis"""
         return {
-            "学习动机": conversation_history.get("study_motivation", "未详细说明学习动机"),
-            "专业兴趣": conversation_history.get("preferred_field", "未明确专业方向"),
-            "职业规划": conversation_history.get("career_goals", "未详细说明职业目标"),
-            "工作经验": conversation_history.get("work_experience", "工作经验信息不详"),
-            "英语能力": conversation_history.get("english_proficiency", "英语水平信息不详"),
-            "特殊要求": conversation_history.get("special_requirements", "无特殊要求") or "无特殊要求"
+            "Study Motivation": conversation_history.get("study_motivation", "Not clearly specified"),
+            "Field Interest": conversation_history.get("preferred_field", "Not clearly specified"),
+            "Career Goals": conversation_history.get("career_goals", "Not clearly specified"),
+            "Work Experience": conversation_history.get("work_experience", "Not clearly specified"),
+            "English Proficiency": conversation_history.get("english_proficiency", "Not clearly specified"),
+            "Special Requirements": conversation_history.get("special_requirements", "No special requirements") or "No special requirements"
         }
 
     def generate_program_match_analysis(self, program: Dict[str, Any], conversation_history: Dict[str, str]) -> str:
-        """生成项目匹配分析"""
-        analysis = f"该项目非常适合您，主要原因包括："
+        """Generate program match analysis"""
+        analysis = f"This program is highly suitable for you, with the following key reasons: "
 
-        # 专业匹配
+        # Field match
         preferred_field = conversation_history.get("preferred_field", "")
         if preferred_field:
-            analysis += f"专业方向与您感兴趣的{preferred_field}领域高度吻合；"
+            analysis += f"Field alignment - the program's focus aligns perfectly with your interest in {preferred_field}; "
 
-        # 城市匹配
+        # Location match
         location_pref = conversation_history.get("location_preference", "")
         campus = program.get("campus", "")
         if location_pref and campus:
             if any(city.lower() in location_pref.lower() for city in [campus]):
-                analysis += f"校区位于您偏好的{campus}地区；"
+                analysis += f"Campus location - the {campus} campus is in your preferred area; "
 
-        # 预算匹配
+        # Budget match
         budget = conversation_history.get("budget_range", "")
         tuition = program.get("tuition_nzd_per_year")
         if budget and tuition:
-            analysis += f"年学费{tuition:,}新西兰元符合您的预算预期；"
+            analysis += f"Tuition affordability - annual tuition NZ${tuition:,} fits your budget expectations; "
 
-        # 职业发展
+        # Career development
         career_goals = conversation_history.get("career_goals", "")
         if career_goals:
-            analysis += f"课程设置与您的职业发展目标{career_goals}密切相关。"
+            analysis += f"Career alignment - the curriculum closely relates to your career development goals: {career_goals}."
 
         return analysis
 
@@ -488,41 +598,41 @@ class QAAssistant:
         english_level = conversation_history.get("english_proficiency", "")
 
         return {
-            "申请时间规划": "建议提前12-18个月开始准备申请，确保有充足时间准备材料和语言考试。主要申请季为每年2月和7月入学。",
-            "材料准备清单": "学历证明及成绩单、英语成绩证明(IELTS/TOEFL)、个人陈述、推荐信、CV/简历、护照复印件等。",
-            "语言考试建议": f"根据您目前的英语水平({english_level})，建议针对性准备IELTS考试，目标分数6.5-7.0分。",
-            "背景提升建议": "可考虑参与相关实习、志愿活动、专业证书考试等来增强申请竞争力。"
+            "Application Timeline": "Recommend starting application preparation 12-18 months in advance to ensure sufficient time for document preparation and language tests. Main intake periods are February and July each year.",
+            "Document Checklist": "Academic transcripts, English test scores (IELTS/TOEFL), personal statement, recommendation letters, CV/resume, passport copy, etc.",
+            "Language Test Advice": f"Based on your current English level ({english_level}), recommend targeted IELTS preparation with target score 6.5-7.0.",
+            "Background Enhancement": "Consider participating in relevant internships, volunteer activities, professional certifications to enhance application competitiveness."
         }
 
     def generate_study_guide(self) -> Dict[str, str]:
-        """生成留学指南"""
+        """Generate study guide"""
         return {
-            "签证申请": "学生签证申请需要提供录取通知书、资金证明、体检报告等材料。建议提前2-3个月申请。",
-            "住宿安排": "可选择学校宿舍、寄宿家庭或自租公寓。学校宿舍相对安全便利，寄宿家庭有助于文化融入。",
-            "生活费用": "新西兰生活费约15,000-20,000新西兰元/年，包括住宿、餐饮、交通、娱乐等费用。",
-            "工作机会": "学生签证允许每周工作20小时，假期可全职工作。毕业后可申请工作签证。"
+            "Visa Application": "Student visa application requires offer letter, financial proof, medical examination report, etc. Recommend applying 2-3 months in advance.",
+            "Accommodation Options": "Choose from university dormitories, homestay, or private rental. University dorms are safer and convenient, homestay helps with cultural integration.",
+            "Living Costs": "New Zealand living expenses approximately NZ$15,000-20,000/year, including accommodation, meals, transportation, entertainment, etc.",
+            "Work Opportunities": "Student visa allows 20 hours work per week, full-time during holidays. Can apply for work visa after graduation."
         }
 
     def generate_action_plan(self, conversation_history: Dict[str, str]) -> Dict[str, list]:
         """生成行动计划"""
         return {
-            "短期行动项 (1-3个月)": [
-                "完善个人陈述和申请材料",
-                "准备并参加IELTS考试",
-                "联系推荐人准备推荐信",
-                "研究具体的申请要求和截止日期"
+            "Short-term Actions (1-3 months)": [
+                "Complete personal statement and application materials",
+                "Prepare and take IELTS exam",
+                "Contact recommenders for recommendation letters",
+                "Research specific application requirements and deadlines"
             ],
-            "中期规划 (3-6个月)": [
-                "提交正式申请",
-                "准备签证申请材料",
-                "安排住宿和接机服务",
-                "了解目标城市的生活信息"
+            "Medium-term Planning (3-6 months)": [
+                "Submit formal applications",
+                "Prepare visa application materials",
+                "Arrange accommodation and airport pickup",
+                "Learn about target city living information"
             ],
-            "长期目标 (6个月以上)": [
-                "获得录取通知书",
-                "完成签证申请",
-                "安排行前准备",
-                "制定学习和职业发展规划"
+            "Long-term Goals (6+ months)": [
+                "Receive offer letters",
+                "Complete visa application",
+                "Arrange pre-departure preparations",
+                "Develop study and career development plans"
             ]
         }
 
