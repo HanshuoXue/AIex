@@ -2,6 +2,134 @@ from promptflow import tool
 from typing import Dict, Any, List
 import json
 import os
+from azure.search.documents import SearchClient
+from azure.core.credentials import AzureKeyCredential
+from dotenv import load_dotenv
+
+# 加载环境变量
+load_dotenv()
+
+
+def try_azure_vector_search(embedding_data: List[float], conversation_history: Dict[str, Any], cv_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    尝试使用Azure Search进行向量搜索
+    """
+    try:
+        # 初始化Azure Search客户端
+        search_endpoint = os.environ.get("SEARCH_ENDPOINT")
+        search_key = os.environ.get("SEARCH_KEY")
+
+        if not search_endpoint or not search_key:
+            return {
+                "matched_programs": [],
+                "status": "failed",
+                "error": "Azure Search credentials not configured",
+                "programs_count": 0
+            }
+
+        search_client = SearchClient(
+            endpoint=search_endpoint,
+            index_name="nz-programs",
+            credential=AzureKeyCredential(search_key)
+        )
+
+        print(f"开始Azure Search向量搜索，向量维度: {len(embedding_data)}")
+
+        # 尝试向量搜索
+        user_text = extract_user_preferences(conversation_history)
+
+        try:
+            # 首先尝试向量搜索
+            search_results = search_client.search(
+                search_text="",  # 空文本，只使用向量搜索
+                vector_queries=[{
+                    "kind": "vector",
+                    "vector": embedding_data,
+                    "k_nearest_neighbors": 3,
+                    "fields": "content_vector"
+                }],
+                select=["*"],
+                top=3
+            )
+            print("🔍 搜索方式: Azure Search 向量搜索 (Vector Search)")
+            search_method = "azure_vector_search"
+        except Exception as vector_error:
+            print(f"❌ 向量搜索失败: {vector_error}")
+            print("🔄 回退到: Azure Search 文本搜索 (Text Search)")
+            # 如果向量搜索失败，回退到文本搜索
+            search_results = search_client.search(
+                search_text=user_text,
+                select=["*"],
+                top=3
+            )
+            search_method = "azure_text_search"
+
+        matched_programs = []
+        for result in search_results:
+            program_data = dict(result)
+            # 添加匹配分数（Azure Search返回的相关性分数）
+            program_data["match_score"] = result.get(
+                "@search.score", 0.0) / 100.0  # 标准化到0-1
+            matched_programs.append(program_data)
+
+        print(f"✅ Azure Search返回 {len(matched_programs)} 个结果")
+        print(f"📊 搜索方式: {search_method}")
+
+        return {
+            "matched_programs": matched_programs,
+            "status": "success",
+            "search_method": search_method,
+            "programs_count": len(matched_programs)
+        }
+
+    except Exception as e:
+        print(f"Azure Search向量搜索失败: {e}")
+        return {
+            "matched_programs": [],
+            "status": "failed",
+            "error": str(e),
+            "programs_count": 0
+        }
+
+
+def try_local_fallback_match(conversation_history: Dict[str, Any], cv_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    本地fallback匹配（原有的关键词匹配逻辑）
+    """
+    try:
+        programs = load_local_programs()
+        scored_programs = []
+        user_text = extract_user_preferences(conversation_history)
+
+        for program in programs:
+            score = calculate_simple_match_score(
+                program, user_text, cv_analysis)
+            program["match_score"] = score
+            scored_programs.append(program)
+
+        # 排序并返回top3
+        scored_programs.sort(key=lambda x: x.get(
+            "match_score", 0), reverse=True)
+        top3 = scored_programs[:3]
+
+        print(f"✅ 本地关键词匹配返回 {len(top3)} 个结果")
+        print(f"📊 搜索方式: 本地关键词匹配 (Local Keyword Match)")
+
+        return {
+            "matched_programs": top3,
+            "status": "success",
+            "search_method": "local_keyword_match",
+            "programs_count": len(top3)
+        }
+    except Exception as e:
+        print(f"本地fallback匹配失败: {e}")
+        fallback_programs = get_fallback_programs()
+        return {
+            "matched_programs": fallback_programs,
+            "status": "fallback_used",
+            "error": str(e),
+            "programs_count": len(fallback_programs)
+        }
 
 
 @tool
@@ -39,33 +167,22 @@ def match_programs(query_embedding: Dict[str, Any], conversation_history: Dict[s
 
         print(f"使用embedding匹配项目，向量维度: {len(embedding_data)}")
 
-        # TODO: 这里应该使用Azure Search的向量搜索
-        # 目前使用简化的本地搜索
-        programs = load_local_programs()
+        # 尝试使用Azure Search向量搜索
+        azure_search_result = try_azure_vector_search(
+            embedding_data, conversation_history, cv_analysis)
 
-        # 简化的匹配逻辑（基于对话内容）
-        scored_programs = []
-        user_text = extract_user_preferences(conversation_history)
-
-        for program in programs:
-            score = calculate_simple_match_score(
-                program, user_text, cv_analysis)
-            program["match_score"] = score
-            scored_programs.append(program)
-
-        # 排序并返回top3
-        scored_programs.sort(key=lambda x: x.get(
-            "match_score", 0), reverse=True)
-        top3 = scored_programs[:3]
-
-        print(f"匹配完成，返回{len(top3)}个项目")
-        return {
-            "matched_programs": top3,
-            "status": "success",
-            "embedding_status": embedding_status,
-            "programs_count": len(top3),
-            "user_text": user_text[:100] + "..." if len(user_text) > 100 else user_text
-        }
+        if azure_search_result["status"] == "success":
+            search_method = azure_search_result.get("search_method", "unknown")
+            print(
+                f"✅ Azure Search搜索成功，匹配到 {len(azure_search_result['matched_programs'])} 个项目")
+            print(f"🔍 搜索方式: {search_method}")
+            return azure_search_result
+        else:
+            print(
+                f"❌ Azure Search失败: {azure_search_result.get('error', 'unknown')}")
+            print("🔄 回退到: 本地关键词匹配 (Local Fallback)")
+            # 使用本地fallback
+            return try_local_fallback_match(conversation_history, cv_analysis)
 
     except Exception as e:
         print(f"RAG匹配失败: {e}")

@@ -1,25 +1,30 @@
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Start executing nodes in thread pool mode.
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Start to run 6 nodes with concurrency level 16.
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Executing node qa_controller. node run id: e0f9a431-6044-4dbf-8453-6cb4ebf2f162_qa_controller_0
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 当前问题数量: 2
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Executing node embedding_generator. node run id: e0f9a431-6044-4dbf-8453-6cb4ebf2f162_embedding_generator_0
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 传入question_count: 2
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     [embedding_generator in line 0 (index starts from 0)] stdout> 生成embedding查询文本: I want to study computer science in New Zealand I'm interested in AI and machine learning programs Python JavaScript React...
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 用户消息: Generate personalized study abroad report
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 是否有CV: True
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 问题收集完成，开始生成报告
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Node qa_controller completes.
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     The node 'question_asker' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'ask_question'.
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     The node 'default_matcher' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'ask_question'.
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Bypassing node question_asker. node run id: e0f9a431-6044-4dbf-8453-6cb4ebf2f162_question_asker_0
-2025-09-21 02:25:24 +1200   36014 execution.flow     INFO     Bypassing node default_matcher. node run id: e0f9a431-6044-4dbf-8453-6cb4ebf2f162_default_matcher_0
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     [embedding_generator in line 0 (index starts from 0)] stdout> 生成embedding成功，维度: 3072
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     Node embedding_generator completes.
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     Executing node rag_matcher. node run id: e0f9a431-6044-4dbf-8453-6cb4ebf2f162_rag_matcher_0
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 使用embedding匹配项目，向量维度: 3072
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 匹配完成，返回3个项目
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     Node rag_matcher completes.
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     The node 'report_generator' will be executed because the activate condition is met, i.e. '${qa_controller.output}' is equal to 'generate_report'.
-2025-09-21 02:25:25 +1200   36014 execution.flow     INFO     Executing node report_generator. node run id: e0f9a431-6044-4dbf-8453-6cb4ebf2f162_report_generator_0
-2025-09-21 02:25:26 +1200   36014 execution.flow     INFO     Node report_generator completes.
-2025-09-21 02:25:26 +1200   36014 execution.flow     WARNING  The node referenced by output:'question_asker' is bypassed, which is not recommended.
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Start executing nodes in thread pool mode.
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Start to run 6 nodes with concurrency level 16.
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Executing node qa_controller. node run id: 07e55b3d-f4bd-4689-930b-b02864c5259f_qa_controller_0
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 当前问题数量: 2
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Executing node embedding_generator. node run id: 07e55b3d-f4bd-4689-930b-b02864c5259f_embedding_generator_0
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 传入question_count: 2
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     [embedding_generator in line 0 (index starts from 0)] stdout> 生成embedding查询文本: I want to study computer science in New Zealand I'm interested in AI and machine learning programs Python JavaScript React...
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 用户消息: Generate personalized study abroad report
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 是否有CV: True
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     [qa_controller in line 0 (index starts from 0)] stdout> 问题收集完成，开始生成报告
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Node qa_controller completes.
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     The node 'question_asker' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'ask_question'.
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     The node 'default_matcher' will be bypassed because the activate condition is not met, i.e. '${qa_controller.output}' is not equal to 'ask_question'.
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Bypassing node question_asker. node run id: 07e55b3d-f4bd-4689-930b-b02864c5259f_question_asker_0
+2025-09-21 02:45:46 +1200   51347 execution.flow     INFO     Bypassing node default_matcher. node run id: 07e55b3d-f4bd-4689-930b-b02864c5259f_default_matcher_0
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [embedding_generator in line 0 (index starts from 0)] stdout> 生成embedding成功，维度: 3072
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     Node embedding_generator completes.
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     Executing node rag_matcher. node run id: 07e55b3d-f4bd-4689-930b-b02864c5259f_rag_matcher_0
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 使用embedding匹配项目，向量维度: 3072
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 开始Azure Search向量搜索，向量维度: 3072
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 🔍 搜索方式: Azure Search 向量搜索 (Vector Search)
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> ✅ Azure Search返回 3 个结果
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 📊 搜索方式: azure_vector_search
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> ✅ Azure Search搜索成功，匹配到 3 个项目
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     [rag_matcher in line 0 (index starts from 0)] stdout> 🔍 搜索方式: azure_vector_search
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     Node rag_matcher completes.
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     The node 'report_generator' will be executed because the activate condition is met, i.e. '${qa_controller.output}' is equal to 'generate_report'.
+2025-09-21 02:45:47 +1200   51347 execution.flow     INFO     Executing node report_generator. node run id: 07e55b3d-f4bd-4689-930b-b02864c5259f_report_generator_0
+2025-09-21 02:45:48 +1200   51347 execution.flow     INFO     Node report_generator completes.
+2025-09-21 02:45:48 +1200   51347 execution.flow     WARNING  The node referenced by output:'question_asker' is bypassed, which is not recommended.

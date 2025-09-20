@@ -467,6 +467,15 @@ export default function QAAssistant() {
               if (debugInfo?.rag_reason) {
                 debugContent += `  - 使用备用方案原因: ${debugInfo.rag_reason}\n`;
               }
+              // 添加搜索方式信息
+              if (flowResult?.search_method) {
+                const searchMethodMap = {
+                  'azure_vector_search': '🔍 Azure Search 向量搜索',
+                  'azure_text_search': '📝 Azure Search 文本搜索', 
+                  'local_keyword_match': '🏠 本地关键词匹配'
+                };
+                debugContent += `- 搜索方式: ${searchMethodMap[flowResult.search_method] || flowResult.search_method}\n`;
+              }
               debugContent += `- Flow结果键: ${debugInfo?.flow_result_keys?.join(', ') || '无'}\n\n`;
               
               // 显示匹配的项目
